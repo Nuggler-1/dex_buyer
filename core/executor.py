@@ -1,10 +1,9 @@
-from concurrent.futures import ThreadPoolExecutor
+
 from typing import Dict, Callable
-from chains.evm_handler import EVMHandler
-from chains.solana_handler import SolanaHandler
+from chains import EVMHandler, SolanaHandler
 from loguru import logger
 from typing import Literal
-from config import API_CHAIN_NAMES
+from config import CHAIN_NAMES
 from web3 import Web3
 import traceback
 
@@ -15,7 +14,7 @@ class TransactionExecutor:
     def __init__(self,):
         
         self.handlers: Dict[
-            Literal[*API_CHAIN_NAMES.values()],
+            Literal[*CHAIN_NAMES],
             EVMHandler | SolanaHandler
         ] = {
             #chain_name: TxHandlerClass (EVMHandler/SolanaHandler)
@@ -23,10 +22,10 @@ class TransactionExecutor:
         
     def register_handler(
         self, 
-        chain: Literal[*API_CHAIN_NAMES.values()], 
+        chain: Literal[*CHAIN_NAMES], 
         handler: EVMHandler | SolanaHandler
     ):
-        """Регистрируем хендлеры по именам из вебсокета"""
+        """Регистрируем хендлеры по локальным именам в софте"""
         self.handlers[chain] = handler
         logger.info(f"[{handler.chain_name}] TX Handler registered")
 
@@ -40,14 +39,31 @@ class TransactionExecutor:
         chain = token_data.get('chain')
         token_address = token_data.get('token_address')
         token_name = token_data.get('token_name')
+        token_supply = token_data.get('token_supply')
  
         try:
             tx_handler = self.handlers.get(chain)
             
-            tx_hash = await tx_handler.execute_swap(token_address)
+            tx_hash = await tx_handler.execute_swap(token_address, token_supply)
             if tx_hash:
-                logger.info(f"[{tx_handler.chain_name}] sent buy {token_name} ({token_address}) | TX: {tx_hash}")
+                logger.info(f"[{tx_handler.chain_name}] bought {token_name} ({token_address}) | TX: {tx_hash}")
+                await tx_handler.tg_client.send_trade_alert(
+                    tx_handler.chain_name,
+                    token_address,
+                    token_name,
+                    tx_hash=tx_hash
+                )
             else:
-                logger.error(f"[{tx_handler.chain_name}] buy {token_name} ({token_address}) failed")            
+                logger.error(f"[{tx_handler.chain_name}] buy {token_name} ({token_address}) failed")     
+                await tx_handler.tg_client.send_error_alert(
+                    "SWAP_FAILED",
+                    f"{tx_handler.chain_name} buy {token_name} {token_address} failed",
+                    "tx failed or not sent - check logs"
+                )       
         except Exception as e:
             logger.error(f"[{tx_handler.chain_name}] buy {token_name} ({token_address}) failed | Error: {e}")
+            await tx_handler.tg_client.send_error_alert(
+                "SWAP_FAILED",
+                f"{tx_handler.chain_name} buy {token_name} {token_address} failed",
+                f"{str(e)}"
+            )

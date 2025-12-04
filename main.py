@@ -1,14 +1,33 @@
 import asyncio
-#import uvloop
+from asyncio import WindowsSelectorEventLoopPolicy
 from core.trading_bot import TradingBot
+import warnings
+import traceback
+import sys
+from loguru import logger
+from config import DEFAULT_LOGS_FILE, LOGS_SIZE
 
-#Ставим uvloop в дефолт (ворк только на unix)
-#asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())
+warnings.filterwarnings("ignore", message="Curlm alread closed")
 
+logger.remove()
+logger.add(
+    sys.stdout,
+    format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> |  <level>{message}</level>",
+    colorize=True
+)
+logger.add(DEFAULT_LOGS_FILE, rotation=LOGS_SIZE)
 
 async def main():
     bot = TradingBot()
-    await bot.start()
+    try:
+        await bot.start()
+    except Exception:
+        logger.error(f"Bot error {traceback.format_exc()}")
+        await bot.stop()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("Bot stopped")

@@ -16,7 +16,7 @@ from solders.keypair import Keypair
 from solders.system_program import CreateAccountWithSeedParams, create_account_with_seed
 from solders.transaction import VersionedTransaction
 from solders.instruction import AccountMeta, Instruction
-from spl.token.client import Token
+from spl.token.async_client import AsyncToken
 from spl.token.instructions import (
     CloseAccountParams,
     InitializeAccountParams,
@@ -58,7 +58,6 @@ class RaydiumClient:
     
     async def fetch_pool_keys(self, pair_address: str, use_cache: bool = True) -> Optional[AmmV4PoolKeys]:
         if use_cache and pair_address in self._pool_keys_cache:
-            logger.debug(f"[SOLANA | RAYDIUM] Using cached pool keys for {pair_address[:8]}...")
             return self._pool_keys_cache[pair_address]
         
         def bytes_of(value):
@@ -106,10 +105,12 @@ class RaydiumClient:
             return pool_keys
             
         except Exception as e:
+            import traceback
+            logger.error(traceback.format_exc())
             logger.error(f"[SOLANA | RAYDIUM] Error fetching pool keys: {e}")
             return None
     
-    async def get_token_balance(self, mint: Pubkey) -> Optional[float]:
+    async def get_token_balances(self, mint: Pubkey) -> Optional[float]:
         try:
             response = await self.client.get_token_accounts_by_owner_json_parsed(
                 self.pubkey,
@@ -120,13 +121,13 @@ class RaydiumClient:
             if response.value:
                 accounts = response.value
                 if accounts:
-                    token_amount = accounts[0].account.data.parsed['info']['tokenAmount']['uiAmount']
-                    return token_amount if token_amount is not None else 0.0
-            return 0.0
+                    token_amount = accounts[0].account.data.parsed['info']['tokenAmount']
+                    return token_amount if token_amount is not None else {}
+            return {}
             
         except Exception as e:
             logger.error(f"[SOLANA | RAYDIUM] Error getting token balance: {e}")
-            return None
+            return {}
     
     async def get_reserves(self, pool_keys: AmmV4PoolKeys) -> tuple:
         try:
@@ -146,7 +147,9 @@ class RaydiumClient:
             return base_balance, quote_balance, pool_keys.base_decimals, pool_keys.quote_decimals
             
         except Exception as e:
+            import traceback
             logger.error(f"[SOLANA | RAYDIUM] Error getting reserves: {e}")
+            logger.error(traceback.format_exc())
             return None, None, None, None
     
     def calculate_amount_out(
@@ -198,31 +201,71 @@ class RaydiumClient:
         data.extend(struct.pack('<Q', minimum_amount_out))
         
         return Instruction(RAYDIUM_AMM_V4, bytes(data), keys)
+
+    async def create_wsol_account_ixs(self, amount_in_raw:int = 0):
+        """
+        returns wsol_token_account and list of ixs
+        """
+        seed = base64.urlsafe_b64encode(os.urandom(24)).decode("utf-8")
+        wsol_token_account = Pubkey.create_with_seed(self.pubkey, seed, TOKEN_PROGRAM_ID)
+        balance_needed = await AsyncToken.get_min_balance_rent_for_exempt_for_account(self.client)
+
+        create_wsol_account_instruction = create_account_with_seed(
+            CreateAccountWithSeedParams(
+                from_pubkey=self.pubkey,
+                to_pubkey=wsol_token_account,
+                base=self.pubkey,
+                seed=seed,
+                lamports=int(balance_needed + amount_in_raw),
+                space=ACCOUNT_LAYOUT_LEN,
+                owner=TOKEN_PROGRAM_ID,
+            )
+        )
+
+        init_wsol_account_instruction = initialize_account(
+            InitializeAccountParams(
+                program_id=TOKEN_PROGRAM_ID,
+                account=wsol_token_account,
+                mint=WSOL,
+                owner=self.pubkey,
+            )
+        )
+
+        close_wsol_account_instruction = close_account(
+            CloseAccountParams(
+                program_id=TOKEN_PROGRAM_ID,
+                account=wsol_token_account,
+                dest=self.pubkey,
+                owner=self.pubkey,
+            )
+        )
+        return wsol_token_account, [create_wsol_account_instruction, init_wsol_account_instruction, close_wsol_account_instruction]
     
-    #можно попробовать ускорить на 200-250ms если найти сервис, который вместе с адресом пула выдаст всю остальную дату, чтобы не делать дополнтиельный запрос к RPC 
-    async def swap(
+    async def get_swap_data_and_price(
         self,
         pair_address: str,
         token_in_mint: str,
         token_out_mint: str,
-        amount_in: float,
-        slippage: float = 1.0,
-        skip_preflight: bool = True,
         cached_blockhash: Optional[str] = None
-    ) -> Optional[str]:
+    ) -> Optional[tuple]:
+        """
+        Получает все данные для свапа и рассчитывает цену токена.
+        
+        возвращает:
+            tuple: (pool_data, price) 
+            или None 
+        """
         try:
-            start_time = time.perf_counter()
-            t0 = time.perf_counter()
+            # Fetch pool keys
             pool_keys = await self.fetch_pool_keys(pair_address)
-            t1 = time.perf_counter()
-            logger.debug(f"[SOLANA | RAYDIUM] Fetch pool keys: {(t1-t0)*1000:.2f}ms")
-            
             if not pool_keys:
                 logger.error("[SOLANA | RAYDIUM] Failed to fetch pool keys")
                 return None
             
             token_in_mint_pubkey = Pubkey.from_string(token_in_mint)
             token_out_mint_pubkey = Pubkey.from_string(token_out_mint)
+            
+            # Determine which token is base/quote
             if token_in_mint_pubkey == pool_keys.base_mint:
                 input_decimal = pool_keys.base_decimals
                 output_decimal = pool_keys.quote_decimals
@@ -232,9 +275,10 @@ class RaydiumClient:
                 output_decimal = pool_keys.base_decimals
                 is_base_input = False
             else:
-                logger.error("Input token not in pool")
+                logger.error("[SOLANA | RAYDIUM] Input token not in pool")
                 return None
-            t2 = time.perf_counter()
+            
+            # Gather reserves and account data in parallel
             reserves_task = self.get_reserves(pool_keys)
             token_in_task = self.client.get_token_accounts_by_owner(
                 self.pubkey, 
@@ -246,48 +290,127 @@ class RaydiumClient:
                 TokenAccountOpts(token_out_mint_pubkey),
                 Processed
             )
+            
             (base_reserve, quote_reserve, _, _), token_account_in_check, token_account_out_check = await asyncio.gather(
                 reserves_task,
                 token_in_task,
                 token_out_task
             )
+            
             blockhash = cached_blockhash if cached_blockhash else await self.client.get_latest_blockhash()
-            t3 = time.perf_counter()
-            logger.debug(f"[SOLANA | RAYDIUM] Get reserves + accounts: {(t3-t2)*1000:.2f}ms")
             
             if base_reserve is None:
-                logger.error("[SOLANA | RAYDIUM] Failed to get reserves")
                 return None
+            
+            # Calculate price: how many output tokens per 1 input token
             reserve_in = base_reserve if is_base_input else quote_reserve
             reserve_out = quote_reserve if is_base_input else base_reserve
             
+            price = reserve_out/reserve_in
+            
+            # Package pool_data for swap method
+            pool_data = (
+                pool_keys,
+                base_reserve, 
+                quote_reserve, 
+                token_account_in_check, 
+                token_account_out_check,
+                blockhash,
+                is_base_input,
+                input_decimal,
+                output_decimal
+            )
+            
+            return (pool_data, price)
+            
+        except Exception as e:
+            import traceback
+            logger.error(traceback.format_exc())
+            logger.error(f"[SOLANA | RAYDIUM] Error getting swap data and price: {str(e)}")
+            return None
+    
+    async def _confirm_tx(self, tx_sig:str):
+
+        try:
+            confirmation = await self.client.confirm_transaction(
+                tx_sig,
+                commitment=Confirmed
+            )
+            
+            if confirmation.value[0].err is None:
+                logger.success(f"[SOLANA | RAYDIUM] Transaction confirmed successfully")
+                return str(tx_sig)
+            else:
+                logger.error(f"[SOLANA | RAYDIUM] Transaction failed: {confirmation.value[0].err}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"[SOLANA | RAYDIUM] Confirmation error: {e}")
+            return None
+
+    #можно попробовать ускорить на 200-250ms если найти сервис, который вместе с адресом пула выдаст всю остальную дату, чтобы не делать дополнтиельный запрос к RPC 
+    async def swap(
+        self,
+        pair_address: str,
+        token_in_mint: str,
+        token_out_mint: str,
+        amount_in: float,
+        slippage: float = 1,
+        skip_preflight: bool = True,
+        pool_data: Optional[tuple] = None,
+        cached_blockhash: Optional[str] = None,
+        skip_confirmation: bool = True
+    ) -> Optional[str]:
+        try:
+            
+            if pool_data is None:
+                if not cached_blockhash:
+                    cached_blockhash = await self.client.get_latest_blockhash()
+                    cached_blockhash = cached_blockhash.value.blockhash
+                result = await self.get_swap_data_and_price(
+                    pair_address,
+                    token_in_mint,
+                    token_out_mint,
+                    cached_blockhash
+                )
+                if result is None:
+                    return None
+                
+                pool_data, _ = result  
+            
+            (pool_keys, base_reserve, quote_reserve, token_account_in_check, token_account_out_check,
+             blockhash, is_base_input, input_decimal, output_decimal) = pool_data
+            
+            reserve_in = base_reserve if is_base_input else quote_reserve
+            reserve_out = quote_reserve if is_base_input else base_reserve
+            
+            token_in_mint_pubkey = Pubkey.from_string(token_in_mint)
+            token_out_mint_pubkey = Pubkey.from_string(token_out_mint)
+            
             amount_out = self.calculate_amount_out(amount_in, reserve_in, reserve_out)
-            minimum_amount_out = int(amount_out * (1 - slippage / 100) * (10 ** output_decimal))
+            minimum_amount_out = int(amount_out * ((100 - slippage) / 100) * (10 ** output_decimal))
             amount_in_raw = int(amount_in * (10 ** input_decimal))
             
-            if token_account_in_check.value:
+            if token_account_in_check.value and not token_in_mint_pubkey == WSOL:
                 token_account_in = token_account_in_check.value[0].pubkey
                 create_in_ix = None
             else:
-                token_account_in = get_associated_token_address(self.pubkey, token_in_mint_pubkey)
-                create_in_ix = create_associated_token_account(self.pubkey, self.pubkey, token_in_mint_pubkey)
+                if token_in_mint_pubkey == WSOL:
+                    token_account_in, create_in_ix = await self.create_wsol_account_ixs(amount_in_raw)
+                else:
+                    token_account_in = get_associated_token_address(self.pubkey, token_in_mint_pubkey)
+                    create_in_ix = create_associated_token_account(self.pubkey, self.pubkey, token_in_mint_pubkey)
             
-            if token_account_out_check.value:
+            if token_account_out_check.value and not token_out_mint_pubkey == WSOL:
                 token_account_out = token_account_out_check.value[0].pubkey
                 create_out_ix = None
             else:
-                token_account_out = get_associated_token_address(self.pubkey, token_out_mint_pubkey)
-                create_out_ix = create_associated_token_account(self.pubkey, self.pubkey, token_out_mint_pubkey)
-            instructions = [
-                set_compute_unit_limit(self.compute_unit_limit),
-                set_compute_unit_price(self.compute_unit_price),
-            ]
-            
-            if create_in_ix:
-                instructions.append(create_in_ix)
-            if create_out_ix:
-                instructions.append(create_out_ix)
-            
+                if token_out_mint_pubkey == WSOL:
+                    token_account_out, create_out_ix = await self.create_wsol_account_ixs()
+                else:
+                    token_account_out = get_associated_token_address(self.pubkey, token_out_mint_pubkey)
+                    create_out_ix = create_associated_token_account(self.pubkey, self.pubkey, token_out_mint_pubkey)
+               
             swap_ix = self._make_swap_instruction(
                 amount_in=amount_in_raw,
                 minimum_amount_out=minimum_amount_out,
@@ -295,9 +418,34 @@ class RaydiumClient:
                 token_account_out=token_account_out,
                 pool_keys=pool_keys,
             )
-            instructions.append(swap_ix)
+
+            instructions_before_swap = [
+                set_compute_unit_limit(self.compute_unit_limit),
+                set_compute_unit_price(self.compute_unit_price),
+            ]
+            instructions_after_swap = [
+                swap_ix,
+            ]
+
+            if create_in_ix:
+                if token_in_mint_pubkey == WSOL:
+                    instructions_before_swap.append(create_in_ix[0])
+                    instructions_before_swap.append(create_in_ix[1])
+                    instructions_after_swap.append(create_in_ix[2])
+                else:
+                    instructions_before_swap.append(create_in_ix)
             
-            t6 = time.perf_counter()
+            if create_out_ix:
+                if token_out_mint_pubkey == WSOL:
+                    instructions_before_swap.append(create_out_ix[0])
+                    instructions_before_swap.append(create_out_ix[1])
+                    instructions_after_swap.append(create_out_ix[2])
+                else:
+                    instructions_before_swap.append(create_out_ix)
+            
+            instructions = instructions_before_swap + instructions_after_swap
+            
+
             compiled_message = MessageV0.try_compile(
                 self.pubkey,
                 instructions,
@@ -309,13 +457,11 @@ class RaydiumClient:
                 txn=VersionedTransaction(compiled_message, [self.keypair]),
                 opts=TxOpts(skip_preflight=skip_preflight),
             )).value
-            t7 = time.perf_counter()
-            logger.debug(f"[SOLANA | RAYDIUM] Build + send transaction: {(t7-t6)*1000:.2f}ms")
+
+            if skip_confirmation:
+                return str(txn_sig)
             
-            end_time = time.perf_counter()
-            logger.info(f"[SOLANA | RAYDIUM] Swap TX sent: {txn_sig}")
-            logger.debug(f"[SOLANA | RAYDIUM] Total TX time: {(end_time-start_time)*1000:.2f}ms")
-            return str(txn_sig)
+            return await self._confirm_tx(txn_sig)
             
         except Exception as e:
             logger.error(f"[SOLANA | RAYDIUM] Swap error: {e}")

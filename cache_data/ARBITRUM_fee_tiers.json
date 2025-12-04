@@ -1,0 +1,325 @@
+[
+  "2025-12-02T10:57:45.723574",
+  {
+    "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9": {
+      "USDT": 0,
+      "USDC": 500,
+      "WETH": 500
+    },
+    "0xaf88d065e77c8cC2239327C5EDb3A432268e5831": {
+      "USDT": 500,
+      "USDC": 0,
+      "WETH": 500
+    },
+    "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4": {
+      "USDT": 3000,
+      "USDC": 3000,
+      "WETH": 500
+    },
+    "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34": {
+      "USDT": 500,
+      "USDC": 0,
+      "WETH": 0
+    },
+    "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1": {
+      "USDT": 500,
+      "USDC": 0,
+      "WETH": 500
+    },
+    "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0": {
+      "USDT": 3000,
+      "USDC": 3000,
+      "WETH": 3000
+    },
+    "0xba5DdD1f9d7F570dc94a51479a000E3BCE967196": {
+      "USDT": 3000,
+      "USDC": 3000,
+      "WETH": 500
+    },
+    "0x912CE59144191C1204E64559FE8253a0e49E6548": {
+      "USDT": 500,
+      "USDC": 500,
+      "WETH": 500
+    },
+    "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978": {
+      "USDT": 3000,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x13Ad51ed4F1B7e9Dc168d8a00cB3f4dDD85EfA60": {
+      "USDT": 3000,
+      "USDC": 3000,
+      "WETH": 3000
+    },
+    "0x9623063377AD1B27544C965cCd7342f7EA7e88C7": {
+      "USDT": 0,
+      "USDC": 10000,
+      "WETH": 3000
+    },
+    "0x7189fb5B6504bbfF6a852B13B7B82a3c118fDc27": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x0c880f6761F1af8d9Aa9C466984b80DAb9a8c9e8": {
+      "USDT": 3000,
+      "USDC": 3000,
+      "WETH": 500
+    },
+    "0x6985884C4392D348587B19cb9eAAf157F13271cd": {
+      "USDT": 10000,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xc87B37a581ec3257B734886d9d3a581F5A9d056c": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x61E030A56D33e8260FdD81f03B162A79Fe3449Cd": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0xB0fFa8000886e57F86dd5264b9582b2Ad87b2b91": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x25118290e6A5f4139381D072181157035864099d": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a": {
+      "USDT": 0,
+      "USDC": 3000,
+      "WETH": 3000
+    },
+    "0x61A1ff55C5216b636a294A07D77C6F4Df10d3B56": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xc1Eb7689147C81aC840d4FF0D298489fc7986d52": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x6694340fc020c5E6B96567843da2df01b2CE1eb6": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xe649e6a1F2afc63ca268C2363691ceCAF75CF47C": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xe4DDDfe67E7164b0FE14E218d80dC4C08eDC01cB": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xbFd5206962267c7b4b4A8B3D76AC2E1b2A5c4d5e": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x3E6648C5a70A150A88bCE65F4aD4d506Fe15d2AF": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0xc08Cd26474722cE93F4D0c34D16201461c10AA8C": {
+      "USDT": 0,
+      "USDC": 10000,
+      "WETH": 0
+    },
+    "0x18c11FD286C5EC11c3b683Caa813B77f5163A122": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x4Cb9a7AE498CEDcBb5EAe9f25736aE7d428C9D66": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x37a645648dF29205C6261289983FB04ECD70b4B3": {
+      "USDT": 10000,
+      "USDC": 10000,
+      "WETH": 3000
+    },
+    "0x539bdE0d7Dbd336b79148AA742883198BBF60342": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xabD587f2607542723b17f14d00d99b987C29b074": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x3082CC23568eA640225c2467653dB90e9250AaA0": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x1CD9a56c8C2eA913c70319A44Da75e99255aa46f": {
+      "USDT": 10000,
+      "USDC": 10000,
+      "WETH": 10000
+    },
+    "0x5575552988A3A80504bBaeB1311674fCFd40aD4B": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x080F6AEd32Fc474DD5717105Dba5ea57268F46eb": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x3b60FF35D3f7F62d636b067dD0dC0dFdAd670E4E": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xf75eE6D319741057a82a88Eeff1DbAFAB7307b69": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xf525E73bdeB4ac1b0e741aF3Ed8a8CBB43ab0756": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 500
+    },
+    "0x61DBbBb552dc893ab3aAd09F289f811E67cEf285": {
+      "USDT": 0,
+      "USDC": 3000,
+      "WETH": 0
+    },
+    "0xB0F66Bdb39acBb043308eb9Dbe78F5bB47ea5430": {
+      "USDT": 10000,
+      "USDC": 0,
+      "WETH": 0
+    },
+    "0xa78d8321B20c4Ef90eCd72f2588AA985A4BDb684": {
+      "USDT": 0,
+      "USDC": 3000,
+      "WETH": 0
+    },
+    "0xD77B108d4f6cefaa0Cae9506A934e825BEccA46E": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x077574441C4F8763a37a2cFeE2ECb444aA60A15e": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xCa4e51F6AD4AFd9d1068E5899De9dd7d73F3463D": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x580E933D90091b9cE380740E3a4A39c67eB85B4c": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x6b43732a9AE9F8654d496c0A075Aa4Aa43057A0B": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0xAeAC3b55c3522157ecdA7EC8fcB86C832fAA28aF": {
+      "USDT": 3000,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x5F8a7c646511A790C53F171891E5d469cA884EdE": {
+      "USDT": 0,
+      "USDC": 10000,
+      "WETH": 0
+    },
+    "0x11e969e9B3f89cB16D686a03Cd8508C9fC0361AF": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 500
+    },
+    "0xdadeca1167fe47499e53Eb50F261103630974905": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x88a269Df8fe7F53E590c561954C52FCCC8EC0cFB": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0x4D840b741bc05FDE325D4Ec0B4CFCD0CeA237e4E": {
+      "USDT": 3000,
+      "USDC": 0,
+      "WETH": 0
+    },
+    "0x11920f139a3121c2836E01551D43F95B3c31159c": {
+      "USDT": 3000,
+      "USDC": 0,
+      "WETH": 0
+    },
+    "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f": {
+      "USDT": 500,
+      "USDC": 500,
+      "WETH": 500
+    },
+    "0x46850aD61C2B7d64d08c9C754F45254596696984": {
+      "USDT": 0,
+      "USDC": 3000,
+      "WETH": 0
+    },
+    "0x60bf4E7cF16Ff34513514b968483B54Beff42a81": {
+      "USDT": 3000,
+      "USDC": 3000,
+      "WETH": 3000
+    },
+    "0x93FA0B88C0C78e45980Fa74cdd87469311b7B3E4": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x3b58a4C865B568a2F6a957C264F6b50CbA35D8CE": {
+      "USDT": 0,
+      "USDC": 3000,
+      "WETH": 0
+    },
+    "0x431402e8b9dE9aa016C743880e04E517074D8cEC": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 500
+    },
+    "0x4e352cF164E64ADCBad318C3a1e222E9EBa4Ce42": {
+      "USDT": 0,
+      "USDC": 3000,
+      "WETH": 0
+    },
+    "0x2Ac2B254Bc18cD4999f64773a966E4f4869c34Ee": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 10000
+    },
+    "0x1C43D05be7E5b54D506e3DdB6f0305e8A66CD04e": {
+      "USDT": 0,
+      "USDC": 0,
+      "WETH": 3000
+    },
+    "0xadf5DD3E51bF28aB4F07e684eCF5d00691818790": {
+      "USDT": 0,
+      "USDC": 10000,
+      "WETH": 3000
+    }
+  }
+]

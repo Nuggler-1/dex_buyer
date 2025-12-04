@@ -1,0 +1,9 @@
+{
+    "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1": {
+        "base_token_address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "fee_tier": 500,
+        "take_profit_ladder_id": 5,
+        "price_bought": 0.0069205291269660565,
+        "steps_done": 0
+    }
+}

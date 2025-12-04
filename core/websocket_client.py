@@ -12,6 +12,7 @@ class WebSocketClient:
         self.uri = uri
         self.on_message_callback_handler = on_message_callback_handler
         self._connection = None
+        self._transport = None
         
     async def listen(self):
         callback = self.on_message_callback_handler
@@ -36,4 +37,18 @@ class WebSocketClient:
         
         #коннектим, picows сама обрабатывает коллбеки на каждом новом сообщении
         transport, client = await ws_connect(ClientListener, self.uri)
+        self._transport = transport
         await transport.wait_disconnected() #слушаем
+
+    async def close(self):
+        logger.info("[WS_CLIENT] Closing WebSocket connection")
+        if self._transport is not None:
+            try:
+                self._transport.disconnect()
+                logger.info("[WS_CLIENT] WebSocket disconnected")
+            except Exception as e:
+                logger.warning(f"[WS_CLIENT] Error disconnecting: {e}")
+            self._transport = None
+        if self._connection is not None:
+            await self._connection.close()
+            self._connection = None

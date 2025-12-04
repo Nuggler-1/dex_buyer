@@ -1,0 +1,3669 @@
+[
+    "2025-12-02T18:58:23.825893",
+    {
+        "0xdAC17F958D2ee523a2206206994597C13D831ec7": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4e68Ccd3E89f51C3074ca5072bbAC773960dFa36",
+                    "fee_tier": 0
+                },
+                "USDC": {
+                    "pool_address": "0x3416cF6C708Da44DB2624D63ea0AAef7113527C6",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x4e68Ccd3E89f51C3074ca5072bbAC773960dFa36",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x99ac8cA7087fA4A2A1FB6357269965A2014ABc35",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDC": {
+                    "pool_address": "0x99ac8cA7087fA4A2A1FB6357269965A2014ABc35",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xdA5e1988097297dCdc1f90D4dFE7909e847CBeF6": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xcdF9F50519Eb0a9995730DDB6e7d3A8B1D8fFA07",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0xcdF9F50519Eb0a9995730DDB6e7d3A8B1D8fFA07",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfAbA6f8e4a5E8Ab82F62fe7C39859FA577269BE3": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xA8e8C91fAA15149F5f6E4A37846DCd58B88b3EC7",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDC": {
+                    "pool_address": "0xA8e8C91fAA15149F5f6E4A37846DCd58B88b3EC7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf34960d9d60be18cC1D5Afc1A6F012A723a28811": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xB26a868fFA4Cbba926970D7ae9c6a36D088eE38C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE0f63A424a4439cBE457D80E4f4b51aD25b2c56C": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xa1532d04697cCB522E4EFC8FBa5daa75A412f7b8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCa14007Eff0dB1f8135f4C25B34De49AB0d42766": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xAC4fD96fcF729390A3c8044422a529028eC36751",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF57e7e7C23978C3cAEC3C3548E3D615c346e79fF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xFd76bE67FFF3BAC84E3D5444167bbC018f5968b6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaea46A60368A7bD060eec7DF8CBa43b7EF41Ad85": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xc931D9fEFd06A8361d8057501F1EC522cF69c573",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD533a949740bb3306d119CC777fa900bA034cd52": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4c83A7f819A5c37D64B4c5A2f8238Ea082fA1f4e",
+                    "fee_tier": 0
+                },
+                "USDC": {
+                    "pool_address": "0x9445bd19767F73DCaE6f2De90e6cd31192F62589",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe28b3B32B6c345A34Ff64674606124Dd5Aceca30": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc944E90C64B2c07662A292be6244BDf05Cda44a7": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFe0c30065B384F05761f15d0CC899D4F9F9Cc0eB": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xDeFDAC77A9A767a2c4eEd826E1AEaD2dAcE53e1C",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "0x80fa4C1fd0fbB9A4f071999aF69531dee1016644",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xb9C4a5522a2f8bA9E2fF7063Df8C02ed443337A3",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "0x09Aa63b7a22eEfC372196AaCd5b53441eD390BFb",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd1d2Eb1B1e90B638588728b4130137D262C87cae": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x465E56cD21ad47d4d4790F17de5E0458F20C3719",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xec53bF9167f50cDEB3Ae105f56099aaaB9061F83": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7A0FBcC466E6830d3a813826ddeeC608978bde2f",
+                    "fee_tier": 0
+                },
+                "USDC": {
+                    "pool_address": "0xd640333b71b015092D9b3AFcff3E427036304370",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaA7a9CA87d3694B5755f213B5D04094b8d0F0A6F": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x643D48b8A27A0A60394331Fa28B8765Df16a6856",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfF20817765cB7f73d4bde2e66e067E58D11095C2": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4E57F830B0b4A82321071ead6FfD1Df1575a16e2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf0DB65D17e30a966C2ae6A21f6BBA71cea6e9754": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x7a1a9B361CfEb62C599794f708554A80751360A7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe53EC727dbDEB9E2d5456c3be40cFF031AB40A55": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5B781915b6b610A1aba8135Ad5df084FFe528DA4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfc82bb4ba86045Af6F327323a46E80412b91b27d": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3902428a74A08a91e2Cb2Fd834De75E69974FE67",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE41d2489571d322189246DaFA5ebDe1F4699F498": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x919b20Ac45304AEB09C9df5c604b3CD9D99a51cA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCdF7028ceAB81fA0C6971208e83fa7872994beE5": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x520E9F24E0F7E7D9c8Ff37A137885C3d55A98e37",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf091867EC603A6628eD83D274E835539D82e9cc8": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x738ea57616FA9dab407E9e7920d446eAF4E7eAAa",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDEf1CA1fb7FBcDC777520aa7f396b4E015F497aB": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd9Fcd98c322942075A5C3860693e9f4f03AAE07b": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xB003DF4B243f938132e8CAdBEB237AbC5A889FB4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE7C6BF469e97eEB0bFB74C8dbFF5BD47D4C1C98a": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x463A60837d50CC8901CD314ae454331260a8FFF9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xcb1592591996765Ec0eFc1f92599A19767ee5ffA": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x54fc75D22f6a290863E9a8EA18fcE11aebB4dB75",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD7EFB00d12C2c13131FD319336Fdf952525dA2af": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x464BD7e6718a815c20a5AD529003d7a93a9676B3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xEd04915c23f00A313a544955524EB7DBD823143d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xeB4626c5149894022C2066120ea7F20f217995Fb",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xdd3B11eF34cd511a2DA159034a05fcb94D806686": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xF12533a96712133d9Bb97C24de5BCf52F48851BD",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd3CC9d8f3689B83c91b7B59cAB4946B063EB894A": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3fE3045C692BaDEa6D2c4aC88D537a5EFa6C5081",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xcccCCCcCCC33D538DBC2EE4fEab0a7A1FF4e8A94": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x08A10A8B713C03E2fECaa3E355cea18a459fFCBF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd459ECeddafcc1d876a3be7290A2E16e801073a3": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x33b8213dE159884531957097F1722a12436014CC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDBB5Cf12408a3Ac17d668037Ce289f9eA75439D7": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc789130A5b127449F439D17267744d24d69a5876",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xeD35af169aF46a02eE13b9d79Eb57d6D68C1749e": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc20059e0317DE91738d13af027DfC4a50781b066": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x76665642F513aAf2A00bE05711A598F44e3970A7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD33526068D116cE69F19A9ee46F0bd304F21A51f": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xe42318eA3b998e8355a3Da364EB9D48eC725Eb45",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC08e7E23C235073C6807C2EFE7021304cb7c2815": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3c385B0ce5b48958ffab12FFd8DA14d433d7b885",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xea17Df5Cf6D172224892B5477A16ACb111182478": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE6Bfd33F52d82Ccb5b37E16D3dD81f9FFDAbB195": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x20c42D3513e9E7fafFf82173AA5327f02D5163e3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB528edBef013aff855ac3c50b381f253aF13b997": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x62e0d3fD804dfBf02d08eE632E9634dBa5c00D03",
+                    "fee_tier": 0
+                },
+                "WETH": {
+                    "pool_address": "0xd1A47332acaD7498AF1efdBa16158e11317ecA4A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC4441c2BE5d8fA8126822B9929CA0b81Ea0DE38E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x14154C15fc0fD3f91DE557a1B6FdD2059972Cd0B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe76C6c83af64e4C60245D8C7dE953DF673a7A33D": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xA4AC834d4948003c44Aa05b6ddAa4bC48864Ef6a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE2AD0BF751834f2fbdC62A41014f84d67cA1de2A": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x4D63DA0421AB1D71FBF2A3d3c8625a66d9b9799d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCC8Fa225D80b9c7D42F96e9570156c65D6cAAa25": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x0CfBeD8f2248D2735203f602BE0cAe5a3131ec68",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF411903cbC70a74d22900a5DE66A2dda66507255": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x98409d8CA9629FBE01Ab1b914EbF304175e384C8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xeF4461891DfB3AC8572cCf7C794664A8DD927945": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x8bDEf1a57652F4cc24Be447732b7F1484c7C41eA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe6fd75ff38Adca4B97FBCD938c86b98772431867": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x412940FDaC1214Fc3Df430769F54e69210A18e49",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD101dCC414F310268c37eEb4cD376CcFA507F571": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xeC2061372a02D5e416F5D8905eea64Cab2c10970",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf94e7d0710709388bCe3161C32B4eEA56d3f91CC": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xBE24f9952bf2a15bc4d2661151049D9588d6c0cB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFeDC5f4a6c38211c1338aa411018DFAf26612c08": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xD192a9f86A0CfF3C814251D90328d19EcD05826B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF42fCFfc27A5B8d0afEC45659407B82f9F32fA98": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFeAc2Eae96899709a43E252B6B92971D32F9C0F9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc593Fe9193B745447e86b45eA0Bf62565eE030cc",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xdab396cCF3d84Cf2D07C4454e10C8A6F5b008D2b": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2A4d547Ea2c35D03A501a8BB5d12d81D0a222dC5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc56C7A0eAA804f854B536A5F3D5f49D2EC4B12b8": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x05391bd57D8C6fB30d9C39F6618f2207893922dC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC210B2cB65ed3484892167F5e05F7ab496Ab0598": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x6771dc01D5796db631e7743DAF359F2412D308DF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfd418e42783382E86Ae91e445406600Ba144D162": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x269A70a223F215f31acd4D91F52a3ef99113475E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xEeB4d8400AEefafC1B2953e0094134A887C76Bd8": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x80F8143Fa056A063AaEeCec3323Aa3426262ddb2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDe30da39c46104798bB5aA3fe8B9e0e1F348163F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc98D64DA73a6616c42117b582e832812e7B8D57F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc770EEfAd204B5180dF6a14Ee197D99d808ee52d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2F79643F9FE52DCbFb90Cc03F59678A8a16073bc",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB4b9DC1C77bdbb135eA907fd5a08094d98883A35": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xAaE63Df9A86f9A682507C922db38faE5e777A606",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF2B2f7b47715256Ce4eA43363a867fdce9353e3A": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xa87De12EA019B7b55772BbFFc0d9a844F7327Ef9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbA47214eDd2bb43099611b208f75E4b42FDcfEDc": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x39FCB1935f6Ccb0A106D05eB928205C59646af57",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF3e4872e6a4cF365888D93b6146a2bAA7348F1A4": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xEeb8F880EAd7281A301ef2E6791A6bBe790603eD",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCaB84bc21F9092167fCFe0ea60f5CE053ab39a1E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xd19393e02c3cc60C21A89b5e85656fF1122eBd51",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFca59Cd816aB1eaD66534D82bc21E7515cE441CF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xFAaCE66BD25abFF62718AbD6DB97560E414eC074",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc555D625828c4527d477e595fF1Dd5801B4a600e": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x826b34e62320108A9fa38a080360d693A8a73111",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC477D038d5420C6A9e0b031712f61c5120090de9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x18Adbc0144059be823a5d0De1d6445002f858Eb5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf6b1117ec07684D3958caD8BEb1b302bfD21103f": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x31227b50eCCDC9C589826AA2D9E7C5619B1895Da",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF0d33BeDa4d734C72684b5f9abBEbf715D0a7935": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x18D02326BB38d351cd874A0959aeFA8C716893d5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFc1C93a2507975E98b9d0E9260Ded61A00152BF1": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x884aCcD11c12104DbD273B97159002486489c0CA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCb76314C2540199f4B844D4ebbC7998C604880cA": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xDd949D1fE117744A38319C7B7dcc045d630BCc8d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe355De6a6043b0580Ff5A26b46051A4809B12793": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xEE83F6873b1d387FccdE7b1d680ff6a7281e8179",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe33679565212f14d68131851751E1050E15db857": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf4d2888d29D722226FafA5d9B24F9164c092421E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4b5Ab61593A2401B1075b90c04cBCDD3F87CE011",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDAe0faFD65385E7775Cf75b1398735155EF6aCD2": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x51c2E82b1D0815eDa5F21d63795a77774E988e50",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe636f94a71eC52Cc61eF21787aE351AD832347B7": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x6FB092521191ab1Ec60c83Ae9e71DfAFb25da9d6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD29DA236dd4AAc627346e1bBa06A619E8c22d7C5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x961eC3bb28C9E98A040c4bDEd38917aA96B791bE",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd47bDF574B4F76210ed503e0EFe81B58Aa061F3d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x0A0b2c28470bF68A6144DF04b08360559fb4aAf1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF5B5eFc906513b4344EbAbCF47A04901f99F09f3": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xb65859E27e7baC92F806C04258372e3bE314A502",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf9902EdfCa4F49DcaEBC335C73aEbD82C79C2886": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xA19A732e51b5222A64834098C90F9c6E03EC31Ed",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe0B7AD7F8F26e2b00C8b47b5Df370f15F90fCF48": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7E75b6876a9feE811EC67B55385BA5A1491D11f3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xff8C479134A18918059493243943150776cF8CF2": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7373126710174da79118A553731Bd702c89244b1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF9ff95468cb9A0cD57b8542bbc4c148e290Ff465": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xfa06982d442DEAc6ce57dedce29D55CC6ff99D73",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf65B5C5104c4faFD4b709d9D60a185eAE063276c": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x141aae4C91b8e66e98EFFa7768af8c57108F107f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE2c5D82523E0E767B83D78E2bFc6FcD74D1432Ef",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD31a59c85aE9D8edEFeC411D448f90841571b89c": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x127452F3f9cDc0389b0Bf59ce6131aA3Bd763598",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE9A95d175a5f4C9369f3b74222402eB1b837693b": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x545b7Db6632ab230FD84897488291dEF7912319c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAcE8E719899F6E91831B18AE746C9A965c2119F1": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x4229851DD1Fc22b481dd93E5E23AF2535eefe940",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xcfcEcFe2bD2FED07A9145222E8a7ad9Cf1Ccd22A": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xc0B51c7042be877BEdEEE2103F3F6667e32bEE97",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA26Cbb76156090f4B40A1799A220fc4C946aFB3c": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x1C65313c3BE89D78Ba315A044eB5847D21a3A2Eb",
+                    "fee_tier": 0
+                },
+                "WETH": {
+                    "pool_address": "0x3Ec3244C7F7344a8983DF8dA2416e981EDc53E22",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb788144DF611029C60b859DF47e79B7726C4DEBa": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xEc70fF4A5B09110E4D20aDa4F2DB4A86ec61Fac6": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xe3100BB16871D9f53A5Bc8A659803811A4D08E59",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD13c7342e1ef687C5ad21b27c2b65D772cAb5C8c": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE8b977aA5a9303fA94818441D78575e0f697aE72",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xcDbddbdEFB0eE3eF03a89AFcd714aa4ef310D567": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xBaa1fcEFf65e21d547Bf6747b0b777a32bE53668",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFa14Fa6958401314851A17d6C5360cA29f74B57B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x02976320EF83e1413a9307B34C463A19Ab484B5E",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "0x19f83460e387F1b01F94b85c2532EBC15B0b712e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xba386A4Ca26B85FD057ab1Ef86e3DC7BdeB5ce70": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xa8d08dc16ba94bBdeDDFeE3fd4B98f79b0703dc9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xccB365D2e11aE4D6d74715c680f56cf58bF4bF10": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xA3C2076eB97D573CC8842f1Db1ECDF7B6F77ba27",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD8912C10681D8B21Fd3742244f44658dBA12264E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xe11Ee9c18d03B43d6A7fC53e51AeDda8451e837A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd3E4Ba569045546D09CF021ECC5dFe42b1d7f6E4": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x78194BA1a135A71F7FBa71FDa7cDd3885872b8FF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfd409Bc96d126bC8a56479d4c7672015D539F96C": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xcC9C758705ECCAE6d4426A002B79C489b8250B53",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xEC213F83defB583af3A000B1c0ada660b1902A0F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x19A573b228468f3bf917389f4E2D4f2997610F71",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB8c77482e45F1F44dE1745F52C74426C631bDD52": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9E7809C21BA130c1A51C112928eA6474D9a9Ae3C",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x9E7809C21BA130c1A51C112928eA6474D9a9Ae3C",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x9E7809C21BA130c1A51C112928eA6474D9a9Ae3C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x50327c6c5a14DCaDE707ABad2E27eB517df87AB5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x99950bAE3d0b79b8BeE86A8A208Ae1b087b9Dcb0",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x99950bAE3d0b79b8BeE86A8A208Ae1b087b9Dcb0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x514910771AF9Ca656af840dff83E8264EcF986CA": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDC": {
+                    "pool_address": "0xFAD57d2039C21811C8F2B5D5B65308aa99D31559",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x435664008F38B0650fBC1C9fc971D0A3Bc2f1e47",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0x435664008F38B0650fBC1C9fc971D0A3Bc2f1e47",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6B175474E89094C44Da98b954EedeAC495271d0F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC2e9F25Be6257c210d7Adf0D4Cd6E3E881ba25f8",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0xC2e9F25Be6257c210d7Adf0D4Cd6E3E881ba25f8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xA15cc73E881c06D8DB06b50b7a3688B763C18350",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x2F62f2B4c5fcd7570a709DeC05D68EA19c82A9ec",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA0b73E1Ff0B80914AB6fe0444E65848C4C34450b": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x87B1d1B59725209879CC5C5adEb99d8BC9EcCf12",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x87B1d1B59725209879CC5C5adEb99d8BC9EcCf12",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x582d872A1B094FC48F5DE31D3B73F2D9bE47def1": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x2a48dBF6347Ea5Cdc906B4Bb6A2ed27969241cde",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x4b62Fa30Fea125e43780DC425C2BE5acb4BA743b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xD0fC8bA7E267f2bc56044A7715A489d851dC6D78",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDC": {
+                    "pool_address": "0xD0fC8bA7E267f2bc56044A7715A489d851dC6D78",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3c3a81e81dc49A522A592e7622A7E711c06bf354": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xF4c5e0F4590b6679B3030d29A84857F226087FeF",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0xF4c5e0F4590b6679B3030d29A84857F226087FeF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x4D1Ad4A9e61Bc0E5529d64F38199cCFca56f5a42",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0x4D1Ad4A9e61Bc0E5529d64F38199cCFca56f5a42",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8d0D000Ee44948FC98c9B98A4FA4921476f08B0d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xef530078320f3A9223661e2Fe37001023048a7dF",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0xef530078320f3A9223661e2Fe37001023048a7dF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x75231F58b43240C9718Dd58B4967c5114342a86c": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xf3d15274772F40f65673fd35C665dcF7d6c27E8f",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0xf3d15274772F40f65673fd35C665dcF7d6c27E8f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x00f3C42833C3170159af4E92dbb451Fb3F708917": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4068038AB5490063a3eAd93B3712Ed082e62bD59",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x4068038AB5490063a3eAd93B3712Ed082e62bD59",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x57e114B691Db790C35207b2e685D4A43181e6061": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc3Db44ADC1fCdFd5671f555236eae49f4A8EEa18",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0xc3Db44ADC1fCdFd5671f555236eae49f4A8EEa18",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6982508145454Ce325dDbE47a25d4ec3d2311933": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xcEE31C846CbF003F4cEB5Bbd234cBA03C6e940C7",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0x9B96128A3F770FAF7a882Af4b0156E6976feD3d0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x68749665FF8D2d112Fa859AA293F07A622782F38": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3E04d683f7187BC0293e05006203AcCB29311767",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x3E04d683f7187BC0293e05006203AcCB29311767",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x163f8C2467924be0ae7B5347228CABF260318753": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x841820459769cd629B10a36FD12E603938cc2679",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x841820459769cd629B10a36FD12E603938cc2679",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x45804880De22913dAFE09f4980848ECE6EcbAf78": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "0x7Cb85f75e61226060453a997a7733F76707Df337",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x8A7e585048bdA875e64024118c506B14f78166dd",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x455e53CBB86018Ac2B8092FdCd39d8444aFFC3F6": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x88ada7b1dd1C728ea87404CEa7a0780139EB35d1",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0x88ada7b1dd1C728ea87404CEa7a0780139EB35d1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x56072C95FAA701256059aa122697B133aDEd9279": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x764510aB1d39CF300e7abe8F5B8977D18F290628",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4a220E6096B25EADb88358cb44068A3248254675": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6De037ef9aD2725EB40118Bb1702EBb27e4Aeb24": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE936f0073549AD8b1fA53583600d629Ba9375161",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x152649eA73beAb28c5b49B26eb48f7EAD6d4c898": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x83A5f5bdc1C6bC32bdd17eD75A69652002E7CaC6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1151CB3d861920e07a38e03eEAd12C32178567F6": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x403b1b747b1EFB309070436c9aC99Bf476f299ea",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB62132e35a6c13ee1EE0f84dC5d40bad8d815206": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4C54Ff7F1c424Ff5487A32aaD0b48B19cBAf087F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x44ff8620b8cA30902395A7bD3F2407e1A091BF73": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x95A45A87Dd4d3A1803039072f37E075F37B23D75",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x78235D08B2aE7a3E00184329212a4d7AcD2F9985",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x58D97B57BB95320F9a05dC918Aef65434969c2B2": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc8219b876753A85025156b22176c2eDEA17aAC53",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x467Bccd9d29f223BcE8043b84E8C8B282827790F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xf359492d26764481002eD88BD2acae83cA50B5C9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3845badAde8e6dFF049820680d1F14bD3903a5d0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5859ebE6Fd3BBC6bD646b73a5DbB09a5D7B6e7B7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0D8775F648430679A709E98d2b0Cb6250d2887EF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xAE614a7a56cB79c04Df2aeBA6f5dAB80A39CA78E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7420B4b9a0110cdC71fB720908340C03F9Bc03EC": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4d1Eff861316396dD1915F69B49f4C2d7B11590d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6985884C4392D348587B19cb9eAAf157F13271cd": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x360acF12e72044ba3eaAA654E51E4725c699DcB1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc00e94Cb662C3520282E6f5717214004A7f26888": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5598931BfBb43EEC686fa4b5b92B5152ebADC2f6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6810e776880C02933D47DB1b9fc05908e5386b96": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xa46466ad5507bE77Ff5aBDc27DF9dFeDA9bD7aee",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x8661aE7918C0115Af9e3691662f605e9c550dDc9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3506424F91fD33084466F402d5D97f05F8e3b4AF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x325365ED8275f6a74cac98917b7f6FaCe8da533b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x643C4E15d7d62Ad0aBeC4a9BD4b001aA3Ef52d66": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x27941A235804f33D81aDaBb2d56589c5f6Ea6556",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x111111111117dC0aa78b770fA6A738034120C302": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "WETH": {
+                    "pool_address": "0xE931b03260B2854e77e8dA8378A1BC017b13cb97",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6f40d4A6237C257fff2dB00FA0510DeEECd303eb": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc1cd3D0913f4633b43FcdDBCd7342bC9b71C676f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7DD9c5Cba05E151C895FDe1CF355C9A1D5DA6429": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xFe4ec8F377be9e1e95A49d4e0D20F52D07b1ff0D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB0fFa8000886e57F86dd5264b9582b2Ad87b2b91": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x86bC870520aCF4e9c255270d7f51C814Ad184960",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbe0Ed4138121EcFC5c0E56B40517da27E6c5226B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xd31d41DfFa3589bB0c0183e46a1eed983a5E5978",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x320623b8E4fF03373931769A31Fc52A4E78B5d70": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x32D9259e6792B2150FD50395D971864647FA27B2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4d224452801ACEd8B2F0aebE155379bb5D594381": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xB07Fe2F407F971125D4EB1977f8aCEe8846C7324",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x58b6A8A3302369DAEc383334672404Ee733aB239": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3019D4e366576A88D28B623afAF3eCb9ec9d9580",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2E4784446A0a06dF3D1A040b03e1680Ee266c35a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA35923162C49cF95e6BF26623385eb431ad920D3": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7baecE5d47f1BC5E1953FBE0E9931D54DAB6D810",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x62D0A8458eD7719FDAF978fe5929C6D342B0bFcE": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xb6b925d7EE9496Ac91Cd4fA7E9CC96C17Dad6D27",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbd31EA8212119f94A611FA969881CBa3EA06Fa3d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x33f6E97Ea6F5dfa6691176B33aD5677E08Fb6b38",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x626E8036dEB333b408Be468F951bdB42433cBF18": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2a0330c7e979A4d18E5B0C987b877DA24dd37D04",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3073f7aAA4DB83f95e9FFf17424F71D4751a3073": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xA04d13F092f68F603A193832222898B0d9f52c71",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x712bd4Beb54C6B958267d9dB0259abdBb0BFF606": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xa9De9685d373763B424D42a9b01bb87999E110d9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7Ddc52c4De30e94Be3A6A0A2b259b2850f421989": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc2fA5fD1c1Ad37701Ef1B26C5F0680Ac807E3Efd",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x467719aD09025FcC6cF6F8311755809d45a5E5f3": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE7F6720C1F546217081667A5ab7fEbB688036856",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x04916039B1f59D9745Bf6E0a21f191D1e0A84287",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAC57De9C1A09FeC648E93EB98875B212DB0d460B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9f2EbE69A86c079f3d4C3B94a11932b676B72f74",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7832310Cd0de39c4cE0A635F34d9a4B5b47fd434",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8eD97a637A790Be1feff5e888d43629dc05408F6": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xeB7AbE950985709c34af514eB8cf72f62DEF9E75",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x73A6a761FE483bA19DeBb8f56aC5bbF14c0cdad1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5aFE3855358E112B5647B952709E6165e1c1eEEe": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5283D291DBCF85356A21bA090E6db59121208b44": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x6F41040B9e098C2AC4B88E27b50D4E9Ab486781b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6c6EE5e31d828De241282B9606C8e98Ea48526E2": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xf7849D0852FC588210B9C0d8b26F43C0c9bc1470",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6BEF15D938d4E72056AC92Ea4bDD0D76B1C4ad29": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC76cDB74d781E219e8c8855A99584dd2e4580046",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7FF7Fa94b8b66Ef313f7970d4EEbd2CB3103a2C0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7F3C5aB7EFF0aC57B9538F88D1558709acb45821",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8f8221aFbB33998d8584A2B05749bA73c37a938a": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x937e2AfAB37237a83F47B9eC0ecB18a5Aaef353A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4b1F895066058662B9fA885E87a4E4159bE0798a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x00c83aeCC790e8a4453e5dD3B0B4b3680501a7A7": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x12CC685eEb95D3fCDfAe0a996e214e51FA6f7548",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x13dC0a39dc00F394E030B97b0B569dedBe634c0d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6fB3e0A217407EFFf7Ca062D46c26E5d60a14d69": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x489cEbE6Cd5DC5dcB7047A1F0D4F358a5d2fB295",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x744d70FDBE2Ba4CF95131626614a1763DF805B9E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x084B5191Bd08412952337b1108b6e5942418928f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x52A8845DF664D76C69d2EEa607CD793565aF42B8": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xC74F05C1e7b86fa42Ab07Ab4a1361286B9a90087",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb131f4A55907B10d1F0A50d8ab8FA09EC342cd74": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x70cF99553471FE6C0d513ebFac8aCC55BA02ab7B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xCD8286b48936cDAC20518247dBD310ab681A9fBf",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x157Dfa656Fdf0D18E1bA94075a53600D81cB3a97",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x55296f69f40Ea6d20E478533C15A6B08B654E758": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE331DE28cd81B768C19A366b0e4e4675c45eC2dA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x516d31321928700C6B4fB0DB0c8c6BC5d6799787": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x77777FeDdddFfC19Ff86DB637967013e6C6A116C": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0FD10b9899882a6f2fcb5c371E17e70FdEe00C38": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xD050430dd432876cF5622fF60c4Dc106b64fA753",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4C1746A800D224393fE2470C70A35717eD4eA5F1": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xD845AcDeb03fB3295E7735C232C588efc441D903",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x50f41F589aFACa2EF41FDF590FE7b90cD26DEe64": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x607F4C5BB672230e8672085532f7e901544a7375": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x56Ea002B411FD5887E55329852D5777EcB170713",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x45e02bc2875A2914C4f585bBF92a6F28bc07CB70": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x53Ead11073fc0651dce70572666f0eD0752abfeA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x812Ba41e071C7b7fA4EBcFB62dF5F45f6fA853Ee": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x15153Da0E9e13cfC167b3D417d3721bF545479bB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8E870D67F660D95d5be530380D0eC0bd388289E1": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0bb217E40F8a5Cb79Adf04E1aAb60E5abd0dfC1e": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3af029B34926028d7ecd4B870cf096493e18F6D0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x595832F8FC6BF59c85C527fEC3740A1b7a361269": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE3FE800B0de664bf0bCa8aD58eCbc73B259047b0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6E2a43be0B1d33b726f0CA3b8de60b3482b8b050": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9cB91e5451d29C84b51FFD40dF0b724b639bf841",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9C7BEBa8F6eF6643aBd725e45a4E8387eF260649": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xC4Dbe30FEcc148a8755c970f3b8b0c9aF0Db81F5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9D65fF81a3c488d585bBfb0Bfe3c7707c7917f54": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x0A55882F4E1117ADc54aFbbac4A39079AD52fB89",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7A58c0Be72BE218B41C608b7Fe7C5bB630736C71": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x83abECf7204d5Afc1Bea5dF734f085f2535a9976",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4691937a7508860F876c9c0a2a617E7d9E945D4B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x122E55503A0b2E5cD528EFfa44D0b2fea300f24b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x767FE9EDC9E0dF98E07454847909b5E959D7ca0E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xbaEC0E18C770993ffb1175FEf493B5113CC6E32d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x64Bc2cA1Be492bE7185FAA2c8835d9b824c8a194": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "0x484dcf85Bc5F005E5628a85c7DDe5c846B9B64A7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9E32b13ce7f2E80A01932B42553652E053D6ed8e": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x1c98562A2FaB5aF19D8Fb3291a36AC3C618835D9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xD1D5A4c0eA98971894772Dcd6D2f1dc71083C44E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0b38210ea11411557c13457D4dA7dC6ea731B88a": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x495864cAD6Cf60E97EFcd3F14FF8B1F167956ba2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x41e5560054824eA6B0732E656E3Ad64E20e94E45": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xBb4Efb22592590D61463E1f6c8c7a2764a3fa2Ce",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x720CD16b011b987Da3518fbf38c3071d4F0D1495": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x5d1461990f636D35030CB603559d6a9d4487F9ca",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0D37aF9D8AE74F35F3A38bD2a08FcB29890Ca6d2": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x41C9687Bf9074E81816C32c1C12fD6fDF950eB81",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x72e4f9F808C49A2a61dE9C5896298920Dc4EEEa9": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xFfC9eFD66926e3023A4cbd20145CA48F52DFf2d9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x84cA8bc7997272c7CfB4D0Cd3D55cd942B3c9419": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x226bb599a12C826476e3A771454697EA52E9E220": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC7Cf089FB4BC91F1981dF2285ca019Ab09A5dd3B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2A79324c19Ef2B89Ea98b23BC669B7E7c9f8A517": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xe61CEDEb1593E2D9f06af1e212842C8B5E289863",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x44108f0223A3C3028F5Fe7AEC7f9bb2E66beF82F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x508acdC358be2ed126B1441F0Cff853dEc49d40F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x01791F726B4103694969820be083196cC7c045fF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x6F582CF72ea9084A109bE3d04eB58477B869a38e",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "0x28601e4f3a3c27de91D9ADfA62c6cA31e75dC69D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x525A8F6F3Ba4752868cde25164382BfbaE3990e1": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x968510ce860030060283aEDc4d951bb72f939334",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4DC26fC5854e7648a064a4ABD590bBE71724C277": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x38fA0E36a9Eb335Ca00dbd6d0f203b0Bd72Ce3b6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6c5bA91642F10282b576d91922Ae6448C9d52f4E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7bc5c9dE2DFe90CFE1e01967096915ba8ea1Bc53",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9Ce84F6A69986a83d92C324df10bC8E64771030f": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xD3e9895230E8FB1460852F6cDA3C4B926FbC29D8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8248270620Aa532E4d64316017bE5E873E37cc09": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x18Bbe20F81bdcB340325E28a6eE6BB426B7cCbc1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1A3496C18d558bd9C6C8f609E1B129f67AB08163": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xa5c75832790748e996FC139917F6Dc4B9F23C31E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x66761Fa41377003622aEE3c7675Fc7b5c1C2FaC5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xCB488B8452996454237D824d72f86090470292f4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa47c8bf37f92aBed4A126BDA807A7b7498661acD": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3CF3D5B9061FaC75FC66bc33035803Fb067cB4f8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4F9254C83EB525f9FCf346490bbb3ed28a81C667": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xAff1025438DA93bd86427f2f9f7d06088f720a8d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6B7774CB12ed7573a7586E7D0e62a2A563dDd3f0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC511FF68aE3A1379e8eF3F599F88559c9eC77D9c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3B50805453023a91a8bf641e279401a0b23FA6F9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x76366D95c2016446247296Ea50c8D06D0585ae00",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x761D38e5ddf6ccf6Cf7c55759d5210750B5D60F3": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xA7B3BCC6c88Da2856867d29F11c67C3A85634882",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3597bfD533a99c9aa083587B074434E61Eb0A258": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x8b6eD5Fa776F10787F1171bDEea4f3c40974DF6E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x430EF9263E76DAE63c84292C3409D61c598E9682": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xe495BfA137B68a037b1f661Ed47a44B4FB2a6563",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0001A500A6B18995B03f44bb040A5fFc28E45CB0": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3f80B1c54Ae920Be41a77f8B902259D48cf24cCf": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1542CD77E7A605cbf140823A9f21Fa7ddDE44078",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x77FbA179C79De5B7653F68b5039Af940AdA60ce0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC1dF8037881df17Dc88998824b9aeA81c71bbB1b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6B0b3a982b4634aC68dD83a4DBF02311cE324181": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xF260d15e8eBe54D210ef53F5b61Cb46bD9Aa29EE",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8207c1FfC5B6804F6024322CcF34F29c3541Ae26": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x70BB8E6844DFB681810FD557DD741bCaF027bF94",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x94a8b4EE5CD64C79D0Ee816f467EA73009f51aA0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xbA2a013b29631d3277BBBCE80C970D06C1Bda0C3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9813037ee2218799597d83D4a5B6F3b6778218d9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3BE033b60BC4aA789368954595332FAB143987eC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5DE8ab7E27f6E7A1fFf3E5B337584Aa43961BEeF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC7cbFF2a23D0926604F9352f65596e65729b8a17",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa6C0c097741D55ECd9a3A7DeF3A8253fD022ceB9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x41E570fC65d0F9EfE89a6145306E2ba7B8A0fa6B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x28d38dF637dB75533bD3F71426F3410a82041544": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xf7Fd0860922bD3352E2DBAf725A182b74bf7A2e1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xFf29D3E552155180809ea3A877408A4620058086",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb3999F658C0391d94A37f7FF328F3feC942BcADC": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE67b950F4b84c5b06Ee36DEd6727a17443fE7493",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0e397938C1Aa0680954093495B70A9F5e2249aBa": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xf9aDf9525342587Bd4620e56c8A86C64ff3fEd38",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0F81001eF0A83ecCE5ccebf63EB302c70a39a654": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x003896387666C5c11458EEb3F927B72a11b19783",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xba5BDe662c17e2aDFF1075610382B9B691296350": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7685cD3ddD862b8745B1082A6aCB19E14EAA74F3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x42bBFa2e77757C645eeaAd1655E0911a7553Efbc": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x256bD88baf707EAaD1B73Dc8B2b8a5D599B45584",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x594DaaD7D77592a2b97b725A7AD59D7E188b5bFa": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x120FFad35bB97a5BaF9aB68f9Dd7667864530245",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x992651BFeB9A0DCC4457610E284ba66D86489d4d": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x24D7ad9402717F429A81925fe7643B78918EdA8B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x8e1148Fe20cf87F7686395BBE6A0C50945cc5001",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x79bbF4508B1391af3A0F4B30bb5FC4aa9ab0E07C": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xacD093A3e09e3d46b990e28f0B1b9F138A9c9770",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x628A3b2E302C7e896AcC432D2d0dD22B6cb9bc88": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x1517BA8F1a1b192AC62f824D6E10F88ae99391B3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x590F820444fA3638e022776752c5eEF34E2F89A6": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9628105808292699874f20d77d50a09BC26850C5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x41545f8b9472D758bB669ed8EaEEEcD7a9C4Ec29": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x1a3Fb049C2D88A16B927Be6a4CAE48ca38D93d4C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x95AF4aF910c28E8EcE4512BFE46F1F33687424ce": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x63e2453a558391bDAC2A55fa336c53DDBDe3F244",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x30D20208d987713f46DFD34EF128Bb16C404D10f": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xc72AbB13B6BDfA64770cb5B1F57Bebd36a91A29E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x675B68AA4d9c2d3BB3F0397048e62E6B7192079c": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC7eC87AEB9D1129C42123859220C525aBa1ca617",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x40e3d1A4B2C47d9AA61261F5606136ef73E28042": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9C7eD68B00DC4f45243b07Ce71a54A86e8f8FcBB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x738865301A9b7Dd80Dc3666dD48cF034ec42bdDa": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xadDd24A001243E6D446Ed8d088c82aEfF84073A3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6055Dc6Ff1077eebe5e6D2BA1a1f53d7Ef8430dE": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x10c4E72abd373295e613e3D2C2C5067d33a0e4a8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x90685e300A4c4532EFCeFE91202DfE1Dfd572F47": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x561599fFf95a3104a43025Dddf277332fE5eCe2A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x88909D489678dD17aA6D9609F89B0419Bf78FD9a": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xE061B362aa157a5037b225570cFf9ebf1d657929",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2e44f3f609ff5aA4819B323FD74690f07C3607c4": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x241fC1CdBF9f741933e5Fa515C5b884da93b81b6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x922D8563631B03C2c4cf817f4d18f6883AbA0109": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7D45a2557bECd766A285d07a4701f5c64D716e2f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4d1C297d39C5c1277964D0E3f8Aa901493664530": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc5c9a9AB6403CDBa9722463000146C18b504F0bA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3991B07b2951a4300Da8c76e7d2c7eddE861Fef3": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1Bbe973BeF3a977Fc51CbED703E8ffDEfE001Fed": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xf9BC02a0f79EE8b6982A754979c9dbD909cceE10",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5026F006B85729a8b14553FAE6af249aD16c9aaB": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7316F8DD242974F0FD7b16dBCC68920b96Bc4Db1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x24fcFC492C1393274B6bcd568ac9e225BEc93584": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x6A888fB73f13104473a4BdFb1bEb220aC1eAFda3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x289Ff00235D2b98b0145ff5D4435d3e92f9540a6": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xF0230b6f9604e3Edc13E125806E4C5446C34dfdf",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0a6E7Ba5042B38349e437ec6Db6214AEC7B35676": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x35B88354C51613Fe8857e02668c68e8c52161BA2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x26E550AC11B26f78A04489d5F20f24E3559f7Dd9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xa2542303c9A01c011da9106128D9B0838e6c3e57",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3632DEa96A953C11dac2f00b4A05a32CD1063fAE": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xB18185a673165DA566886533ccd9691C0aeBBcdf",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0A638F07ACc6969abF392bB009f216D22aDEa36d": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xc3b4ACD01c91E813D49332f11C0ec294c76104Fa",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAcd2c239012D17BEB128B0944D49015104113650": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7a233f0e957A9FF4726c738E9D790b9956f4C894",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x19062190B1925b5b6689D7073fDfC8c2976EF8Cb": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5696C2c2FcB7e304A5B9fAaEc9cd37d369C9D067",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x464eBE77c293E473B48cFe96dDCf88fcF7bFDAC0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x44a269978f4c3348D70F1d8bFB83f9eb50975091",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb9f599ce614Feb2e1BBe58F180F370D05b39344E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x331399c614cA67DEe86733E5A2FBA40DbB16827c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x70EDF1c215D0ce69E7F16FD4E6276ba0d99d4de7": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xa305f3aaD48E285C002a2dbadbbBA58fEA10aD45",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x644192291cc835A93d6330b24EA5f5FEdD0eEF9e": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x755F01736f93C91585b840C2179c560B754D69F3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbC396689893D065F41bc2C6EcbeE5e0085233447": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8Fe815417913a93Ea99049FC0718ee1647A2a07c": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x54Dbc0962Fa5E4a626B0aE05bFb09c84e8965c62",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x57F52C9faa6D40c5163D76b8D7dD81ddB7c95434",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA0Ef786Bf476fE0810408CaBA05E536aC800ff86": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xbf85f94D3233Ee588F0907A9147FBB59d7246b54",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x28561B8A2360F463011c16b6Cc0B0cbEF8dbBcad": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5552727005cc8194c1559289A532DEb288964FD8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x186eF81fd8E77EEC8BfFC3039e7eC41D5FC0b457": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x10358Db0e8532455d3374FB09cF3fbeC631B1914",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9DFAD1b7102D46b1b197b90095B5c4E9f5845BBA": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xd60Dc6571e477fB2d96df02EFD5FBA9c54A4e998",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0d88eD6E74bbFD96B831231638b66C05571e824F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xCDff6ddfC9e4807C9927Fd58708C2Ef3484CC305",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3fFEea07a27Fab7ad1df5297fa75e77a43CB5790": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9e0Fc414E8d5C45b0890C32aB9329Ac90b3ab534",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0E7779e698052f8fe56C415C3818FCf89de9aC6D": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0bc37BEA9068a86C221B8bd71eA6228260DAD5A2": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xf7D01Cdc167149Fec54f7Dd0c66c4022b2A50D0f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x944824290CC12F31ae18Ef51216A223Ba4063092": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9c0dF79f119be0Fc4107c6c49d8CA45e587B1a1B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB17548c7B510427baAc4e267BEa62e800b247173": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x1BEcf1Ac50F31C3441181563F9D350dDF72a2Bfa",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2D1F7226Bd1F780AF6B9A49DCC0aE00E8Df4bDEE": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xf5294094BCe435bFbd0eC488be5C462aAF32Bc7A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x26c8AFBBFE1EBaca03C2bB082E69D0476Bffe099": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x54991328Ab43c7D5d31C19d1B9fa048E77B5cd16": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7090Cc8DFA04b0BBAc6520063c9c1ea677C368a0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xBEF26Bd568e421D6708CCA55Ad6e35f8bfA0C406": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x26FA8b07DcE29Fb1F0fb3C889E01b59dEbADeFdA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8Af78f0c818302164F73B2365fE152C2D1FE80e1": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x89960Fc58d1Ba4da5E29539aAB1d9B3d2ABab573",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x44971ABF0251958492FeE97dA3e5C5adA88B9185": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xFA4A4c553733f2e0c54F1C4b0ddc1Fa2F5f10cE6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2a92525fDA8D3AB481f8E2a913B64B64bD1c9fdD": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x23E182724f1b00A3C5A2c76502096625B5fe87CD",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4Cf89ca06ad997bC732Dc876ed2A7F26a9E7f361": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xBc844C2eCd719B8A9dF3EDe6a28C6BB06322B176",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1121AcC14c63f3C872BFcA497d10926A6098AAc5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x60B0dAd2d7D65b7D6eFc0B746687020cCeF0a233",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9928a8600D14ac22c0be1E8D58909834d7ceAf13": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xA29d18f6a73F6f65c9F0eEAe2Dd0563d6f615c0f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x558e7139800f8bc119F68D23a6126FFFD43a66a6": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x917591eEd17a20aB6Fd2Ed2f6432852423FB3E91",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x21BfBDa47A0B4B5b1248c767Ee49F7caA9B23697": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc3f6B81FB9e6DB259272026601689e383f94c0B0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x236501327e701692a281934230AF0b6BE8Df3353": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x983b92EA1F0A20844466f3E4BB988c1dE145293E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x82a605D6D9114F4Ad6D5Ee461027477EeED31E34": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x6C1bCF1B99D9F0819459DAD661795802d232437e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x08c32b0726C5684024ea6e141C50aDe9690bBdcc": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x70885952F174fb5396dEEbb66cE3B4b2aDFcEf8a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAdF7C35560035944e805D98fF17d58CDe2449389": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xacDA7e4d5025Ee4DD87D2Ff75eCf6d69e921CEE3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x96C3530BFd0a906a123A4e26CEbB635636B41f9d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1416946162B1C2c871A73B07E932D2fB6C932069": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xD2624380A006220574c9E75083490b042e71eE42",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2e85ae1C47602f7927bCabc2Ff99C40aA222aE15": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9507F5c18b0178BEA743727fF00F1619f97E2bfb",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9F9c8ec3534c3cE16F928381372BfbFBFb9F4D24": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc3881FBB90daf3066dA30016d578eD024027317c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb5d730D442e1D5B119Fb4E5c843c48a64202ef92": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4633aFa7C69379Ba09912A42b7E59388Af596081",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8e729198d1C59B82bd6bBa579310C40d740A11C2": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2a8Ff49323d42Be0Af7a1b2f3005b67da55E0c6b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x41765F0FCddC276309195166C7A62AE522FA09ef": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x60F67E1015b3f069DD4358a78c38f83fE3a667A9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xCfaC0661d802Ef85Ece2f02ca691Cd2079a19456",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0D3CbED3f69EE050668ADF3D9Ea57241cBa33A2B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xAdf768402CFa9a755507ACc2cb1a7912158F733F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6e5970DBd6fc7eb1f29C6D2eDF2bC4c36124C0C1": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x09395a2A58DB45db0da254c7EAa5AC469D8bDc85": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xEeC2e46cb11319e4Ab3ec7f83E87fe53d8AE5199",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAa9806c938836627Ed1a41Ae871c7E1889AE02Ca": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4B2C930F88a87D1BfFaC291b6a7e01c9F13dD03e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5b649C07E7Ba0a1C529DEAabEd0b47699919B4a2": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xDf462874EE43069F940265BeF5b0b52d42B991EF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1495bc9e44Af1F8BCB62278D2bEC4540cF0C05ea": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x1385Fc1Fe0418ea0B4Fcf7Adc61FC7535AB7F80d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa84f95eb3DaBdc1bbD613709ef5F2fD42CE5bE8d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xf9e18e98A0bB56fe7E663F5AB1170b3105c4c56D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1cEB5cB57C4D4E2b2433641b95Dd330A33185A44": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x11B7a6bc0259ed6Cf9DB8F499988F9eCc7167bf5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x38e382F74dfb84608F3C1F10187f6bEf5951DE93": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x844EB5C280F38c7462316AaD3F338eF9bDa62668",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa1f410f13B6007fCa76833ee7eb58478D47Bc5Ef": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2f905b03A3B78fE636218c591F14A30Ae21EeE60",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9E6be44cC1236eEf7e1f197418592D363BedCd5A": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x8fe199d58EBBeC1C9C8dC45C9961Ce3Ac33E939C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb0415D55f2C87b7f99285848bd341C367FeAc1ea": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xA27E955148d6Cf916f01a5a9649133465e9c7A28",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x423352F2c6E0E72422B69Af03aba259310146d90": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xe764b1fEBC0179A634e1C554625d0B82355C6000",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x623cD3a3EdF080057892aaF8D773Bbb7A5C9b6e9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x766658180726600DC5e723CF85BBF2Dcd470B2Ad",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0921799CB1d702148131024d18fCdE022129Dc73": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x880ED8E3C0BaD6a4a2FA6355BB0CAa7Fe03199F4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x168e209D7b2F58f1f24b8Ae7B7d35E662bBF11Cc": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xc0b7F8B3f857DF57027d340Cf101a164c3B20bB8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x580E933D90091b9cE380740E3a4A39c67eB85B4c": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x715a3cEAc0D039d674F50b07804592e87e8C6D77",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x08A1C30BBB26425c1031ee9E43FA0B9960742539": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x8A694ef09cCfB2180003c0e542C71C07De583918",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4Ff57e25eeB7AFfbBB060e0BAd2E1759eFc8BeC4": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xc8513e9696384C26A84AE04d6C8014E1e42295b4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x89A8c847f41C0dfA6c8B88638bACca8a0b777Da7": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xe77F11E28494226ed5048c8d9e62BB066F1Ec119",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xba83b5ed3f12Bfa44f066f03eE0433419B74f469": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2d8eA194902Bc55431420BD26Be92b0782dCe91D": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xAC8bA9D6FA2f9FF7c712Bef5670CB0F7E4177965",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0000000000c5dc95539589fbD24BE07c6C14eCa4": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC4ce8E63921b8B6cBdB8fCB6Bd64cC701Fb926f2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4e107a0000DB66f0E9Fd2039288Bf811dD1f9c74": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xb382646C447007a23Eab179957235DC3FC51606c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa37DB5456b5938Aa50B33575Ae2eB8048CA5959b": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x08612fcB3B676C7F21aCb216bE0dD4C989891084",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8AB98330473101309Db94b625f9997366A518223": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5F64Ab1544D28732F0A24F4713c2C8ec0dA089f0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x06450dEe7FD2Fb8E39061434BAbCFC05599a6Fb8": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2a9d2ba41aba912316D16742f259412B681898Db",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6b66ccd1340c479B07B390d326eaDCbb84E726Ba": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x32aEa6703491B6B26cd21eD7E0177b12aC84bde5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9eAeBd7E73D97E78c77fAB743e6FFA1b550e224c": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x557520519449BAA1E2d4D4Ad4CA0A23DC3fD6ec1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0954906da0Bf32d5479e25f46056d22f08464cab": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x77843EA21a4cC006766bBa8BDeFd934cBeA20f4a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x26EbB8213fb8D66156F1Af8908d43f7e3e367C1d": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1458770554b8918B970444d8b2c02A47F6dF99A7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x15e6E0D4ebeAC120F9a97e71FaA6a0235b85ED12": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xAD9eF19e289dcbC9AB27b83D2dF53CDEFF60f02D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x73fBD93bFDa83B111DdC092aa3a4ca77fD30d380": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xB98740764d84Ff6a56ABF2d64803165F37759aC7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa444EC96Ee01bB219A44B285De47bf33C3447ad5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x00C07A7E77C9ffA6E0E3C58790E0DCb81ceF89E1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x72FDc31f4a9a1EDF6B6132D3C1754F1CdcF5D9B1": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xA1276d6E03e12970E5f5aEe72FD5dDfcFC8fD587",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x59d1e836F7b7210A978b25a855085cc46fd090B5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xfe7aFF6F4F1B0D9F65767E96573e6df8B1fF5920",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB58E61C3098d85632Df34EecfB899A1Ed80921cB": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x79DC831D556954FBC37615A711df16B0b61Df083",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x21D6d37411d86fAfdC565260e81E7a585bc44119": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x04E69Ff14A86E1ca9a155A8563E95887973EE175": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9Ab85ABf72e0e0BC29B1326F4200E76D030BfcF3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6c3fE25a4de7FA243c653cfE1F165bf11D99704E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xA6D6BDb66131B45C61a54D47F096EC036428FC0D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x9Db9e0e53058C89e5B94e29621a205198648425B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0d438F3b5175Bebc262bF23753C1E53d03432bDE": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xC02D0fA00C0bEC48186026c71da2E54Ebf680139",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8143182a775C54578c8B7b3Ef77982498866945D": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x43e7AdE137b86798654D8e78c36D5a556a647224",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7636D8722Fdf7cd34232a915E48e96aA3eB386BF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xe76154de890a34a3aF778F06b2af535a584aEB1E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2AF5D2aD76741191D15Dfe7bF6aC92d4Bd912Ca3": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x758A5F59b3EbE8a5cb9E6a09B5B876d2414042CD",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x13394005C1012e708fCe1EB974F1130fDc73a5Ce",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xCc6D2f26D363836f85a42D249E145eC0320d3E55",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x6637D3D16bf761289e0E2dc7668135c49E9dD801",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x73A15FeD60Bf67631dC6cd7Bc5B6e8da8190aCF5": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x4e665157291DBcb25152ebB01061E4012F58aDd2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x5c95d4B1C3321CF898D25949F41D50Be2dB5bc1d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x853d955aCEf822Db058eb8505911ED77F175b99e": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8881562783028F5c1BCB985d2283D5E170D88888": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xD0A4c8A1a14530C7C9EfDaD0BA37E8cF4204d230",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xe56f322182834d4b9Bc7E39d4e0f2863c19D07C6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x046EeE2cc3188071C02BfC1745A6b17c656e3f3d": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x510100D5143e011Db24E2aa38abE85d73D5B2177",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x1F195908f2EE7A6Fc15D33B30c82298F568E805C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x037A54AaB062628C9Bbae1FDB1583c195585fe41": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5AAA28Ca43C6646fD1403e508f0FCA1D92357dde",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x32462bA310E447eF34FF0D15BCE8613aa8C4A244": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1Dcd41a3876959023EF49603374Af655973a64Cf",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6440f144b7e50D6a8439336510312d2F54beB01D": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x1E4DBb639eBBF725fd243A6190dF5440eE38740E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x5aA1356999821b533EC5d9f79c23B8cB7c295C61",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC581b735A1688071A1746c968e0798D642EDE491": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x48c0F5E663d682A6450995f210FD1EF8aBAd7A61",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4274cD7277C7bb0806Bd5FE84b9aDAE466a8DA0a": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xdFce55C1cc365D3CB2FB475A4762d34ef0Bf6c0d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAAA9214F675316182Eaa21C85f0Ca99160CC3AAA": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x09117BfF68B5939319e61b226BF1f3F5f985EBa1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x9663f2CA0454acCad3e094448Ea6f77443880454",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB98d4C97425d9908E66E53A6fDf673ACcA0BE986": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x677d05B8BC5C691AFD0Dcb8ed81404C1ebE114d6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4ed257678Fc4E76df9642a416b223729fdEDBEFd": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x94E71b1bEC5f96B57DBF3B26ceeFD132A33ea472",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb23d80f5FefcDDaa212212F028021B41DEd428CF": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xCD423F3ab39a11ff1D9208B7D37dF56E902C932B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5422374B27757da72d5265cC745ea906E0446634": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x27848B0c260961826C4135e69e6cDD45cFBa8257",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb753428af26E81097e7fD17f40c88aaA3E04902c": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x122C12fCAb68cB8CD96615c636ac44999Ba90f2B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9AAb071B4129B083B01cB5A0Cb513Ce7ecA26fa5": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x54578B6F942aEB23b67A8ceF24220651306B8e26",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x35e78b3982E87ecfD5b3f3265B601c046cDBe232": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x73db82E81B7a11490278687551D3b632119b0E1f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x88800092fF476844f74dC2FC427974BBee2794Ae": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x53bbDF4EA397D17A6F904dC882b3fB78A6875a66",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x70e8dE73cE538DA2bEEd35d14187F6959a8ecA96": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0x6279653c28f138C8B31b8A0F6F8cD2C58E8c1705",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa9D54F37EbB99f83B603Cc95fc1a5f3907AacCfd": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0xE545E099B4A71F7181965A385709bc0D97d2D0fC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2A8e1E676Ec238d8A992307B495b45B3fEAa5e86": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x129360c964e2E13910d603043F6287E5e9383374",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x32B77729cD87F1EF2bEa4C650c16f89f08472c69": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x12C5b6233F660676374A51099e313673d63267c6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB1F1ee126e9c96231Cc3d3fAD7C08b4cf873b1f1": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xfBa26C3F9C8eCeF989def3C5c8aD037487462d83",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5C697fee285B513711A816018DBb34DC0cFC4875": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x61192EB6ca9fe34a3Ccc5f4cd4bf6feFB77a037f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8f693ca8D21b157107184d29D398A8D082b38b76": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc83e27f270cce0A3A3A29521173a83F402c1768b": {
+            "uniswap-v3": {
+                "USDT": {
+                    "pool_address": "0x35d1e851F04B874eC6eb7B0589F04686EBe64c8C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9ad37205d608B8b219e6a2573f922094CEc5c200": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3eb8224923774F668d6e722cdBF8b0F4E46DaE38",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x86ed939B500E121C0C5f493F399084Db596dAd20": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xf90321d0EcAD58aB2B0C8c79Db8AaeEEfa023578",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaa95f26e30001251fb905d264Aa7b00eE9dF6C18": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x4B75395c221f3699563C56De7A7F76199EAe36f6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8400D94A5cb0fa0D041a3788e395285d61c9ee5e": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xf9D29c7C0691CA27f076828B4C1de6f6b14C0bDA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x485d17A6f1B8780392d53D64751824253011A260": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x89E8E084cC60e6988527f0904b4bE71656e8bFA9": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xBCaa74f7401Ff4a2702e4F0dBA83B546815299f3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbdab72602e9AD40FC6a6852CAf43258113B8F7a5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3C4323f83D91b500b0f52cB19f7086813595F4C9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaDB2437e6F65682B85F814fBc12FeC0508A7B1D0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xe0F0e02a16B45f949B98856b61175e63ca5f6293",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x23B608675a2B2fB1890d3ABBd85c5775c51691d5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc75a99Fa00803896349891F8471Da3614bd07564",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x04C17b9D3b29A78F7Bd062a57CF44FC633e71f85": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x1a89Ae3BA4F9a97B10bAC6A77061f00bb956858B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x419c4dB4B9e25d6Db2AD9691ccb832C8D9fDA05E": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x44f9469D0d5393d3a01A0D4Fa14FE7713c1aD1f7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x656C00e1BcD96f256F224AD9112FF426Ef053733": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x04DD76803F247b611d4F470fC6cd206a9D02f869",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8dF723295214Ea6f21026eeEb4382d475f146F9f": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2F7c61cA05A53E3B38E808D90f5eDDBeaCe2EC99",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4cCe605eD955295432958d8951D0B176C10720d5": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x686f2404e77Ab0d9070a46cdfb0B7feCDD2318b0": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5104846dC1C3c7697B856dC69E350AE4dCc47E24",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6123B0049F904d730dB3C36a31167D9d4121fA6B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7613C48E0cd50E42dD9Bf0f6c235063145f6f8DC": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x7f74c86CD8BA48be647d541B3E7f5A2184A3AfA4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x956F47F50A910163D8BF957Cf5846D573E7f87CA": {
+            "uniswap-v3": {
+                "USDC": {
+                    "pool_address": "0xdf50Fbde8180c8785842C8E316EBe06F542D3443",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x38F9bf9dCe51833Ec7f03C9dC218197999999999": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xc1956d9520eFee0ec005aC60A99e28396771ae84",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x80008BCD713c38AF90a9930288D446bc3bD2E684": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xED6b5FB20322C2822CD97845261422f9d581b9C4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9E9FbDE7C7a83c43913BddC8779158F1368F0413": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x1dF4C6e36d61416813B42fE32724eF11e363EDDc",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x31e4efe290973ebE91b3a875a7994f650942D28F": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x0A6773C78f7b75748574B05912A794B739f360E1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x761A3557184cbC07b7493da0661c41177b2f97fA": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x61847189477150832D658D8f34f84c603Ac269af",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x14DE8287AdC90f0f95Bf567C0707670de52e3813",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x243cACb4D5fF6814AD668C3e225246efA886AD5a": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x959C7D5706AC0B5a29F506a1019Ba7F2a1C70c70",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6468e79A80C0eaB0F9A2B574c8d5bC374Af59414": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x694886528668F2bCBaFf8270419ab2f4bd7099f0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaE6e307c3Fe9E922E5674DBD7F830Ed49c014c6B": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xAB26D20964CC0284e190Bc22e67d52b8A88a3084",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDf801468a808a32656D2eD2D2d80B72A129739f4": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x42069026EAC8Eee0Fd9b5f7aDFa4f6E6D69a2B39": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x842293fA6Ee0642BF61eBF8310E7E546039ba7f4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3b991130eaE3CcA364406D718DA22FA1C3E7C256": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x5E31db99Eb2a95755dAA062a0cEcAB632e7524B2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x79D464248516Bc6977cA2069ba15d8D1044479D8": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xF214d89EA69C6696473b0Dee25698723B8011961",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x662b67d00A13FAf93254714DD601F5Ed49Ef2F51": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xD43b29AaF8aD938CfF4F478A0756defFfb329D07",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4aF1Bc87e43dDb22188bb3791ae00341586fE8fc": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x2520994FD94dDCC252b4598038cb05B7A0391ba9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x10633216E7E8281e33c86F02Bf8e565a635D9770": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0x3BaC5698df02ECAD4709E70F2bf15fBb12Ae821C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9AfC975EdB8a0B57f066e8e0A72A5e2ADbdCb605": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "0xBC5f1d2A0C411AAdfB95557365ABfDd4633Ea882",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0000000000085d4780B73119b644AE5ecd22b376": {
+            "uniswap-v3": {
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        }
+    }
+]

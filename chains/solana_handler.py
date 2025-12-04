@@ -2,23 +2,39 @@
 
 import asyncio
 import time
+import json
+import os
+import warnings
+from datetime import datetime, timedelta
 from config import (
     GAS_UPDATE_INTERVAL,
     GAS_MULTPLIER, 
     GAS_LIMIT, 
-    AMOUNT_BUY, 
+    DELAY_BEFORE_TP,
     RPC,
     WS_RPC,
     USE_WEBSOCKET,
-    TOKEN,
+    ERROR_429_RETRIES,
+    ERROR_429_DELAY,
     SLIPPAGE_PERCENT,
     #SHYFT_API_KEY,
+    TP_LADDERS,
     SOLANA_PRIORITY_FEE,
+    TOKEN_DATA_BASE_PATH,
+    PARSED_DATA_CHECK_DELAY_DAYS,
+    FORCE_UPDATE_ON_START,
+    CACHE_UPDATE_BATCH_SIZE,
+    DELAY_BETWEEN_BATCHES,
+    USABLE_TOKENS,
+    MARKET_CAP_CONFIG,
+    PRICE_UPDATE_DELAY,
+    MIN_POOL_TVL
 )
 from typing import Literal, Callable
 from raydium_lib import RaydiumClient
 from solders.message import MessageV0
 import base58
+from tg_bot import TelegramClient
 from loguru import logger
 from typing import Optional
 from solana.rpc.async_api import AsyncClient
@@ -33,21 +49,60 @@ import base64
 import ujson
 from solders.transaction import VersionedTransaction
 from curl_cffi.requests import AsyncSession
+import traceback
+
+
+#TODO: 
+#1. Перенести http запросы в отдельный класс
+#2. Перенести парсер в отдельный класс 
+#3. Перенсети тп логику в отдельный класс (общий для обоих евм и сол)
 
 class SolanaHandler:
 
     def __init__(
         self,
+        tg_client: TelegramClient,
         private_key_base58: str,
+        token_pool: list,
         blockhash_update_interval: int = GAS_UPDATE_INTERVAL,
         dex: Literal['RAYDIUM', 'JUPITER'] = 'RAYDIUM'
     ):
 
-        self.sell_token_address = DEX_ROUTER_DATA['SOLANA']['USDT']
-        self.token_decimals = DEX_ROUTER_DATA['SOLANA']['token_decimals']
         self.chain_name = 'SOLANA'
         self.client = None
+        self.token_pool = token_pool
+        self.tg_client = tg_client
+
+        self.jup_api_base = "https://lite-api.jup.ag/"
         
+        # Base tokens configuration
+        self.usable_tokens = [
+            token for token in USABLE_TOKENS if token in DEX_ROUTER_DATA[self.chain_name]
+        ]
+        self.token_decimals = DEX_ROUTER_DATA['SOLANA']['token_decimals']
+        
+        #cache
+        self.pool_cache_path = TOKEN_DATA_BASE_PATH + f'{self.chain_name}_pool_data.json'
+        self.token_data = {
+            token: {
+                'pool_address': {
+                    'WSOL': None,
+                    'USDT': None,
+                    'USDC': None,
+                }
+            } for token in self.token_pool
+        }
+        self.pool_cached = False
+        self._last_pool_update_time = None
+        self._initialized = False
+        
+        #background tasks
+        self._gas_token_price_updater_task = None
+        self._blockhash_updater_task = None
+        self._pool_updater_task = None
+        self._take_profit_tasks = []
+        
+        #account data
         secret_key = base58.b58decode(private_key_base58)
         self.keypair = Keypair.from_bytes(secret_key)
         self.pubkey = self.keypair.pubkey()
@@ -58,30 +113,89 @@ class SolanaHandler:
             compute_unit_price=SOLANA_PRIORITY_FEE,
         )
         self.client = AsyncClient(RPC[self.chain_name])
-        self.swap_func: Callable = {
-            'RAYDIUM': self.execute_raydium_swap,
-            'JUPITER': self.execute_jupiter_swap
-        }[dex]
         
-        #кэшируем блокхэш
+        #cache
         self._blockhash_cache = None
         self.blockhash_update_interval = blockhash_update_interval
+        self._gas_token_price = 0
+        self.tp_cache_path = TOKEN_DATA_BASE_PATH + '/TP_data/'+ f'{self.chain_name}_TP_cache.json' #путь к файлу с тп кэшем
+        self._take_profit_cache = {}
 
     @classmethod
     async def create(
         cls,
+        tg_client: TelegramClient,
         private_key_base58: str,
+        token_pool: list,
         blockhash_update_interval: int = GAS_UPDATE_INTERVAL,
         dex: Literal['RAYDIUM', 'JUPITER'] = 'RAYDIUM'
     ):
-        instance = cls(private_key_base58, blockhash_update_interval, dex)
-        await instance._initialize_blockhash_cache()
-        asyncio.create_task(instance._blockhash_updater_loop())
+        instance = cls(tg_client, private_key_base58, token_pool, blockhash_update_interval, dex)
+        await instance._initialize()
         return instance
+    
+    async def _initialize(self):
+        if self._initialized:
+            return
+        
+        # Initialize blockhash cache
+        await self._initialize_blockchain_cache_vars()
+        
+        # Initialize token data structure
+        for token_address in self.token_pool:
+            self.token_data[token_address] = {
+                'pool_address': {base_token: None for base_token in self.usable_tokens}
+            }
+        
+        # Load cached pool addresses
+        cached_pools = self._load_pool_cache()
+        if cached_pools:
+            for token, pool_data in cached_pools.items():
+                if token in self.token_data:
+                    self.token_data[token]['pool_address'] = pool_data
+            self.pool_cached = True
+        
+        # Start background tasks
+        self._blockhash_updater_task = asyncio.create_task(self._blockhash_updater_loop())
+        self._gas_token_price_updater_task = asyncio.create_task(self._gas_token_price_updater_loop())
+        self._pool_updater_task = asyncio.create_task(self._pool_updater_loop())
+        await self._start_take_profit_tasks()
+        
+        self._initialized = True
 
-    async def _initialize_blockhash_cache(self):
-        blockhash_cache = await self.client.get_latest_blockhash()
-        self._blockhash_cache = blockhash_cache.value.blockhash
+    async def close(self):
+        """Close handler and stop all background tasks"""
+        
+        tasks_to_cancel = []
+        if self._blockhash_updater_task and not self._blockhash_updater_task.done():
+            tasks_to_cancel.append(self._blockhash_updater_task)
+        
+        if self._pool_updater_task and not self._pool_updater_task.done():
+            tasks_to_cancel.append(self._pool_updater_task)
+        
+        if self._gas_token_price_updater_task and not self._gas_token_price_updater_task.done():
+            tasks_to_cancel.append(self._gas_token_price_updater_task)
+
+        if len(self._take_profit_tasks) > 0:
+            tasks_to_cancel.extend([t for t in self._take_profit_tasks if not t.done()])
+        
+        # Save pool cache before closing
+        if self.token_data:
+            self._save_pool_cache()
+        
+        #закрываем все таски
+        if tasks_to_cancel:
+            for task in tasks_to_cancel:
+                task.cancel()
+            
+            #ожидаем завершения всех тасков
+            await asyncio.gather(*tasks_to_cancel, return_exceptions=True)
+            logger.info(f"[{self.chain_name}] All background tasks cancelled ({len(tasks_to_cancel)} tasks)")
+
+    async def _initialize_blockchain_cache_vars(self):
+        self._blockhash_cache = await self.client.get_latest_blockhash()
+        self._gas_token_price = await self._gas_token_price_updater_loop(init=True)
+        #self.priority_fee = await self._priority_fee_updater_loop(init=True)
         return 
         
     async def _blockhash_updater_loop(self):
@@ -93,6 +207,103 @@ class SolanaHandler:
             except Exception as e:
                 logger.error(f"[{self.chain_name}] Blockhash update error: {str(e)}")
                 await asyncio.sleep(self.blockhash_update_interval)
+
+    async def _gas_token_price_updater_loop(self, init:bool=False):
+        """
+        Цикл обновления цены нативки, нужен для рассчета мкапы если свапаем к нативке
+        """
+        pool_address = await self.query_raydium_pool(
+            DEX_ROUTER_DATA[self.chain_name]['gas_token'],
+            DEX_ROUTER_DATA[self.chain_name]['USDT']
+        )
+        while True:
+            try:
+                _, price = await self.raydium_client.get_swap_data_and_price(
+                    pool_address,
+                    DEX_ROUTER_DATA[self.chain_name]['gas_token'],
+                    DEX_ROUTER_DATA[self.chain_name]['USDT'],
+                    self._blockhash_cache
+                )
+                if price: 
+                    self.gas_token_price = price
+                if init:
+                    return price
+                await asyncio.sleep(10)
+            except Exception as e:
+                logger.error(f"[{self.chain_name}] Native token price update error: {str(e)}")
+                await asyncio.sleep(10)
+
+    def _load_pool_cache(self) -> dict:
+        """
+        Загружает кэшированные адреса пулов из файла
+        """
+        if not os.path.exists(self.pool_cache_path):
+            logger.info(f"[{self.chain_name}] No pool cache file found")
+            return {}
+
+        if FORCE_UPDATE_ON_START:
+            logger.info(f"[{self.chain_name}] Forcing pool cache update")
+            return {}
+        
+        try:
+            with open(self.pool_cache_path, 'r', encoding='utf-8') as f:
+                raw_data = json.load(f)
+                
+            if not isinstance(raw_data, list) or len(raw_data) != 2:
+                logger.warning(f"[{self.chain_name}] Invalid pool cache format, creating new")
+                return {}
+            
+            last_check, cache_data = raw_data
+            last_check = datetime.fromisoformat(last_check)
+            
+            #проверяем кэш на свежесть
+            if datetime.now() - last_check > timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS):
+                logger.info(f"[{self.chain_name}] Pool cache is older than {PARSED_DATA_CHECK_DELAY_DAYS} days, will refresh")
+                return {}
+            else:
+                self._last_pool_update_time = last_check
+                self.pool_cached = True
+            
+            logger.warning(f"[{self.chain_name}] Loaded {len(cache_data)} cached pool addresses out of {len(self.token_pool)} parsed tokens")
+            return cache_data
+            
+        except Exception as e:
+            logger.error(f"[{self.chain_name}] Error loading pool cache: {str(e)}")
+            return {}
+    
+    def _save_pool_cache(self):
+        """
+        Сохраняет текущие адреса пулов из self.token_data в файл
+        """
+        os.makedirs(os.path.dirname(self.pool_cache_path), exist_ok=True)
+        
+        #загружаем уже существующий кэш из json
+        if os.path.exists(self.pool_cache_path):
+            with open(self.pool_cache_path, 'r', encoding='utf-8') as f:
+                raw_data = json.load(f)
+                if not isinstance(raw_data, list) or len(raw_data) != 2:
+                    logger.info(f"[{self.chain_name}] Invalid pool cache format, creating new")
+                    pool_addresses = {}
+                else:
+                    pool_addresses = raw_data[1]
+        else:
+            pool_addresses = {}
+        
+        #обновляем загруженный кэш
+        pool_addresses = {
+            token: data['pool_address']
+            for token, data in self.token_data.items()
+            if data.get('pool_address') and any(data['pool_address'].values())
+        }
+        
+        #сохраняем обновленный 
+        cache_data = [datetime.now().isoformat(), pool_addresses]
+        with open(self.pool_cache_path, 'w', encoding='utf-8') as f:
+            json.dump(cache_data, f, indent=4, ensure_ascii=False)
+        
+        #берем непустые пулы
+        non_empty_pools = sum(1 for pools in pool_addresses.values() if any(pools.values()))
+        logger.info(f"[{self.chain_name}] Saved {non_empty_pools} pool addresses to cache")
     
     async def get_jupiter_quote(
         self,
@@ -102,7 +313,7 @@ class SolanaHandler:
         slippage_bps: int = 50
     ) -> dict:
         
-        url = "https://lite-api.jup.ag/ultra/v1/order"
+        url = self.jup_api_base + "ultra/v1/order"
         
         params = {
             "inputMint": input_mint,
@@ -126,6 +337,23 @@ class SolanaHandler:
                 logger.error(f"[{self.chain_name}] Jupiter quote error: {str(e)}")
                 return None
     
+    async def _sign_raw_tx(self, raw_tx: str, in_base64: bool = False) -> str:
+        tx_bytes = base64.b64decode(raw_tx)
+        transaction = VersionedTransaction.from_bytes(tx_bytes)
+        
+        message_bytes = to_bytes_versioned(transaction.message)
+        signature = self.keypair.sign_message(message_bytes)
+        
+        signed_transaction = VersionedTransaction.populate(
+            transaction.message,
+            [signature],
+        )
+        
+        signed_tx_bytes = bytes(signed_transaction)
+        signed_tx_base64 = base64.b64encode(signed_tx_bytes).decode('utf-8')
+        
+        return signed_tx_base64 if in_base64 else signed_tx_bytes
+
     async def execute_jupiter_swap(
         self,
         token_in_mint: str,
@@ -144,23 +372,13 @@ class SolanaHandler:
         get_quote_time = time.perf_counter() - start_time
         logger.info(f"[{self.chain_name}] Get quote time: {(get_quote_time)*1000:.2f}ms")
 
-        tx = quote_tx.get('transaction')
-        tx_bytes = base64.b64decode(tx)
-        transaction = VersionedTransaction.from_bytes(tx_bytes)
-        
-        message_bytes = to_bytes_versioned(transaction.message)
-        signature = self.keypair.sign_message(message_bytes)
-        
-        signed_transaction = VersionedTransaction.populate(
-            transaction.message,
-            [signature]
-        )
+        tx = quote_tx.get('transaction') 
+        signed_transaction = await self._sign_raw_tx(tx)
         tx_opts = TxOpts(
             skip_preflight=True,
             preflight_commitment=Processed,
             max_retries=0
         )
-        
         response = await self.client.send_raw_transaction(
             bytes(signed_transaction),
             opts=tx_opts
@@ -169,22 +387,20 @@ class SolanaHandler:
         end_time = time.perf_counter()
         logger.info(f"[{self.chain_name}] TX sent: {response.value} | Time: {(end_time - start_time)*1000:.2f}ms")
         return str(response.value)
-
-    #по факту костыль, надо использовать какой-то сервис типа Yellowstone\laserstream
-    #потому что джупитер/шифт выдают адерс пула с задержкой ~200ms оба 
-
     
     async def query_raydium_swap_data_with_jupiter(
         self,
+        token_one_decimals: int,
         token_one: str, 
         token_two: str, 
         amount: int,
         
     ) -> dict: 
-        url = f'https://public.jupiterapi.com/quote?inputMint={token_one}&outputMint={token_two}&amount={amount*10**self.token_decimals}&dexes=Raydium'
+        url = f'https://public.jupiterapi.com/quote?onlyDirectRoutes=true&inputMint={token_one}&outputMint={token_two}&amount={amount*10**token_one_decimals}&dexes=Raydium'
         async with AsyncSession() as session:
             try:
                 resp = await session.get(url)
+                resp.raise_for_status()
                 data = ujson.loads(resp.text)
                 route_plan = data.get('routePlan')
                 if route_plan and len(route_plan) > 0:
@@ -195,85 +411,635 @@ class SolanaHandler:
             except Exception as e:
                 logger.error(f"[{self.chain_name}] Jupiter quote error: {str(e)}")
                 return None
-    
-    # async def query_raydium_lp_by_tokens(
-    #     self, 
-    #     token_one: str, 
-    #     token_two: str, 
-    #     api_key: str = SHYFT_API_KEY
-    # ) -> dict:
 
-    #     endpoint = f"https://programs.shyft.to/v0/graphql/?api_key={api_key}"
-
-    #     query = """
-    #     query MyQuery($where: Raydium_LiquidityPoolv4_bool_exp) {
-    #         Raydium_LiquidityPoolv4(
-    #         where: $where
-    #         order_by: {lpReserve: desc}
-    #         limit: 1
-    #         ) {
-    #         pubkey
-    #         }
-    #     }
-    #     """
-
-    #     # Search for specific token pair (checks both directions)
-    #     variables = {
-    #         "where": {
-    #             "_or": [
-    #                 {
-    #                     "baseMint": {"_eq": token_one},
-    #                     "quoteMint": {"_eq": token_two}
-    #                 },
-    #                 {
-    #                     "baseMint": {"_eq": token_two},
-    #                     "quoteMint": {"_eq": token_one}
-    #                 }
-    #             ]
-    #         }
-    #     }
-
-    #     payload = {
-    #         "query": query,
-    #         "variables": variables
-    #     }
-
-    #     async with AsyncSession() as session:
-    #         try:
-    #             resp = await session.post(endpoint, json=payload)
-    #             data = ujson.loads(resp.text)
-    #             if data.get('data').get('Raydium_LiquidityPoolv4'):
-    #                 return data.get('data').get('Raydium_LiquidityPoolv4')[0].get('pubkey')
-    #             else:
-    #                 logger.error(f"[{self.chain_name}] Raydium LP not found")
-    #                 return None
-    #         except Exception as e:
-    #             logger.error(f"[{self.chain_name}] Raydium LP query error: {e}")
-    #             return None
-
-    async def execute_raydium_swap(self,token_in_mint: str, token_out_mint: str, amount_in: int):
-        t_before_get_pool = time.perf_counter()
-        pool = await self.query_raydium_swap_data_with_jupiter(token_in_mint, token_out_mint, amount_in)
-        t_after_get_pool = time.perf_counter()
-        logger.debug(f"[{self.chain_name}] Getting Raydium LP took {(t_after_get_pool - t_before_get_pool)*1000:.2f}ms")
-        
-        tx_sig = await self.raydium_client.swap(
-            pair_address=pool,
-            token_in_mint=str(token_in_mint),
-            token_out_mint=str(token_out_mint),
-            amount_in=amount_in,
-            slippage=float(SLIPPAGE_PERCENT),
-            cached_blockhash=self._blockhash_cache
-        )
-        t_after_send_tx = time.perf_counter()
-        logger.debug(f"[{self.chain_name}] Sending swap overall took {(t_after_send_tx - t_before_get_pool)*1000:.2f}ms")
-        
-        return tx_sig
-
-    async def execute_swap(
+    async def query_raydium_pool(
         self,
-        token_out_mint: str,
-        amount_in: int = AMOUNT_BUY,
+        token_one: str,
+        token_two: str,
+        ):
+        url = f'https://api-v3.raydium.io/pools/info/mint?mint1={token_one}&mint2={token_two}&poolType=standard&poolSortField=liquidity&sortType=desc&pageSize=1&page=1'
+        async with AsyncSession() as session:
+            for i in range(ERROR_429_RETRIES):
+                try:
+                    resp = await session.get(url)
+                    resp.raise_for_status()
+                    data = ujson.loads(resp.text).get('data', {})
+                    #print(resp.text)
+                    pool_id = None
+                    
+                    if data and data.get('count', 0):
+                        pool_data = data.get('data', [{}])[0]
+                        if pool_data.get('id', None) and pool_data.get('tvl', 0) > MIN_POOL_TVL:
+                            pool_id = pool_data.get('id', None)
+                            return pool_id
+                        #logger.success(f"[{self.chain_name}] {token_one} - {token_two} Raydium pool found")
+                    return None
+
+                except Exception as e:
+                    if '429' in str(e) or 'rate limit' in str(e):
+                        logger.warning(f"[{self.chain_name}] [{i+1}/{ERROR_429_RETRIES} retries] Rate limit exceeded for {token_one} with {token_two}: {str(e)}")
+                        await asyncio.sleep(ERROR_429_DELAY)
+                    else:
+                        logger.warning(f"[{self.chain_name}] error getting raydium pool for {token_one} with {token_two}: {str(e)}")
+                        return None
+
+    async def get_pool_address_realtime(
+        self,
+        token_address: str,
+        ):
+        _, pool_addresses, success = await self._update_single_token_pool(token_address)
+        if success:
+            for base_token in self.usable_tokens:
+                pool_address = pool_addresses.get(base_token)
+                if pool_address:
+                    return (base_token, pool_address)
+        else:
+            return (None, None)
+
+    def _get_first_available_pool_cached(self, token_address: str) -> tuple:
+        """
+        Возвращает данные для свапа на первом доступном пуле из кэша
+        Returns: (base_token_name, base_token_address, pool_address) или (None, None, None)
+        """
+        token_data = self.token_data.get(token_address, {})
+        pool_addresses = token_data.get('pool_address', {})
+        
+        for base_token in self.usable_tokens:
+            pool_address = pool_addresses.get(base_token)
+            if pool_address:
+                base_token_address = DEX_ROUTER_DATA[self.chain_name].get(base_token)
+                return (base_token, base_token_address, pool_address)
+        
+        return (None, None, None)
+    
+    def get_pool_address_cached(self, token_address: str, base_token: str = None) -> str:
+        """
+        Возвращает адрес пула для токена из кэша
+        Если base_token не указан, возвращает адрес первого доступного пула
+        """
+        if base_token is None:
+            _, _, pool_address = self._get_first_available_pool_cached(token_address)
+            return pool_address if pool_address else None
+        
+        return self.token_data.get(token_address, {}).get('pool_address', {}).get(base_token)
+    
+    async def _update_single_token_pool(self, token_address: str) -> tuple:
+        """
+        Получает адреса пулов для токена по всем базовым токенам
+        Returns: (token_address, pool_addresses_dict, success)
+        """
+        pool_addresses = {}
+        any_success = False
+
+        #для каждого базового токена проверяем наличие пула
+        for base_token in self.usable_tokens:
+            base_token_address = DEX_ROUTER_DATA[self.chain_name].get(base_token)
+            if not base_token_address:
+                pool_addresses[base_token] = None
+                continue
+  
+            pool_address = await self.query_raydium_pool(
+                base_token_address,
+                token_address,
+            )
+            
+            if pool_address:
+                pool_addresses[base_token] = pool_address
+                any_success = True
+            else:
+                pool_addresses[base_token] = None
+
+        #обновляем кэш
+        if any_success:
+            self.token_data[token_address]['pool_address'] = pool_addresses
+            return (token_address, pool_addresses, True)
+        else:
+            #logger.warning(f"[{self.chain_name}] No pools found for {token_address}")
+            return (token_address, pool_addresses, False)
+    
+    async def _pool_updater_loop(self):
+        """
+        Цикл обновления адресов пулов для всех токенов
+        """
+        update_pools = True if not self.pool_cached else False
+        first_run = True
+        
+        if update_pools:
+            logger.info(f"[{self.chain_name}] Starting pool address updater")
+        
+        while True:
+            try:
+                #проверяем время ласт обновления
+                if self._last_pool_update_time and self._last_pool_update_time < datetime.now() - timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS):
+                    update_pools = True
+                    logger.debug(f"[{self.chain_name}] refreshing pool addresses")
+                
+                #если не нужно обновлять пулы, ждем пока не придет время
+                if not update_pools:
+                    logger.debug(f"[{self.chain_name}] pool data is up to date")
+                    time_sleep = self._last_pool_update_time + timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS) - datetime.now()
+                    await asyncio.sleep(int(time_sleep.total_seconds()))
+                    continue
+                
+                if not self.token_pool:
+                    logger.warning(f"[{self.chain_name}] Token pool is empty, skipping pool update")
+                    return 0
+                
+                
+                start_time = time.perf_counter()
+                total_successful = 0
+                total_failed = 0
+                #гоним пачками
+                for i in range(0, len(self.token_pool), CACHE_UPDATE_BATCH_SIZE):
+                    batch = self.token_pool[i:i + CACHE_UPDATE_BATCH_SIZE]
+                    batch_start = time.perf_counter()
+                    batch_successful = 0
+                    batch_failed = 0
+                    
+                    tasks = [
+                        self._update_single_token_pool(token_address)
+                        for token_address in batch
+                    ]
+                    results = await asyncio.gather(*tasks, return_exceptions=True)
+                    
+                    #итерация результатов
+                    for result in results:
+                        if isinstance(result, Exception):
+                            batch_failed += 1
+                        elif result[2]:  #success flag
+                            batch_successful += 1
+                        else:
+                            batch_failed += 1
+                    
+                    batch_elapsed = (time.perf_counter() - batch_start) * 1000
+                    total_successful += batch_successful
+                    total_failed += batch_failed
+
+                    if first_run:#выводим только при первом запуске
+                        logger.info(f"[{self.chain_name}] Batch {i//CACHE_UPDATE_BATCH_SIZE + 1}/{len(self.token_pool)//CACHE_UPDATE_BATCH_SIZE + 1}: {batch_successful}/{len(batch)} tokens updated in {batch_elapsed:.2f}ms")
+                    
+                    #Delay between batches
+                    if i + CACHE_UPDATE_BATCH_SIZE < len(self.token_pool):
+                        await asyncio.sleep(DELAY_BETWEEN_BATCHES)
+                
+                elapsed_ms = (time.perf_counter() - start_time) * 1000
+                
+                #сохраняем кэш после апдейта
+                if total_successful > 0:
+                    self._save_pool_cache()
+                    self._last_pool_update_time = datetime.now()
+                    self.pool_cached = True
+                
+                if first_run:
+                    logger.info(f"[{self.chain_name}] Initial pool update completed: {total_successful} successful, {total_failed} no poolData in {elapsed_ms:.2f}ms")
+                    first_run = False
+                    update_pools = False  #убираем флаг
+                else:
+                    logger.debug(f"[{self.chain_name}] Pool update: {total_successful}/{len(self.token_pool)} tokens updated in {elapsed_ms:.2f}ms")
+                
+            except Exception as e:
+                logger.error(f"[{self.chain_name}] Pool updater loop error: {traceback.format_exc()}")
+                await asyncio.sleep(10)
+    
+    def _get_buy_size_and_tp_id(self, mcap: int, sell_token: str) -> int:
+        
+        for config in MARKET_CAP_CONFIG:
+            if mcap >= config['min_cap'] and mcap <= config['max_cap']:
+                if config['enabled']:
+                    return config['size'][sell_token], config['tp_ladder_id']
+                else: 
+                    logger.warning(f"[{self.chain_name}] Market cap config {config['min_cap']} - {config['max_cap']} is disabled, skipping")
+        return 0, None
+
+    """
+    async def _create_jupiter_trigger_order(
+        self,
+        sell_token_address: str,
+        base_token_address: str,
+        amount_in: int,
+        amount_out: int,
+    ): 
+        url_build = self.jup_api_base + "trigger/v1/createOrder"
+        url_execute = self.jup_api_base + "trigger/v1/execute"
+
+        payload = {
+            "maker": str(self.pubkey),
+            "payer": str(self.pubkey),
+            "inputMint": sell_token_address,
+            "outputMint": base_token_address,
+            "params": {
+                "makingAmount": str(amount_in),
+                "takingAmount": str(amount_out),
+                "slippageBps": "40"
+            },
+            "computeUnitPrice": "auto"
+        }
+        headers = {"Content-Type": "application/json"}
+
+        async with AsyncSession() as session:
+            response = await session.post(url_build, json=payload, headers=headers)
+            response.raise_for_status()
+            data = ujson.loads(response.text)
+            unsigned_tx = data.get('transaction')
+            request_id = data.get('requestId')
+            
+            if not (unsigned_tx and request_id):
+                logger.error(f"[{self.chain_name}] Failed to create Jupiter trigger order")
+                raise Exception(f"Failed to parse Jupiter trigger order: {data}")
+
+            signed_tx = await self._sign_raw_tx(unsigned_tx, in_base64=True)
+            payload = {
+                "signedTransaction": signed_tx,
+                "requestId": request_id,
+            }
+            #print(payload)
+            
+            response = await session.post(url_execute, json=payload, headers=headers)
+            #print(response.text)
+            response.raise_for_status()
+            data = ujson.loads(response.text)
+            if not data.get('status', '').lower() == 'success':
+                raise Exception(f"Failed to execute Jupiter trigger order: {data}")
+            else: 
+                logger.info(f"[{self.chain_name}] Jupiter trigger order placed successfully")
+            
+            return 1
+
+    async def _create_jupiter_tp_ladder(
+        self,
+        base_token_name: str,
+        sell_token_address: str,
+        tp_ladder_id: int,
+        price_bought: float,
         
     ):
-        return await self.swap_func(self.sell_token_address, token_out_mint, amount_in)
+        balances = await self.raydium_client.get_token_balances(Pubkey.from_string(sell_token_address))
+        total_balance = balances.get('uiAmount', 0)
+        sell_token_decimals = balances.get('decimals', 6)
+        base_token_address = DEX_ROUTER_DATA[self.chain_name][base_token_name]
+        base_decimals = DEX_ROUTER_DATA[self.chain_name]['token_decimals'][base_token_name]
+        if not total_balance:
+            logger.error(f"[{self.chain_name}] Failed to get token balance for {sell_token_address}")
+            return None
+        
+        ladder_config = TP_LADDERS[tp_ladder_id]
+        total_percent = ladder_config['total_percent']
+        steps = ladder_config['steps']
+        first_tp_percent = ladder_config['first_tp_percent']
+        distribution = ladder_config['distribution']
+
+        price_step_percent = (total_percent - first_tp_percent) / (steps - 1) if steps > 1 else 0
+        
+        for i in range(steps):
+            target_percent = first_tp_percent + (price_step_percent * i)
+            target_price = price_bought * (1 + target_percent)
+            sell_amount = (total_balance * distribution[i]) / 100
+            buy_amount = (sell_amount * target_price)
+            for j in range(3): 
+                try:
+                    await self._create_jupiter_trigger_order(
+                        sell_token_address,
+                        base_token_address,
+                        int(buy_amount*10**base_decimals),
+                        int(sell_amount*10**sell_token_decimals)
+                    )
+                    logger.info(f"[{self.chain_name}] [{i+1}/{steps}] tp order on {sell_token_address} created successfully")
+                    await asyncio.sleep(0.5)
+                    break
+                except Exception as e:
+                    logger.error(f"[{self.chain_name}] [{j+1}/3] retrying to create tp order on {sell_token_address} due to error: {str(e)}")
+                    await asyncio.sleep(5)
+    """
+
+    async def _load_take_profit_cache(self,):
+        #Загружаем кэш из json
+        if os.path.exists(self.tp_cache_path):
+            try:
+                with open(self.tp_cache_path, 'r', encoding='utf-8') as f:
+                    self._take_profit_cache = json.load(f)
+            except Exception as e:
+                logger.error(f"[{self.chain_name}] Failed to load TP cache: {str(e)}")
+                self._take_profit_cache = {}
+        
+        return self._take_profit_cache
+
+    async def _update_take_profit_json(self):
+        #сохрянаем в json
+        try:
+            with open(self.tp_cache_path, 'w', encoding='utf-8') as f:
+                json.dump(self._take_profit_cache, f, indent=4)
+        except Exception as e:
+            logger.error(f"[{self.chain_name}] Failed to save TP cache in json: {str(e)}")
+
+    async def _start_take_profit_tasks(self,):
+        await self._load_take_profit_cache()
+        if len(self._take_profit_cache) > 0:
+            logger.info(f"[{self.chain_name}] Starting TP tasks for {len(self._take_profit_cache)} tokens")
+        else: 
+            logger.info(f"[{self.chain_name}] No TP tasks to start")
+            return
+        for token_address, tp_data in self._take_profit_cache.items():
+            self._take_profit_tasks.append(
+                asyncio.create_task(
+                    self._create_take_profit_task(
+                        token_address,
+                        tp_data['base_token_address'],
+                        tp_data['pool_address'],
+                        tp_data['take_profit_ladder_id'],
+                        tp_data['price_bought'],
+                        tp_data['steps_done']
+                    )
+                )
+            )
+
+    async def _create_take_profit_task(
+        self, 
+        token_address_to_sell: str, 
+        base_token_address: str,
+        pool_address: str,
+        take_profit_ladder_id: int, 
+        price_bought: float,
+        steps_done: int = 0,
+        tx_failure_counter: int = 10
+    ):
+        """
+        Мониторит цену токена и продает по лестнице тейк-профитов или в стоплосс
+        
+        Args:
+            token_address_to_sell: Адрес токена для продажи
+            base_token_address: Адрес токена, в который продаем (USDT/USDC/WETH)
+            take_profit_ladder_id: ID конфигурации лестницы из TP_LADDERS
+            price_bought: Цена покупки токена в token_sell_to
+            stop_loss_price: Цена продажи токена в token_sell_to (default - price_bought)
+            steps_done: Количество проданных шагов (default - 0)
+        """
+        
+        # Получаем конфигурацию лестницы
+        ladder_config = TP_LADDERS.get(take_profit_ladder_id)
+        if not ladder_config or not ladder_config.get('enabled'):
+            logger.warning(f"[{self.chain_name}] | TP task | TP ladder {take_profit_ladder_id} is disabled or not found")
+            await self.tg_client.send_error_alert(
+                "TP task FAILED", 
+                f"{self.chain_name} TP ladder {take_profit_ladder_id} is disabled or not found",
+                "Need to check manually"
+                )
+            return
+
+        #конвертируем в доллары цену покупки. Если нет цены нативки, то считаем в нативных токенах
+        if base_token_address != DEX_ROUTER_DATA[self.chain_name]['gas_token'] or self.gas_token_price == 0:
+            price_corrector = 1
+        else: 
+            price_corrector = self.gas_token_price
+        raw_price_bought = price_bought
+        price_bought = price_bought * price_corrector
+
+        #ставим дефолтный стоплосс
+        stop_loss_price = price_bought * (1 + ladder_config['SP_from_entry_percent'])
+        
+        # Получаем параметры лестницы
+        first_tp_percent = ladder_config['first_tp_percent']
+        total_percent = ladder_config['total_percent']
+        steps = ladder_config['steps']
+        distribution = ladder_config['distribution']
+        
+        # Получаем баланс токена
+        try:
+            
+            balances = await self.raydium_client.get_token_balances(Pubkey.from_string(token_address_to_sell))
+            total_balance = balances.get('uiAmount',0)
+        except Exception as e:
+            logger.error(f"[{self.chain_name}] | TP task | Failed to get token balance: {str(e)}")
+            await self.tg_client.send_error_alert(
+                "TP task FAILED", 
+                f"{self.chain_name} Failed to get token balance for {token_address_to_sell}",
+                "Need to check manually"
+                )
+            return 0
+        
+        if total_balance == 0:
+            logger.warning(f"[{self.chain_name}] | TP task | Zero balance for {token_address_to_sell}")
+            await self.tg_client.send_error_alert(
+                "TP task DISABLED", 
+                f"{self.chain_name} Zero balance for {token_address_to_sell}",
+                "TP task stopped"
+                )
+            return 0
+        
+        #Сохраняем данные в кэш и в json
+        self._take_profit_cache[token_address_to_sell] = {
+            'base_token_address': base_token_address,
+            'pool_address': pool_address,
+            'take_profit_ladder_id': take_profit_ladder_id,
+            'price_bought': raw_price_bought,
+            'steps_done': steps_done,
+
+        }
+        await self._update_take_profit_json()
+        
+        logger.info(f"[{self.chain_name}] | TP task | Starting TP task for {token_address_to_sell} | Ladder id: {take_profit_ladder_id} | Balance: {total_balance:.4f} | SL at {stop_loss_price:.4f}")
+        
+        # Рассчитываем ценовые уровни для каждого шага
+        price_step_percent = (total_percent - first_tp_percent) / (steps - 1) if steps > 1 else 0
+        tp_levels = []
+        
+        for i in range(steps):
+            target_percent = first_tp_percent + (price_step_percent * i)
+            target_price = price_bought * (1 + target_percent)
+            sell_amount = (total_balance * distribution[i]) / 100
+            tp_levels.append({
+                'step': i + 1,
+                'target_price': target_price,
+                'target_percent': target_percent,
+                'sell_amount': sell_amount,
+                'size_percent': distribution[i],
+                'executed': False if i >= steps_done else True
+            })
+        logger.info(f"[{self.chain_name}] | TP task | TP levels calculated: {steps-steps_done}/{steps} steps left from {tp_levels[0]['target_price']:.6f} to {tp_levels[-1]['target_price']:.6f}")
+        
+        # Мониторинг цены и выполнение продаж
+        poll_interval = PRICE_UPDATE_DELAY[self.chain_name]
+
+        tx_failure = 0
+        while True:
+
+            #Если количество неуспешных транзакций превысило лимит, завершаем задачу
+            if tx_failure >= tx_failure_counter:
+                logger.error(f"[{self.chain_name}] | TP task | Failed to execute TP levels for {token_address_to_sell}")
+                await self.tg_client.send_error_alert(
+                    "TP task FAILED", 
+                    f"{self.chain_name} TP task failed for {token_address_to_sell}, can't sell token",
+                    "Need to check manually"
+                    )
+                break
+            #Проверяем, все ли уровни выполнены
+            if all(level['executed'] for level in tp_levels):
+                logger.success(f"[{self.chain_name}] | TP task | All TP levels executed for {token_address_to_sell}")
+                #удаляем данные о тп когда он выполнен
+                if token_address_to_sell in self._take_profit_cache:
+                    del self._take_profit_cache[token_address_to_sell]
+                    await self._update_take_profit_json()
+                break
+    
+            try:
+                # Получаем текущую цену
+                token_data = await self.raydium_client.get_swap_data_and_price(
+                    pool_address,
+                    token_address_to_sell,
+                    base_token_address,
+                    self._blockhash_cache
+                )
+                if token_data is None:
+                    logger.warning(f"[{self.chain_name}] | TP task | Failed to get current price for {token_address_to_sell}")
+                    await asyncio.sleep(poll_interval)
+                    continue
+                else: 
+                    _, current_price = token_data
+                    current_price = current_price * price_corrector
+
+                #Триггерим стоплосс, передаем единственный тейкпрофит - продажа всего
+                if current_price <= stop_loss_price:
+                    logger.warning(f"[{self.chain_name}] | TP task | Stop loss triggered for {token_address_to_sell}")
+                    balances = await self.raydium_client.get_token_balances(Pubkey.from_string(token_address_to_sell))
+                    balance = balances.get('uiAmount',0)
+                    if not balance:
+                        raise Exception("Failed to get token balance")
+                    tp_levels = [
+                        {
+                            'step': 0,
+                            'target_price': 0,
+                            'target_percent': 100,
+                            'sell_amount': balance,
+                            'size_percent': 100,
+                            'executed': False
+                        }
+                    ]
+                #Проверяем каждый уровень
+                for level in tp_levels:
+                    if level['executed']:
+                        continue
+                    price_reached = current_price >= level['target_price']
+                    
+                    #готовим продажу если цена тп достигнута
+                    if price_reached:
+                        logger.info(f"[{self.chain_name}] | TP task | {token_address_to_sell} | TP level {level['step']} triggered: Current: {current_price:.6f}, Target: {level['target_price']:.6f}")
+                        
+                        # Строим и отправляем транзакцию                       
+                        tx = await self.raydium_client.swap(
+                            pool_address,
+                            token_address_to_sell,
+                            base_token_address,
+                            level['sell_amount'],
+                            SLIPPAGE_PERCENT,
+                            cached_blockhash=self._blockhash_cache,
+                            skip_confirmation = False
+                        )
+
+                        #проверям результат, убираем флаг на тп
+                        if tx:
+                            level['executed'] = True
+                            #обновляем кэш
+                            if token_address_to_sell in self._take_profit_cache:
+                                self._take_profit_cache[token_address_to_sell]['steps_done'] = level['step']
+                                await self._update_take_profit_json()
+                            logger.success(f"[{self.chain_name}] | TP task | {token_address_to_sell} | TP level {level['step']} executed: {level['size_percent']}% sold at {current_price:.6f} | TX: {tx}")
+                            await self.tg_client.tp_task_message(
+                                self.chain_name,
+                                token_address_to_sell,
+                                price_bought,
+                                current_price,
+                                level['step'],
+                                tx_hash = tx
+                            )
+                        else:
+                            tx_failure += 1
+                            logger.error(f"[{self.chain_name}] | TP task | {token_address_to_sell} | Failed to execute TP level {level['step']}")
+                            await self.tg_client.send_error_alert(
+                                "TP task FAILED", 
+                                f"{self.chain_name} Failed to execute TP level {level['step']}",
+                                f"retries: {tx_failure}/{tx_failure_counter}"
+                                )
+                             
+                    await asyncio.sleep(poll_interval)       
+                
+            except Exception as e:
+                logger.error(f"[{self.chain_name}] | TP task | Error in TP monitoring loop: {traceback.format_exc()}")
+                await self.tg_client.send_error_alert(
+                    "TP task ERROR", 
+                    f"{self.chain_name} Error in TP monitoring loop but still running",
+                    str(e)
+                    )
+                tx_failure += 1
+                await asyncio.sleep(poll_interval)
+    
+    async def execute_swap(
+        self,
+        token_address: str,
+        token_supply: int
+    ):
+        """
+        Выполняет свап токена
+        Если base_token не указан, использует первый доступный пул из кэша
+        """
+       
+        t1 = time.perf_counter()
+        base_token_name, base_token_address, pool_address = self._get_first_available_pool_cached(token_address)
+        if not base_token_address:
+            logger.warning(f"[{self.chain_name}] No cached pool found for token {token_address} - Starting real-time query")
+            base_token_name, pool_address = await self.get_pool_address_realtime(token_address)
+            if not pool_address:
+                logger.error(f"[{self.chain_name}] No Raydium pool found for token {token_address}")
+                return None
+            base_token_address = DEX_ROUTER_DATA[self.chain_name][base_token_name]
+        t2 = time.perf_counter()
+        logger.debug(f"[{self.chain_name}] | execute_swap | Pool query time: {(t2-t1)*1000:.2f}ms")
+        
+        t3 = time.perf_counter()
+        token_data = await self.raydium_client.get_swap_data_and_price(
+            pool_address, 
+            base_token_address,
+            token_address, 
+            cached_blockhash=self._blockhash_cache
+        )
+        t4 = time.perf_counter()
+        logger.debug(f"[{self.chain_name}] | execute_swap | Swap data query time: {(t4-t3)*1000:.2f}ms")
+
+        t5 = time.perf_counter()
+        if token_data: 
+            pool_data, price = token_data
+            if base_token_address == DEX_ROUTER_DATA[self.chain_name]['gas_token']:
+                mcap_usd_converter = self.gas_token_price * price
+            else:
+                mcap_usd_converter = price
+            mcap = mcap_usd_converter * token_supply
+            amount_in, tp_id = self._get_buy_size_and_tp_id(mcap, base_token_name)
+            if not amount_in:
+                return None
+        else: 
+            logger.error(f"[{self.chain_name}] No Raydium data found for token {token_address}")
+            return None
+
+        swap =  await self.raydium_client.swap(
+            pool_address,
+            base_token_address,
+            token_address,
+            amount_in,
+            slippage = SLIPPAGE_PERCENT,
+            pool_data = pool_data,
+
+        )
+        t6 = time.perf_counter()
+        logger.debug(f"[{self.chain_name}] | execute_swap | send swap time: {(t6-t5)*1000:.2f}ms")
+        logger.debug(f"[{self.chain_name}] | execute_swap | Total time: {(t6-t1)*1000:.2f}ms")
+
+        if swap:
+            await asyncio.sleep(DELAY_BEFORE_TP)
+            asyncio.create_task(self._create_take_profit_task(
+                token_address,
+                base_token_address,
+                pool_address,
+                tp_id,
+                1/price
+            ))
+        return swap
+
+        

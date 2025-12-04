@@ -1,0 +1,3739 @@
+[
+    "2025-12-02T18:58:23.825893",
+    {
+        "0x55d398326f99059fF775485246999027B3197955": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xB67e5EaF770a384Ab28029d08B9bC5EBE32beb0F",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x172fcD41E0913e95784454622d1c3724f546f849",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x172fcD41E0913e95784454622d1c3724f546f849",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xf2688Fb5B81049DFB7703aDa5e770543770612C4",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xf2688Fb5B81049DFB7703aDa5e770543770612C4",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0xf2688Fb5B81049DFB7703aDa5e770543770612C4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xa98D8a5867D664B7A758652146fd93a7dE40eE82",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0xa98D8a5867D664B7A758652146fd93a7dE40eE82",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbA2aE424d960c26247Dd6c32edC70B295c744C43": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0x89da4102853C6cf3F4e9979CBb1dC4a166F38E84",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xc6fAf89f23CBE4BD39e9D16E2685D74545Ba7659",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x0E1893BEEb4d0913d26B9614B18Aea29c56d94b9",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x0E1893BEEb4d0913d26B9614B18Aea29c56d94b9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x647D99772863e09f47435782cbb6C96eC4A75f12",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x647D99772863e09f47435782cbb6C96eC4A75f12",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfb6115445Bff7b52FeB98650C87f44907E58f802": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xe98fC882596C307FF26f8C570532Ed0e93238E9a",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0xe98fC882596C307FF26f8C570532Ed0e93238E9a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8d0D000Ee44948FC98c9B98A4FA4921476f08B0d": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xB3F27Fe82Bd1e5D7458E02b543CF0C6610fFAD83",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x4a3218606AF9B4728a9F187E1c1a8c07fBC172a9",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x4a3218606AF9B4728a9F187E1c1a8c07fBC172a9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc5f0f7b66764F6ec8C8Dff7BA683102295E16409": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xf66A930Ed3b004BA16ee11b3A9B142EAf2259b0d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA697e272a73744b343528C3Bc4702F2565b2F422": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x2f74ad2c64be7DC07C9f51E9d338EcB7C1ee0B18",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x1A1703Bf5f1Da9DB0f62d17e8c54e84Fd732D695",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD82544bf0dfe8385eF8FA34D67e6e4940CC63e16": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x6eC31Af1Bb9a72aaCEc12E4dED508861b05F4503",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x95034f653D5D161890836Ad2B6b8cc49D14e029a": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xD7af60112d7dfE0f914724E3407Dd54424AAA19b",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xb05500Ea96Db17d28cd0EB30BCB797708F279d36",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfb5B838b6cfEEdC2873aB27866079AC55363D37E": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x82B13a3fa0F5C6F5baa68605e5d33A757bcdEbBe",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa0c56a8c0692bD10B3fA8f8bA79Cf5332B7107F9": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3E14879c993d9a60578232648a9b728991947299",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6E88056E8376Ae7709496Ba64d37fa2f8015ce3e": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x23Ab35fAC8A7FF11f0Fe197df68E8Ee52E415f2a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAC23B90A79504865D52B49B327328411a23d4dB2": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x9F8f4615Ff5143aeE365fa34f34196fB85Be7650",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7324c7C0d95CEBC73eEa7E85CbAac0dBdf88a05b": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xF8b5dF35f6ef1F9Ab70D1d76B32D254983Af55e3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA7440029ecA41dEaBd8775Ef1D6086b37d4dF8D6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6a2608Dabe09bc1128EEC7275B92DFB939D5Db3f": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x27820F8b2e7c5dbe1eef6805577c222aFdE1a191",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaF53d56ff99f1322515E54FdDE93FF8b3b7DAFd5": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x83E98cAC01259a0D00729cfB722810472C421459",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x34c78897aD2DfF59610335A89d85e66d71a307c1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb9E1Fd5A02D3A33b25a14d661414E6ED6954a721": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x6B656d224BDF88780f4a85e0B183eEAf1dEDE9Cf",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5b73A93b4E5e4f1FD27D8b3F8C97D69908b5E284": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7Cb113B487e025b3a69537fcA579559433240cb5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9BAFC8d4b487cEBff201721702507a3E2C67ad79": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x99E1a43e738B026a2CD4359409594deBaB61b48D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb3b02E4A9Fb2bD28CC2ff97B0aB3F6B3Ec1eE9D2": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x24618d12b5eA15bB6fe3c81bBb9E011b5D5b107c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7Ddc52c4De30e94Be3A6A0A2b259b2850f421989": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xb297D74cBE67bA9A0fA92862c31E501228E8b00B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc748673057861a797275CD8A068AbB95A902e8de": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x61db764C20a2EBfB7e8a7a5AFb0b2Dd85A4CEF5f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x924fa68a0FC644485b8df8AbfA0A41C2e7744444": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xa1fF9406219fFa6BCC3D89C2719DD91d231D4CEE",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xc397874a6Cf0211537a488fa144103A009A6C619",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf486ad071f3bEE968384D2E39e2D8aF0fCf6fd46": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x8488664e52DF2F6b3772042AceC281447b063733",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xBdEAe1cA48894A1759A8374D63925f21f2Ee2639": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x6425bC30D0751aF5181fC74a50e760b0e4a19811",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF39e4b21c84e737Df08e2C3b32541d856f508E48": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x5Bb59Bb9371cBeC158eD602d5f3CF1AD1c9B4462",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFDFfB411C4A70AA7C95D5C981a6Fb4Da867e1111": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xdA7AD9dea9397cffdDAE2F8a052B82f1484252B3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7D6f2C4fB78B44527efeC5bd5F39D85b04c1c5a2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf307910A4c7bbc79691fD374889b36d8531B08e3": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xa77EBfCaE02f48bbF2069B3a54DF1aBe0682CCA0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x77d5b2560e4B84b3fC58875Cb0133F39560e8AE3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x92516e0DDf1dDBF7FAB1b79CaC26689fDC5ba8e6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7874F0ECD450A5F06AcB85543fe1d0d48e1C525f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDBB5Cf12408a3Ac17d668037Ce289f9eA75439D7": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD38B305CaC06990c0887032A02C03D6839f770A8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xcabCf51b5ca7F4Cf7133eA98a49C91C4b6225A38",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x997A58129890bBdA032231A52eD1ddC845fc18e1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xd15220032c999AE4e4861e0eEFDc86f73CffaCFe",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5aFadCd1E8E3CA78Ee2D37100102f2aec8Bc0Aa8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7427bd9542e64d1Ac207a540CfCE194B7390a07f": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x049F1009BC8C5d0048732Fe2F95C27C240214634",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8b9Ee39195eA99d6ddD68030F44131116bc218F6": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x83A9Fd66c9515536d630Cf818c41190b0372c6f6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE64E30276C2F826FEbd3784958d6Da7B55DfbaD3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xB49332eb00086FD4adcff960A7bC570BBCcAA252",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF81aC2E1A0373ddE1BcE01E2Fe694a9b7E3bfcB9": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x507784Ed62C94F5097D2Ded8DCF65A16818888e3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xea17Df5Cf6D172224892B5477A16ACb111182478": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE747E54783Ba3F77a8E5251a3cBA19EBe9C0E197": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x46bB9a29bFa5397B30A96a316875496EC2556dd2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe50E3d1A46070444F44df911359033F2937fcC13": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x43256d0dCC2571E564311edb6D7e8F076a72Fc46",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA227Cc36938f0c9E09CE0e64dfab226cad739447": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x419f8539c423D66dc42Bd80D6f0Bdd6fD4C21DCe",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFceB31A79F71AC9CBDCF853519c1b12D379EdC46": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x976241c208CC07505a620d768ee7251d47AcB2a0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf9CeC8d50f6c8ad3Fb6dcCEC577e05aA32B224FE": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x635c26c473BB0686D403247477CC648a7C6edc2e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x81D3A238b02827F62B9f390f947D36d4A5bf89D2": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xeA4d99d5fbBb904EE980C86EE2d376c36CFA0434",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa9616e5e23EC1582c2828B025bEcf3Ef610e266F": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xBb7dCdf040346422341c7b844A18663932336606",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFB93EE8152dd0a0e6F4b49C66c06d800Cf1Db72d": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x2Cd1637B4D1c5160109cDFda75320a74afC3a25B",
+                    "fee_tier": 0
+                },
+                "WETH": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd5d0322b6bAb6a762C79f8c81A0B674778E13aeD": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6bf62ca91e397B5A7d1D6bCe97D9092065d7A510": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xE6e51Ea572502DBdF8b40834D0619f9a9144d3A5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD955c9bA56Fb1AB30e34766e252A97ccCE3D31A6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x08dEBfC510A2EB0148107Da7AB8E96531323F4D4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8C321c2E323BC26C01DF0dC62311482A1256Fdf5": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x219cf5fc877F3DC7E5105496249797eD34CDfb4b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC0041EF357B183448B235a8Ea73Ce4E4eC8c265F": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xD4fB9d253739C5dB6aAD90aD2409757d224CCc0C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xECa41281c24451168a37211F0bc2b8645AF45092": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x5F8e4079aEb1447cE11626a5d95d18e1e307A4a1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x825459139C897D769339f295E962396C4F9E4A4D": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7f2D0a96791E70a2d6700238daD1e9793E75016F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9be61A38725b265BC3eb7Bfdf17AfDFc9d26C130": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9840652DC04fb9db2C43853633f0F62BE6f00f98": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1E8D7AB96323953faC85ab687f5D38b45344e62d",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x9338892AC6B2b19ccF17A84D93713aA14CcB2193",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF0EBB572643336834d516C485ad31d3299999999": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8dEdf84656fa932157e27C060D8613824e7979e3": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x463Ec7044c969871afDb210E8F55ded72f8955Cb",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xAF86Fda3f1Fe4604432daD93541F1B98450f15A0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCCe5F304fD043d6A4E8cCB5376A4a4Fb583B98d5": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7839Fbfd09DaE4d0F15BfB36b8f16f7898FBE684": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xe34C78cE8F585014F922b64b7a4E2c665a629AF6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC9d23ED2ADB0f551369946BD377f8644cE1ca5c4": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x0d3944cB515ecae653e6CC85EEebc1ec1505871B",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x82Ec31D69b3c289E541b50E30681FD1ACAd24444": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc07e1300dc138601FA6B0b59f8D0FA477e690589": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xdAf1695c41327b61B9b9965Ac6A5843A3198cf07": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x2ad2651A07b4949C0F892CFa27C3C73fb3b020f6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x61fac5F038515572d6F42d4BcB6B581642753D50": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xc4Dc171d499b3F5340bfFed8433BddCec8d33b04",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xdA6CEF7F667d992A60EB823Ab215493aA0c6b360": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x97e5C863245ccA61304faA2ECA855025691D4Dcd",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAaFe1f781bC5e4D240c4B73f6748d76079678Fa8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9558a9254890B2A8B057a789F413631B9084f4a3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xf4262C4dbF524f53851A5176bdC7D6C1e0fA82D8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB8A677E6D805c8d743e6f14c8bC9C19305b5deFC": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xFC828B2015C0A724E90cFaE0c628eeE02694B1a1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9BeEE89723cEeC27d7c2834bec6834208FFdc202": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7192966c6d3AB630eE60dBD4c1B39E9e8267F8cF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd9483EA7214FCfd89B4Fb8f513B544920E315A52": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x47eEc63A190fBCdc11328341c96543435d8559bC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9123400446a56176Eb1B6BE9ee5CF703e409F492": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x924E62a3689e7B94F397E61ac796DaBfEa32E93B",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x92aa03137385F18539301349dcfC9EbC923fFb10": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x69B86059C5Fb3A44355937e7b505A659443b9A22",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x1C67A1cF31e75213B33D7EE467182a8A4280DE22",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF95a5532D67C944dfa7EDDD2f8c358Fe0dc7FAc2": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x5a1Fe6D5026CC3736Cfb7316dbCFbf63D82cC789",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xBDA011D7F8EC00F66C1923B049B94c67d148d8b2": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x352950bf85E7DcfD2D512eF53E19A29721f21EEc",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x77146784315Ba81904d654466968e3a7c196d1f3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x45C9207eB6aB68D3c2bAe6b645C4E7e887E4bE39",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf86089B30F30285D492B0527C37b9C2225bFCF8c": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3bE400E891786c958c22E121Abe71599C576EffC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8fce7206E3043DD360F115AFa956EE31b90B787C": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x483B06d9c206869f91009EcE89f45addFa341439",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x81a7DA4074b8e0eD51beA40f9dCbDF4d9d4832b4": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC71B5F631354BE6853eFe9C3Ab6b9590F8302e81": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x7d94b911A51670f78a44A7Af3C2Bf773C42f2497",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc32cc70741c3A8433dCbcB5adE071c299B55FfC8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x30305B22FC2830B42908993e668b31B7234a9737",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7ec43Cf65F1663F820427C62A5780b8f2E25593A": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x2f62969A74159bfC9365d8Cd29aE8F6D15582204",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x3679fCB44596729A9BD52f4f3e6f735020a7a346",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc27A719105A987b4c34116223CAE8bd8F4B5def4": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x2Fdf9b25Df26e81598c09ef7482a82E2ec6eb68c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf2c88757f8d03634671208935974B60a2a28Bdb3": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x1D519280255d5D90F469f79dC8f5ABE05F64429f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF4C8E32EaDEC4BFe97E0F595AdD0f4450a863a11": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x2E2DcA75BBD1a4CE87F59F52f22fd252963eeA03",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5651fA7a726B9Ec0cAd00Ee140179912B6E73599": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x5dE8249a02507f8701489D251ab2E498a2bb19b4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb994882a1b9bd98A71Dd6ea5F61577c42848B0E8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xb89A15524cA1Cc8810e12880Af927b319273d1DC",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xE9691394A7A62F78EF4AA10b571140AcfDd4C91F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x68Ae2F202799be2008c89e2100257e66F77DA1f3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xdF95771a236b6A87B1325Bf674737FE498aAEfde",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5d3A12c42E5372B2CC3264AB3cdcF660a1555238": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xA5DbEaf16Fc031eae92175974F8d0A439bE4aD17",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc335Df7C25b72eEC661d5Aa32a7c2B7b2a1D1874": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xBE29Fd1238B7874a490025234774a4B82bddc0bc",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDaC991621fd8048D9f235324780ABD6c3aD26421": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xE9388678F0542D5406145C3dB85B5b754DAff085",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8A063A9ff4dE28dcB87117cc759BE6cE70e09F81": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x4D9541BCFC450B15C458877c97848C7A96898f6C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5fFD0EAdc186AF9512542d0d5e5eAFC65d5aFc5B": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1b54cd932B6B751803C996cBeF36280b53795f81",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFf7d6A96ae471BbCD7713aF9CB1fEeB16cf56B41": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xa6Ed9F4A42D0f47B088178bbdF3582a9A654dB99",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC61eb549Acf4A05Ed6e3Fe0966f5e213b23541cE": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x39D2d7bEBD1487FFEa308fab8A6Fe2D737600e1A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCAAE2A2F939F51d97CdFa9A86e79e3F085b799f3": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x6dAfBf0AB4FD72e2a5C0Ad5a1ED277d3bf8a8d1f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x95C9B514566fbD224Dc2037F5914eB8ab91c9201": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x28B7C347a58c9C30b21e51e732EE9723d910f605",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xCeF5B397051Fc92026249670e918C0aD7B8585E4": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xd919Dc242Bb1E8A823Da9cdb9806E3D211265f47",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xad8c787992428cD158E451aAb109f724B6bc36de": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xf9452Bb9B8B119DC08094B8B3B191bC88e94b319",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd5dF4d260D7a0145F655bcBf3B398076F21016C7": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xCA3F029A70d5d90000E614afD29E5c833f33CEa5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA43cA4e5abdf9917eaDE63C2837eeeE321897dAd": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF585B5b4f22816BAf7629AEA55B701662630397b": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x144b632e957dc93A324a60f06Ff19E26958c0F99",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE3225e11Cab122F1a126A28997788E5230838ab9": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x7cCC3010e52fbca54467ff68eEc4be78420571C5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF970706063b7853877F39515C96932D49d5AC9Cd": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x8481d46579164E3a5797c5C484D9F8d87c25342F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAe1E85c3665b70B682dEfd778E3dAFDF09ed3B0f": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfEbe8C1eD424DbF688551D4E2267e7A53698F0aa": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x660B571d34B91Bc4C2FFFBf8957AD50B5faC56f4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe8Db8733c5baDF634F86D6EF894fFdBF0e85B7c2": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xed9Ae3DEF8d6F052971Bb8b6d1975FF267Cf9aaD": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xBA20Fe9506a904A30EBB8B7C348f4969F5A5Ea07",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xba5eD44733953d79717F6269357C77718C8Ba5ed": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xE9e4ED350De777Cc22B5210B624F670C7177E173",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfed13D0c40790220fbdE712987079Eda1Ed75C51": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x787ABD73593Bed588852163402d191C302c7f8b6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd715cC968c288740028be20685263F43ED1E4837": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xa424C24C5CbFC377c3b6aE7355c3F30984664B16",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd5eaAaC47bD1993d661bc087E15dfb079a7f3C19": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x5a76A552f857Aa4Dc505740B6821278Bf158AdC2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC1353D3Ee02FDbd4f65F92EEe543cfd709049CB1": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xA10C53b6846658E8F2a4693d0541bD9b6bb2C612",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6261963EbE9Ff014aAd10eCc3b0238D4D04E8353": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xd21bc2291C1aeF340f5265E257B18aa5dafed759",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xeCEB87cF00DCBf2D4E2880223743Ff087a995aD9": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xf89068B387771C706f5451c25204f9f2d42E371D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaa036928c9c0Df07d525B55ea8EE690Bb5a628C1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x26deB24a2623Cf54452Ab5183E2C34551831D54d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x686318000d982bc8dCC1cdCF8fFd22322F0960Ed": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xaa251535D7Cc793e131Ce7E0Dbf4f8ca5edf1ad0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd55C9fB62E176a8Eb6968f32958FeFDD0962727E": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xe4Af4797AFbf733591B6e0C4EA3566Ad3979CA94",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC0c240C870606a5Cb3150795E2D0dffF9f1F7456": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x6d09609b8A9a0FB0c9515B059A1AA3121c9100Dd",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x87aa6aEb62ff128aAA96E275d7B24cd12a72ABa1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x040b8e22122b0dE821432F51cA1B882A0072FDF9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC4a1E7106d08B7FF947254B6D75cf2b877d55daF": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1De2a3DfeBD6F56247B4b403FdB47FAda086aA90",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF9Ca3fE094212FfA705742D3626a8Ab96aAbABf8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xC791051aF95aB0f816d3bf2e3e27021bE9472622",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA9eE28C80f960B889dFbd1902055218cBa016F75": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd98438889Ae7364c7E2A3540547Fad042FB24642": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xA2C1e0237bF4B58bC9808A579715dF57522F41b2",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc23dB46993F643f1Fa0494cd30F9F43505885D84": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7F0B9A92fe7ABBC64d38cbD02a3c39191657b8bB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xcE7C3B5E058C196a0EAAa21F8E4BF8C2C07C2935": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x35e4299Efe62450Dfb7dB57e1e33005C7C889889",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd6B48CCF41a62EB3891e58D0F006B19B01d50cCa": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xd5B642646A6E40090d5d61cA11A78eE2f6e0eF14",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfDc8Cd47848c0C67dF66F7120F4e3371181cFA5e": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1D1B9D512238963fa65195383f834645497F891B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb897D0a0f68800f8Be7D69ffDD1c24b69f57Bf3e": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x18cA6BDbAA051324Df002be8440F3EEF2d1b1866",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe3f53c0d48360de764dDc2a1A82c3e6DB5d4624d": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x4b2cC848eAe4487a48FD363A107DDbcCCb570b64",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB035723D62e0e2ea7499D76355c9D560f13ba404": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x985c205bb3a294c4778A9318aecc42b9c07B0b1d",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbfe78De7D1c51E0868501D5FA3E88e674C79AcDD": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x532f514fA9038a7BfA9DA1740D77b99c1E9E7D21",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa890F8BA60051ec8a5B528F056DA362Ba208a96F": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xA39C258CBc35Cb243A18EcBa38bfB024Aeb3C709",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFE2DD2d57a05F89438F3AEC94EaFA4070396bab0": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x5eB4A369E7a446F6f24E8f3E8f27eEC35197618f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf6402bEc11BD945BBd46BE77e1fA5D477883F6C2": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfC5a743271672E91D77F0176e5CEa581Fbd5D834": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x31b9Ba7F7982948b34CB9C967A0CFC17d4094c0a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe62B7C22484F8b031930275d31F42B9a517fE038": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x5d4ED9CeC88BA7aBAA254cA938E6Bef3DBD244e2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x635d44F246156ed1080CB470877256c847673f19": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xD879A7aED6257C099C6c1eefA79F2b99cb8572C5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb75Ba7eF520A5Bd0A5d01108060bE269642c4601": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xcDf937995A55a9AB551D81b463AC0f7F02795368": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xcCb18946b0DcD7b80E23101158F1693363378D4d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb40f2e5291c3Db45AbB0Ca8DF76F1C21E9f112a9": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xF17FFB376BC606211fA18023EFAeC1e4f011dD2F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6d106C0B8d2f47c5465bdBD58D1Be253762cBBC1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x35346986b68b336d370F126b4F69AC6712A986B5",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xf076209c0167b3e1144f4A914BF645A62D9F0168",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE32f9e8F7f7222fcd83EE0fC68bAf12118448Eaf": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x8C4c97D6A279C6A3eb63348C760FF0153AA779EE",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xc2bD425A63800731E3Ae42b6596BDD783299fCb1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA3cfB853339b77F385B994799B015cB04b208Fe6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xE5ce5bc4785CD2a246151364f5A190ceE3FDb142",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFe723495f73714426493384eb5e49Aa5b827e1D5": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x9210f9cA621AB4DBB39b0592389eE780bCdd15CB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe5E1A0a43f307F390887E2a17399172F3F9a3caB": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xdbaBB18b9B41E28f9053967ee37253E04dEa48fF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbE7E12B2E128bC955A0130fFB168F031d7dD8d58": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x90869b3a42E399951bd5F5fF278B8CC5ee1Dc0fE": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x81E3088D7C6e0D6EcCF00a2f85b7cF87b5B0055A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfD9A3f94Bec6B08711D90FF69CBBa42fac96B45A": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xd17C012F90838EF526656468124C63b466AcEdCd",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb7E548C4f133AdBB910914D7529D5CB00c2E9051": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xBF623e415D0Aeb10015c97889Abd2dc30be271eF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA856098dCBc1b2B3a9C96C35c32bC4f71E49AEd2": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x0541fEd9B938070EEBB9E2f49E7Ba1fF1a0d20Fd",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xdCE40c14D5956F8b8bA912402bA73B4D4d599612": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x95ffB3A4b6764FB4549464C2677dAed3c0e78b4E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x83330d159C9A4B09E6717feeFef7a634b70D216A": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xd8570291391E2775fF077bA78328B0A3274B7C6d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9EFdAE4D959365349Fcd7c7EaE1f38DdCb25068c": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x4D6063A85E3dE0C21eaeBD21bf7f1BDC186317Ab",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5BA9bfFFB868859064C33D4f995A0828b2B1d2d3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xb21B3D62433d2FCf8f2Eed7d986E93ffeE6e4E64",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xde914ED9f96853aB95df19481Bd14f0FD9dC2249": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xfD6697A1B355f37232a72f65680F86D5d8B2216e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD029B392580d555F35CCa1987f27D248cF883716": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xC7e56Bcd65e0C6346EdE1379B428844729bC9d40",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDfeB13936A8975f9F788e73FB93861Ce461541f9": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa89e2871A850E0e6fD8F0018eC1fc62FA75440d4": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x032c23Ee512F588b068aFD37eCB1C7D73a47bEb5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd9Af3915fB1a13179d5C3F0255fa3DcbB716b240": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xeE634A826465a1799afc2CFEfBdB6Fa3766C8888": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x58Dc9f69De4EE4a7506E43986eF2614E16bb2917",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD438b82543FB109F34575c825edAeEFC98f1F2b4": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x3d190eA630EDbAe6Fb7d967AD63588B0e4eD5bDc",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC114678C6e4654d041B2006C90f08478b444c4E2": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xeEB47C88b7755aAaa388B26C64F8440464237f25",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xb118A9A54a6915AF312323F7f9CEECF643126C2e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x90c48855Bb69f9D2C261Efd0D8C7F35990F2dd6f": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5A110fC00474038f6c02E89C707D638602EA44B5": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x78ad546Ab1fDAB49ce912F793edae23D438b6200",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe6DF05CE8C8301223373CF5B969AFCb1498c5528": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xaa2e21Fc625Eb5fba712Fd5B3e9fb51FB8Dd57F3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaf44A1E76F56eE12ADBB7ba8acD3CbD474888122": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xF26dE996845FB1E07f33Af3c7f02B084965D6DDe",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x22536030B9cE783B6Ddfb9a39ac7F439f568E5e6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xf4B385849f2e817E92bffBfB9AEb48F950Ff4444": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x07FeD7f326ab26377d5a4bf4aF2D0E9402eC2639",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xBb46693eBbEa1aC2070E59B4D043b47e2e095f86": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xF0d6bF03731A35A2dd21D239716C69Cc3938Ab97",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE1E93E92C0c2Aff2dC4D7d4A8b250d973cAd4444": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x088464e4E8CC54BF91180cBb8c61C68AeCC74166",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xADF7335Da0e77339F2d69841f79b0aa6c14d187D": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x6c95e3ec83F0A40360464A8526615f97d2bdbE5d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xfa35E2250E376c23955247383DC32C79082e7fcC": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xd9BBa97FD4A12407eAd371e71C07d4F0dbDC6A4D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDB6f1F098B55E36B036603c8e54663a8D907D6E1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x55Cb1Cc9C51E96246ae727a5F90E660878bE8048",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xd8002d4bd1d50136A731c141e3206D516E6D3b3d": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1D6574B113Ea4Cbfe141063ee97C1C742696eE97",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9A70815DFB644a24B57358E1041F8d0324c8f6e1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3bf6F934EEeFd436Fbd990Bdbc3FD6E4c9ebac9a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5845684b49aEf79A5c0F887f50401C247dca7AC6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xcB3f6C0431c03b69905c300D8Ff1DA516ae4d5E7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xDc06717F367e57A16e06CcE0c4761604460da8Fc": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x78fc96f3543337cd5393533eA66dC8fe42Ad054d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2170Ed0880ac9A755fd29B2688956BD959F933F8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x62Fcb3C1794FB95BD8B1A97f6Ad5D8a7e4943a1e",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x62Fcb3C1794FB95BD8B1A97f6Ad5D8a7e4943a1e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDC": {
+                    "pool_address": "0x4158C70E13bBcF4329d7B5179151A88b55047478",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0x29C5ba7dbB67a4af999a28Cc380AD234FE7C1B86",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8fF795a6F4D97E7887C79beA79aba5cc76444aDf": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xb2e4962480d3974bD996E4ABf051C73Eb9C84d7d",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0xb2e4962480d3974bD996E4ABf051C73Eb9C84d7d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4338665CBB7B2485A8855A139b75D5e34AB0DB94": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0x6B9E3825E39203277F8FD33371e36b5188B26410",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1CE0c2827e2eF14D5C4f29a091d735A204794041": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDT": {
+                    "pool_address": "0x9f11264d6d0d9671dAb2CC485eb6Ec1B502C4025",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1Ba42e5193dfA8B03D15dd1B86a3113bbBEF8Eeb": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x07e17913808cA2983b10181E589D800218D57cc7",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x07e17913808cA2983b10181E589D800218D57cc7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2859e4544C4bB03966803b044A93563Bd2D0DD4D": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xE8DF1539b380274f1f8205A8f45a7Cc266793518",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0xE8DF1539b380274f1f8205A8f45a7Cc266793518",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x47474747477b199288bF72a1D702f7Fe0Fb1DEeA": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x097419329833bdBF0a1FF5ba134f76d4E5929434",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x097419329833bdBF0a1FF5ba134f76d4E5929434",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x76A797A59Ba2C17726896976B7B3747BfD1d220f": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x43bEB5b09ac912c4288dB731FE7c30507e252C2A",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0x43bEB5b09ac912c4288dB731FE7c30507e252C2A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x62F0546cBcd684F7C394D8549119e072527C41Bc",
+                    "fee_tier": 0
+                },
+                "WETH": {
+                    "pool_address": "0xbA0Aa85C33F3bAdaF7947CE93c612677127bB8d6",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WETH": {
+                    "pool_address": "0xbA0Aa85C33F3bAdaF7947CE93c612677127bB8d6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x000Ae314E2A2172a039B26378814C252734f556A": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x24D66a6B4eAd2F95677c1Ffb4Ce44E5680E3CffC",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "USDC": {
+                    "pool_address": "0x24D66a6B4eAd2F95677c1Ffb4Ce44E5680E3CffC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3d6545b08693daE087E957cb1180ee38B9e3c25E": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xD97e03D02cE147CaD1F470E436948436B6d12e1f",
+                    "fee_tier": 0
+                }
+            },
+            "v3": {
+                "WBNB": {
+                    "pool_address": "0xD97e03D02cE147CaD1F470E436948436B6d12e1f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0Eb3a705fc54725037CC9e008bDede697f62F335": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x33dcD5381c0fd234867d5D7a49a19C009F82Af4e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0D8Ce2A99Bb6e3B7Db580eD848240e4a0F9aE153": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x16D7C51e9c59be9F18b19b608d53b37fa9890b8a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x21dCb183F9D895e3A7c5205621555C44C5B566c5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x031b41e504677879370e9DBcF937283A8691Fa7f": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x2cBfA271CcE515FEd6e49b406Df4A77ec952a952",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa2B726B1145A4773F68593CF171187d8EBe4d495": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xe7CB78efE9930e250baF9f64a6A17a79e12b3c5D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x45E51bc23D592EB2DBA86da3985299f7895d66Ba": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x40af3827F39D0EAcBF4A168f8D4ee67c121D11c9": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb3Ed0A426155B79B898849803E3B36552f7ED507": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x85BeA4fBC57fA22b41Fb1632f0D9a6A99390fd0a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4B0F1812e5Df2A09796481Ff14017e6005508003": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3C01A8cb79f4561606C6DeDfEb1f4695F8A174b2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x352Cb5E19b12FC216548a2677bD0fce83BaE434B": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x3F6B51501b03AeC93a39786F7BBf8a528B48c73d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x101d82428437127bF1608F699CD651e6Abf9766E": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x0DAacc1Ec0251dec752B13eCE05d2d3ABb23e409",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6985884C4392D348587B19cb9eAAf157F13271cd": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xC241e8fb314bc3799BE2Db94dCE4d070c29b425d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x405FBc9004D857903bFD6b3357792D71a50726b0": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x50203DF8eFcddBa9755C886F086b9B2D537a15F9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x111111111117dC0aa78b770fA6A738034120C302": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x44F161aE29361E332dEA039DFA2F404E0bC5B5Cc": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xef7D88D12b6393fE06f5F07d48d7B76511909e6b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4B948d64dE1F71fCd12fB586f4c776421a35b3eE": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x6dF8Ef1C3Fdb297fDa86445D1ef9b09C20871866",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0DF0587216a4a1bB7d5082fdc491d93d2dD4B413": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x0b969B8b753871A5d5A3B98cE64Ab398D75f24AD",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6bdcCe4A559076e37755a78Ce0c06214E59e4444": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8f86a15EC17cb3369d8b3E666dAdBC11daA82b79": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x715D400F88C167884bbCc41C5FeA407ed4D2f8A0": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x81Bef404f5C93d99ed04Ed55488c99722CDd7A50",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x156ab3346823B651294766e23e6Cf87254d68962": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x2706763E5585f8D123229191a9DA4fD4c441AefD",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x33d08D8C7a168333a85285a68C0042b39fC3741D": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x80968a476E0235a026Fd1F33AAac5a3B7b76110F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9dCE13E71B11eb5Df66ca269bD657696587Fd4E2": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x831F347c3a35a6941d235D38B9DBEB337f93aD34",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1D0A4821FDEf156b0d051D08A166DE5DF2788Cf7": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x58e609879B19f90B4Fdb3151bC24176B4B935B94",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6CFfFa5bFD4277a04D83307fEedFe2D18D944DD2": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xa325B22090aA2d5528B01cc6974699DA4B9Cc875",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb86AbCb37C3A4B64f74f59301AFF131a1BEcC787": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x1Ee885f2a5b5357b29e8cD9121c5349934dd6082",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x40b8129B786D766267A7a118cF8C07E31CDB6Fde": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x916F992Df86795F24de6C268CFB9031fBB1155da",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0000028a2eB8346cd5c0267856aB7594B7a55308": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x1d80FE88136206Ac0D02dDfFA1B3E43B8aA01972",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5de3939b2F811A61d830E6F52d13B066881412ab": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x40016Fa97BD81Ba59d270AF3504425d23f0Ac2C2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0A8D6C86e1bcE73fE4D0bD531e1a567306836EA5": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xbc0E5A205D729299D93973d634E2507CD8b625A3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x20482b0b4d9d8f60d3AB432b92F4c4B901a0D10C": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x6F3176a7B42D55AF6451f7401FDA3c5fd57a72B5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2dfF88A56767223A5529eA5960Da7A3F5f766406": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x4e1f9aDf96dBA6Dc09c973228c286568F1315ea8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x20d6015660b3fe52e6690a889b5C51F69902cE0e": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7DDf164CEcfddd0f992299D033B5a11279A15929": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x3353274E21Dec3964E56CC227582E320533c5869",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8C907e0a72C3d55627E853f4ec6a96b0C8771145": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x001405FaDd5D49EE1838f3A96E42e0028AD9D7eF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB0D502E938ed5f4df2E681fE6E419ff29631d62b": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x389AD4bb96d0D6EE5B6eF0EFAF4b7db0bA2e02a0": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x5DBB1220BC24B462d75E66012bb70CdA8d3D1ad5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4BfAa776991E85e5f8b1255461cbbd216cFc714f": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xA2BbDeD3F749Ed41800b82e9a064196bb5174286",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0c8382719ef242CaE2247E4DeCb2891fBF699818": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x208bF3E7dA9639f1Eaefa2DE78c23396B0682025": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xf0750c373EbBB3BaEEF7e03D8300cAaD1983d67c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x59264f02D301281f3393e1385c0aEFd446Eb0F00": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xC0FB39f705Ee65Ef098dD5452997A7846d156aa9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9d1A7A3191102e9F900Faa10540837ba84dCBAE7": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x477C2c0459004E3354Ba427FA285D7C053203c0E": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xAE02717e94C9B5bAe817601a49B4584F58324015",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x868FCEd65edBF0056c4163515dD840e9f287A4c3": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x908aB8983DffBbDd74EC6028110610E18239EC1E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x17EA10b6aE4FDE59FDBF471Bd28Ab9710F508816": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x48a18A4782b65a0fBed4dcA608BB28038B7bE339": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x6531a0190C9977E48b3a5c8bc5226a6cD821d18c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x55ad16Bd573B3365f43A9dAeB0Cc66A73821b4a5": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xb433aE7E7011a2fb9A4BBB86140E0f653DCFcFBa",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3d4f0513E8a29669B960f9dBcA61861548A9A760": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x7F51BBf34156ba802dEB0E38B7671DC4fa32041d",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x31d0E332ccEf98b583E40e0cEFBb7502c9a6b3f8": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3e58E3eCab0F9b6018a69841371bdF5aB968543D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4E200fE2f3eFb977d5fd9c430A41531FB04d97B8": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xA7DF052672a24885d784A72b5f72d50296161531",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x00312400303d02c323295f6E8b7309bc30FB6BcE": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x55D0119A43a0E2c54fd6Eb1F17e3b883EEdBA602",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1AeCab957bAD4C6e36DD29C3d3BB470c4C29768A": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xBee2C57e3a11220e2B948E26965DAAA9dFD87A4A",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5e0d6791EdbEEBa6a14D1d38e2b8233257118EB1": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x83bD3CEaDc3c19Af0264157f4b70F0402C9BB3a8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1d58e204ca59328007469A614522903d69dc0A4C": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x443fa7bbF35C09eE0eBb5E15F1EA3F0704b89D04",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3B4de3c7855C03bB9F50ea252cD2c9FA1125Ab07": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xFff4857A955b2b460C27fD431aA5a85FABcA5559",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x722294F6c97102fB0DDb5b907c8d16BDEAB3f6D9": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xC1D32D62A81B98410395a30e3a336f319E5e90bE",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8b194370825E37b33373e74A41009161808C1488": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x5D2913a8EA284E486000177852c87EA4D64D03D6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x31DbA3c96481FDe3CD81C2aaF51F2D8bf618C742": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x98d6E81F14B2278455311738267D6Cf93160be35",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x15247e6E23D3923a853cCf15940A20CCdf16e94a": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x61A6f9E817174Be19b734934573ae5219E724425",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7bd6FaBD64813c48545C9c0e312A0099d9be2540": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xa7C1E8B098a2FAb23D268b8766eC78b43Ed3E496",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0A43fC31a73013089DF59194872Ecae4cAe14444": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6685906b75C61c57772C335402F594f855c1B0E3": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xcD8548027AEE0FA28329d495d9e931A236Cd9448",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1a5D7E4c3A7F940B240b7357a4bFED30D17f9497": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xF7f9fC41DA4B8E0d52a642Af2ad38509C3e40BF0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xabE8E5CabE24Cb36df9540088fD7cE1175b9bc52": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x50a9663b08A33eDDD9A642590F5Cb8fb4079B8F8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xaEC945e04baF28b135Fa7c640f624f8D90F1C3a6": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xC2B3dbBF26d43617036b0ebA53aD2DBD945adebf",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x783c3f003f172c6Ac5AC700218a357d2D66Ee2a2": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xc1A780989734a0e5df875cEbe410748562e1c5e6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7C8217517ed4711fe2DECCdFefFE8d906b9Ae11F": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x49986efbeEdEa3Ab962CA95caF86919860ECc9DB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6894CDe390a3f51155ea41Ed24a33A4827d3063D": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x588d7cf062f4eDD7c7c7f2d66FD770e03b1eA735",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x52B5fB4B0F6572B8C44d0251Cc224513ac5eB7E7": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2D060Ef4d6BF7f9e5edDe373Ab735513c0e4F944": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x9042D880E0b3986334017F975E7E29EeC8E4b5f8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa4B68D48D7bc6f04420e8077E6F74bdeF809dEa3": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x8F0Bd6B22a9000E550E5dC31313D128ABe40fCBd",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3fefe29dA25BEa166fB5f6ADe7b5976D2b0e586B": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x30D59a44930B3994c116846EFe55fC8fcF608aa8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3AeE7602b612de36088F3ffEd8c8f10E86EbF2bF": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xee6fF918A1f68B5d2FDEcb14b367FA2EB5C6951c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x94a8b4EE5CD64C79D0Ee816f467EA73009f51aA0": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xF46EaA0c84F916b45295C999dA8Fd99c3Dd6012e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9A4a67721573f2c9209DfFf972c52Be4E3F6642e": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x8943A75f4D0D1BAbEa4cd77eabC323127714CAA4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0409633A72D846fc5BBe2f98D88564D35987904D": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x321d27aF9068b683fB08a9EEF6232AB918e88891",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1FA0f5ed24a1a2b43741E88F8FEc19633e67082B": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xc98A66945b27A787035eCa21c13c87E163a2bE31",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xbb1B031c591235408755ff4E0739cb88C5cF2507": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x45F2DFbC92dF283569C66DB5915b10762b278d03",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3203c9E46cA618C8C1cE5dC67e7e9D75f5da2377": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x0004222c2075E9A1291E41f1cA4C8d32141dB501",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x00000000bcA93b25a6694ca3d2109d545988b13B": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x809ef7f598673413Cb7cb0A3344EbDd1E32a05D6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x79bbF4508B1391af3A0F4B30bb5FC4aa9ab0E07C": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x307Bc76E3d59ED73886A9cf9360a9286f6281ba7": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x2bAaf64f128Cfa6bAEBEc6585D3a1E4155437752",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5C85D6C6825aB4032337F11Ee92a72DF936b46F6": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x90A54475D512B8f3852351611c38faD30a513491",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8683BA2F8b0f69b2105f26f488bADe1d3AB4dec8": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3f160760535Eb715d5809a26cF55408A2d9844c1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xE65eA0eC747f2a3Cc7999b92F81231db48F6ab1F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8e1e6BF7E13C400269987B65Ab2b5724b016CaEF": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xdaF84e35ca400d7641456e53b6a8a30CccEcFD5b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x39702843A6733932ec7CE0dde404e5A6DBd8C989": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x5ed54FE795a56D71D1a4B0D716D111b846A4bE03",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3D9bE0aC1001cd81c32464276D863d2FFdCa4967": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x8063181179B613B7b28F2c208146B701A184F672",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0e4F6209eD984b21EDEA43acE6e09559eD051D48": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x86Bb94DdD16Efc8bc58e6b056e8df71D9e666429": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x16969FA79651Bae11736F2f6576a86fE2726b42B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1b379A79c91a540b2bcd612b4d713f31De1b80cc": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x435A26A47c60324bA74476922274d8E41813BE6f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6d5AD1592ed9D6D1dF9b93c793AB759573Ed6714": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xA5067360b13Fc7A2685Dc82dcD1bF2B4B8D7868B",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7d814b9eD370Ec0a502EdC3267393bF62d891B62": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x09F9789CF2DbA13e6E1cE8Cfdcd3F751D2917fc5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5c8daEabc57E9249606D3bD6d1E097eF492eA3C5": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x71487CD609c7B60E78BA37513ECf49A154A40cf6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x235B6fe22B4642aDa16D311855c49Ce7DE260841": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x64fa53217bde4179f54C9706dE431b73814e92db",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x12BB890508c125661E03b09EC06E404bc9289040": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x7eb6B5Ab4a075071e339e09d4f665A91B6007745",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4d2d32d8652058Bf98c772953E1Df5c5c85D9F45": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x1fa2cBBBb823A702A3622629bf297b75edBBF10f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa260E12d2B924cb899AE80BB58123ac3fEE1E2F0": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x821eb9Ea4c057a76bD59E2d49DaFB155fFDc7628",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x19Ed254efa5E061D28d84650891a3db2A9940C16": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x5181C65117D6421BEF9245b6d064be212eA72589",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x87d00066cf131ff54B72B134a217D5401E5392b6": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x03F83FdFb168E7A2A621691E4B15297B1917ab91",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1A9Fd6eC3144Da3Dd6Ea13Ec1C25C58423a379b1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x24B0A02941aE3fE51E6F5e27b9D1568391388dFA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x510Ad22d8C956dCC20f68932861f54A591001283": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x4F1Ac27957Ee5CFb32338f6DB8bfD53F435B3409",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x193f4A4a6ea24102F49b931DEeeb931f6E32405d": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x01219Fc92c94cBC4C847C8944f6b42A2159376c1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5357e9c3488C7680E710b46B744e706E484b4Ad7": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x55F0Af2cfC605F549480201Fa5c9418F9812E9eb",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0F0df6cB17ee5E883eddFEf9153fC6036BDB4e37": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xA341E8E8EE6BF97fA1d18c2d12F00555DC78207E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x51363F073b1E4920fdA7AA9E9d84BA97EdE1560e": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x6b4BEfa0eeCCc647158A5584842df80a90fe3683",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0xBc7fF1f31Dc4e4293a53AC646a865303F0251fb9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2c3a8Ee94dDD97244a93Bc48298f97d2C412F7Db": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x4D3bF29Ba30f8Bfe4624e7678709afA195689c5D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1E3dbC0aad9671FDD31E58b2fcc6cF1Ca9947994": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x657187786583659b86c5F9d261fD1d65F56b28d7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA2bE3E48170a60119b5F0400C65F65F3158fbeEe": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0c78d4605c2972e5f989DE9019De1Fb00c5D3462": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xADa2D09b25Bb7Efd1B4fBe3b779117a9E98593C3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x24fcFC492C1393274B6bcd568ac9e225BEc93584": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x01bf3D77cd08b19Bf3F2309972123a2cCa0F6936": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x3a7d17060c4BDECE3B5b8f0786750F5a1977cDe0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa1832f7F4e534aE557f9B5AB76dE54B1873e498B": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x764cF114f1838c22b138fB4dcDAAD03A65C946a9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8263CD1601FE73C066bf49cc09841f35348e3be0": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7a986bA67227acfab86385FF33436a80E2BB4CC5": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x3177b22127f9fecfAabe4102429E368c98f89227",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1036b2379F506761f237FBa7463857924Ef21Ce3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x44Fb9C6A8dc3eb87a2852DDF4385B3fe4C3fdF9C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB7C0007ab75350c582d5eAb1862b872B5cF53F0C": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x90345Fbe6DA637322015129De38d3166f98aac9c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x43Ac932FC7A84918Fb52e1a5baBaC63901b897B6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3Dc8e2d80b6215a1BCcAe4d38715C3520581E77c": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x9b24b1716Fc977708755EbFd523a6aE2119b787b",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7b4Bf9fEcCfF207eF2CB7101Ceb15b8516021AcD": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xD26d38408a6aC6fAFf6FdfA92B5910Ced2E5FD31",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5D7909f951436D4e6974D841316057dF3a622962": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xc744be8190e2A4d9058294AfE86d43ad9FB118e7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x74836cC0E821A6bE18e407E6388E430B689C66e9": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xAA8fadca5d1F36e24C919168d0D4c7B12feC8D32",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x12B4356C65340Fb02cdff01293F95FEBb1512F3b": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x1103B20b74acA62297eEbC0097B537EfEbC01ea7",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x02e75d28A8AA2a0033b8cf866fCf0bB0E1eE4444": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa1faa113cbE53436Df28FF0aEe54275c13B40975": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xf7849c846b8b34F0d892392173ade4B6D1Fb3392",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x238D72E179A581C98DC1996417a49818c7E509dC": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x6510B17df2909FEAd6492905C72a66676547dA7C",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5dBde81fcE337FF4bcaaEe4Ca3466C00aeCaE274": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xD3cFFC6B02a34DfC72F1350339031043a854599f",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x103071Da56e7cD95b415320760D6a0dDC4DA1ca5": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x7ed1C4d5feF23980c20804b33cA6Ad381E68E3f2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x20de22029ab63cf9A7Cf5fEB2b737Ca1eE4c82A6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x832EeBF89F99aACcf6640fe6b5E838066c630Fbe",
+                    "fee_tier": 0
+                },
+                "USDC": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9C8B5CA345247396bDfAc0395638ca9045C6586E": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x757651b39d4D13509B60B5784Ba0e504A8eF6691",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3ecB529752dEc6c6ab08fd83E425497874e21D49": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x8E6601B49A2c73FE64d01C057b796CA05f2a7348",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x06238c1b8e618AbeDf17669228dc95fB2D2e210b": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x539AE81A166E5E80aEd211731563e549c411b140": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xFA7421F1ed6AD1548316a847e8437af7219A8F18",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA5C8e1513B6A08334b479fe4D71F1253259469BE": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x61DBbBb552dc893ab3aAd09F289f811E67cEf285": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x4C9B6E5EC402178046E1C426838c4916Eb830534",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x8D279274789CceC8af94a430A5996eAaCE9609A9": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x06aC8EE32BCdcE6bF2eA82D9Bfb932a84D45BFcb",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0E7779e698052f8fe56C415C3818FCf89de9aC6D": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xA0c5B17A5bE4e4c991e891b757587371d8B0B2F2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x529C79f6918665EBE250F32eeEAA1d410a0798C6": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x9b876d740f75efC07Aa4AAcd5F4d938CaB7B5d0c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2F714d7b9A035d4ce24af8d9b6091c07E37f43Fb": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xd741e051815f4cd350ffD1F4bba800F1DF62B828",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x44440f83419DE123d7d411187aDb9962db017d03": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x9d60d308878d56C4AA4f89081421E6720Bf3e8b2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x03AA6298F1370642642415EDC0db8b957783e8D6": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xc8d3cEf6F91CdC3D737F96109991D463614b90D5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x11cf6bF6D87CB0EB9c294fd6CBFEC91EE3a1A7D0": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xF0601427E3Bfc416bc7838FB9e15C6F0F56F4aa0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x944824290CC12F31ae18Ef51216A223Ba4063092": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x6AFe0F2b39B98857e49af22cEf4e4525551B46ac",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0bBeA6812fb3fcBcA126eDb558e551B3f1702026": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0510101Ec6c49D24ED911F0011E22A0D697Ee776": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x22313ace9911B91A0Bc6eAB0189b99e78c28C699",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x22514fFb0d7232a56F0c24090E7B68f179FAA940": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x2570978d1E0b960DB4BC2ecba636635E0BAE3fE6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4c067DE26475E1CeFee8b8d1f6E2266b33a2372E": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x05F4a518FE9271cb45D4A1D708ece2ac04bC6A6c",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x3aC8e2c113D5D7824aC6ebe82a3c60b1B9D64444": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x9d7058AB214d3D3a7D743C5a1C35771208Ca9BFB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA49fA5E8106E2d6d6a69E78df9B6A20AaB9c4444": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x5607bB2115fEa94e2D0C8E6BDf7Af1Fa1C6E0B26",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2D739Dd563609C39A1aE1546a03E8b469361175f": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x003d87d02A2A01E9E8a20f507C83E15DD83A33d1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xb24cd29e32FaCDDf9e73831d5cD1FFcd1e535423",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7E35D0e9180bF3A1fc47b0d110bE7a21A10B41Fe": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x3D0D8259E04F7de45adB763B75699784299e591e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x59537849f2a119ec698c7Aa6C6DaAdc40C398A25": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x8B948b1C8366B4aA135755C6960047383e72c2C4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x965F527D9159dCe6288a2219DB51fc6Eef120dD1": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x953783617a71A888F8b04f397F2c9e1a7c37Af7e": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xd14e5639F8Bc41fcd66EA571F29780B9C7927FF4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x503Fa24B7972677F00C4618e5FBe237780C1df53": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xC242E7C7d4bC5E920ab2199C407298514b16c92F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x899357E54C2c4b014ea50A9A7Bf140bA6Df2eC73": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x2b90a064Ec039b55FD68E59C20975558f01CD5D8",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6D6bA21E4C4b29CA7Bfa1c344Ba1E35B8DaE7205": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xb323f5Df0b737a8C19D30B30F5Ca6423E88dDF8E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x63eC886286f30AD392749b9e8f24f67F5b8Ac394": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xbaf4c90Cef7b2AC1B923CEf71528256d81E962E1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x004D50B3fC784b580531D8e8615AA96Cf7fbb919": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x915424Ac489433130d92B04096F3b96c82e92a9D": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xDBBf752e001E4632023Ee385a61dcD1ee0C713CB",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xb5761f36FdFE2892f1b54Bc8EE8baBb2a1b698D3": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x2AFDF2cD0384a3b5d7836b70C8DA5E73841ba826",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2Bf83D080d8Bc4715984e75E5b3D149805d11751": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xb1B3fbdb060cFb9cCE2CE37cE1f264264329d5C3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7e975D85714B11d862C7cFFEe3C88d565a139Eb7": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xfB1486d3a2a5e757597f0FfA5ccd1E4D1E3Ae33E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x491e6DE43b55c8EAE702EDC263E32339da42f58c": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x12535b2086FA423C838AB0BCc6cCaE0717200e7a",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2AA89A0113BcbBcdC5812C6Df794E2D9650fC1AF": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xFB1c06DD94c9A65f2C6715397C31790e8f10bed2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0C808F0464C423d5Ea4F4454fcc23B6E2Ae75562": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x32FFF96e79a7e984A02F5ABab073E4CC17ab9FE3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6f0037C79d144d5B8E3E6f04E49FBb5f25fD508f": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x2645828c03ECaaF2D4c98118992E5C7F56041709",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x38fD4EE2aDE8B4Be157DFEe3D6B8979c78A56145": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xC331602C21e794702270E2e577c1BA2721141a8D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0A73d885CdD66adF69c6D64c0609e55C527dB2BE": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x6eA9789F71F9571b6aD1BE41b97824F6883CE0F6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA992ffb0C9B753307B9704079c61DB4e405DeFfd": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x361Cb32ED0d4dB219E3E277BB0fD0F767F6F5D6F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x46Ee3BFC281d59009cCD06F1dD6aBDbfCd82FFC3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x88Bd08490D07e000E744941ED774da854eDE5c72",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x84E9aaE2081AD3135Ec82496c31e5658A31B9756": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x9c6A9e993Aa948159FEed7C85a321C83B9ef96E1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa8d3dee6671c4fdac4743a1eb1F276EabD4ba302": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x3b426cfF2E9B843406f5f0689017Bb5d4b88F671",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x96AdaA33e175F4A7f20c099730bc78dd0B45745B": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xD3774ab0fD42708095A72E865b2E282E20B0d255",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0808Bf94d57C905F1236212654268EF82E1e594E": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xFA5208Ea7a1730150B7a51e23cee42E068200dC4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x395603B95D721084c1917aFfDD06D78E559Fa94d": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x7A718Fd5BeCB64d37A6B8eD38e54F706aeaf7B0D",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xA9972b1fAC35fdd8cBdbaA315A002B2Ad91d2ad6": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x845C5c2835359af01C931290636C2fCBc5F52977",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1F34c87ded863Fe3A3Cd76FAc8adA9608137C8c3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x927aE3c2cd88717a1525a55021AF9612C3F04583",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x799a290F9CC4085a0ce5b42b5F2C30193A7a872B": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xd6f20a50b022EA3e5899c5069c542a9a33e5d240",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x49f1D4dB3ea1a64390E990C6deBEaC88EAC007Ca": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x3Cd90114102606D9c89AdA6666Cb17f486751f38",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x516f8a1fB458EBdcFd0F544fF85c69C1c0Ebc31d": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xe08ae994283829a3e55aBB450Ec4deD4F762D1EA",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0203D275D2A65030889aF45ed91D472be3948B92": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x89a1674Df5665383D7d534aDfC80Bd2C6086c931",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x37EFF3FF1321Fb9AbC734761cA72FAFDc044534A": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xeaB04e85c7007D705fD57e17Cd1f3d74Bf3e14b9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x44a21B3577924DCD2e9C81A3347D204C36a55466": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xEDB6d7d456A570f790185aF9f6B99020Cc578Ed0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x410a56541bD912F9B60943fcB344f1E3D6F09567": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x11bd737757B86c16646313FdF9e86681dd3F065F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x47A1EB0b825b73e6A14807BEaECAFef199d5477c": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x07F071AA224e2FC2Cf03cA2e6558Ec6181d66a90",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x21ac3bB914f90A2Bb1a16088E673a9fdDa641434": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x0125ac49a5C06CCfd0819e6E20CCBE09bDE35140",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x570A5D26f7765Ecb712C0924E4De545B89fD43dF": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xbFFEc96e8f3b5058B1817c14E4380758Fada01EF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2f8A339B5889FfaC4c5A956787cdA593b3c36867": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7636D8722Fdf7cd34232a915E48e96aA3eB386BF": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xc3D2ED62dB6E5db72f32b9e1CC6A8607cA84DDdF",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x12E79eb21dCc5852F9c6AC1736d977312925da33",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x23AE4fd8E7844cdBc97775496eBd0E8248656028": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x497E224d7008fE47349035ddd98beDB773e1f4C5",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x75a5863A19aF60ec0098d62ED8C34cc594fB470f": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0xcacD3583C7EF55126099BE733B12672c60E2AB23",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x23Fe903be385832fD7Bb82bf1FEE93F696278888": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x86501dd6000B5Cee3F01e74F8C2879F5c4B2ebBC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xB05F4747eB3d18a3fa4Aa3e5c627F02cCc70d005": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xa3C96072e43efF455B11A27bbc332A23579D77F3",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1ffEFD8036409Cb6d652bd610DE465933b226917": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x401C1BccF8D90aE2D031F926c9a9f906EC79021F",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x84575b87395c970F1F48E87d87a8dB36Ed653716": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x1c962cD446b7D7c5d2b7263d2364A76fE1D9B84e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x1633b7157e7638C4d6593436111Bf125Ee74703F": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x96e55d2d53b79D636166B23103552253E23B699E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9b17bAADf0f21F03e35249e0e59723F34994F806": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x0864c156b3C5F69824564dEC60c629aE6401bf2a": {
+            "pancakeswap-v3": {
+                "USDC": {
+                    "pool_address": "0x42A69a118570Bec5015c23e4fC5F52Bf994a6051",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x67b47971426bb2180453b3993FF2ec319e704444": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x6952c5408b9822295ba4a7e694d0C5FfDB8fE320": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x701232f46796855B0841Df2cbF46595C00667DDE",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x9eC02756A559700d8D9e79ECe56809f7bcC5dC27": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x6CD061334aaFeE6CDD5bC5C958e71f769D7cA8CC",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x323665443CEf804A3b5206103304BD4872EA4253": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0x589a5062e47202bB994cD354913733a14b54e8Dc",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x184cff0e719826b966025F93e05d8C8b0a79b3F9": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x7CEA5B9548a4B48cF9551813Ef9e73DE916e41E0": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x551Df97Cca8599Dd76aB50Aa0c752Bf27480EBB9",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x23CcAB1de32E06a6235a7997C266F86440C2Cbe6": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x52A499d86a824CF7cA5A5F964226066b825FDbD6",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x38F9bf9dCe51833Ec7f03C9dC218197999999999": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x603A58f995885744AcBA41342d526084a474A63E",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4fa7C69a7B69f8Bc48233024D546bc299d6B03bf": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xD28C09cb3c31c8388dC32dA6B5158ED79eCaA8c1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4eA98c1999575aaadfb38237Dd015c5E773F75a2": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x032AB93B734BEf57D98552EB56839F0995D4FB28",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x32f1518BaAcE69e85b9E5fF844eBd617c52573ac": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xA0B149Bf04dDD1042619cF911A18210509dDD871",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "0xF5B4B24E5808DAA3fBeee11DF27a0994600356b4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x5B3829EbDf126fadf69B829BbC000e5C749265AF": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xee863c2AC429CE081f02eCD210C687A41bAA45D1",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xFa11a2ed28aBB3a0F20dcc20Cb207e10899fe6f0",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x840eF7e5f896Be71D46Df234C60898216feFCBe3": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                },
+                "WBNB": {
+                    "pool_address": "0x4642792Ac79B0E80F5a43F1fBf93A0Af8b4a33ba",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4AD663403df2F0E7987bC9C74561687472e1611C": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x21177cEae4fA36CFC84B5c45C38b714EAC78Cc27",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x998305efDC264b9674178899FFfBb44a47134a76": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x692cb71A629Aa90A8ED6c6B6e56Ce4D86760DD43",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x76E9b54B49739837bE8aD10c3687Fc6b543de852": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x468aB8fD260878EbD44b7a28cEAb5f052e4833D2",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAc45475ABE6F9516e233a824aA013933B61bbB5C": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xC46D953bBA6aD287a12Eb12ebe815e82ec3dc974",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x2E72393A57287b1A09857Db589B27bB0fd499922": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0xc7CA97c1ec678952A4Bd68Eee03459ABF2517fa4",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xa5346F91A767b89a0363A4309C8E6c5ADc0C4A59": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "0x3571f9Bbb968E11A9c4e9C6Ed76e3777f275AA6e",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAdBAF88B39D37Dc68775eD1541F1bf83A5A45feB": {
+            "pancakeswap-v3": {
+                "WETH": {
+                    "pool_address": "0x949c21DDBA9ffC361d78d2A1459Ec6741A4E6A40",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAD6cAEb32CD2c308980a548bD0Bc5AA4306c6c18": {
+            "pancakeswap-v3": {
+                "WETH": {
+                    "pool_address": "0x61F625664aa41B0059F61D5c978d5Ec902751f78",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xeb2B7d5691878627eff20492cA7c9a71228d931D": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xC19D38925F9F645337B1D1f37bAf3C0647A48E50": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x44443dd87EC4d1bEa3425AcC118Adb023f07F91b": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x73b84F7E3901F39FC29F3704a03126D317Ab4444": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xE356cb3eFc9CB4320b945393A10Fd71c77dc24A0": {
+            "pancakeswap-v3": {
+                "WETH": {
+                    "pool_address": "0x1B67c7F208D8226CAa0fE04dA8fA5176d15b5574",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x4DEC3139f4A6c638E26452d32181fe87A7530805": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xF8584516b7d2c156C763C874d6813E06b57e4cB5": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xFf4A90B8A0C60047a838D64DbC762bdb4cB78394": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0xAC68931B666E086E9de380CFDb0Fb5704a35dc2D": {
+            "pancakeswap-v3": {
+                "USDT": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        },
+        "0x88D7e9B65dC24Cf54f5eDEF929225FC3E1580C25": {
+            "pancakeswap-v3": {
+                "WBNB": {
+                    "pool_address": "",
+                    "fee_tier": 0
+                }
+            }
+        }
+    }
+]

@@ -3,7 +3,7 @@ Telegram notification client using aiogram
 Sends messages to Telegram if API credentials are configured, otherwise skips silently
 """
 from aiogram import Bot
-from loguru import logger
+from utils import get_logger
 from typing import Optional
 from config import TG_BOT_TOKEN, TG_CHAT_ID
 import asyncio
@@ -25,6 +25,7 @@ class TelegramClient:
         bot_token: Optional[str] = TG_BOT_TOKEN, 
         chat_id: Optional[str] = TG_CHAT_ID
     ):
+        self.logger = get_logger("TG_CLIENT")
         self.bot_token = bot_token
         self.chat_id = chat_id
         self.enabled = bool(bot_token and chat_id)
@@ -33,10 +34,10 @@ class TelegramClient:
         
         if self.enabled:
             self.bot = Bot(token=self.bot_token)
-            logger.info("[TG_CLIENT] Telegram notifications enabled")
+            self.logger.info("Telegram notifications enabled")
         else:
             self.bot = None
-            logger.info("[TG_CLIENT] Telegram notifications disabled (no API key configured)")
+            self.logger.info("Telegram notifications disabled (no API key configured)")
     
     async def close(self):
         if self._status_monitor_task:
@@ -48,7 +49,7 @@ class TelegramClient:
         
         if self.enabled and self.bot:
             await self.bot.session.close()
-            logger.debug("[TG_CLIENT] Bot session closed")
+            self.logger.debug("Bot session closed")
     
     async def send_message(
         self, 
@@ -78,11 +79,11 @@ class TelegramClient:
                 parse_mode=parse_mode,
                 disable_notification=disable_notification
             )
-            logger.debug("[TG_CLIENT] Message sent successfully")
+            self.logger.debug("Message sent successfully")
             return True
                         
         except Exception as e:
-            logger.error(f"[TG_CLIENT] Error sending message: {e}")
+            self.logger.error(f"Error sending message: {e}")
             return False
     
     async def send_trade_alert(
@@ -203,7 +204,7 @@ class TelegramClient:
             True if started successfully, False otherwise
         """
         if not self.enabled:
-            logger.warning("[TG_CLIENT] Telegram notifications disabled (no API key configured)")
+            self.logger.warning("Telegram notifications disabled (no API key configured)")
             return False
         
         try:
@@ -222,7 +223,7 @@ class TelegramClient:
                 parse_mode="Markdown"
             )
             self._status_message_id = sent_message.message_id
-            logger.info("[TG_CLIENT] Status monitor message sent")
+            self.logger.info("Status monitor message sent")
             
             # Start background task to update message every 20 seconds
             self._status_monitor_task = asyncio.create_task(
@@ -232,7 +233,7 @@ class TelegramClient:
             return True
             
         except Exception as e:
-            logger.error(f"[TG_CLIENT] Error starting status monitor: {e}")
+            self.logger.error(f"Error starting status monitor: {e}")
             return False
     
     async def _update_status_loop(self, chains: list[str]):
@@ -264,8 +265,8 @@ class TelegramClient:
                     text=message,
                     parse_mode="Markdown"
                 )
-                #logger.debug("[TG_CLIENT] Status message updated")
+                #self.logger.debug("Status message updated")
                 
             except Exception as e:
-                logger.error(f"[TG_CLIENT] Error updating status message: {e}")
+                self.logger.error(f"Error updating status message: {e}")
                 

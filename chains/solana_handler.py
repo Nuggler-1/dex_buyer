@@ -21,10 +21,6 @@ from config import (
     TP_LADDERS,
     SOLANA_PRIORITY_FEE,
     TOKEN_DATA_BASE_PATH,
-    PARSED_DATA_CHECK_DELAY_DAYS,
-    FORCE_UPDATE_ON_START,
-    CACHE_UPDATE_BATCH_SIZE,
-    DELAY_BETWEEN_BATCHES,
     USABLE_TOKENS,
     MARKET_CAP_CONFIG,
     PRICE_UPDATE_DELAY,
@@ -35,7 +31,7 @@ from raydium_lib import RaydiumClient
 from solders.message import MessageV0
 import base58
 from tg_bot import TelegramClient
-from loguru import logger
+from utils import get_logger
 from typing import Optional
 from solana.rpc.async_api import AsyncClient
 from solana.rpc.commitment import Confirmed, Processed
@@ -51,7 +47,6 @@ from solders.transaction import VersionedTransaction
 from curl_cffi.requests import AsyncSession
 import traceback
 
-
 #TODO: 
 #1. Перенести http запросы в отдельный класс
 #2. Перенести парсер в отдельный класс 
@@ -63,14 +58,14 @@ class SolanaHandler:
         self,
         tg_client: TelegramClient,
         private_key_base58: str,
-        token_pool: list,
         blockhash_update_interval: int = GAS_UPDATE_INTERVAL,
         dex: Literal['RAYDIUM', 'JUPITER'] = 'RAYDIUM'
     ):
 
+        self.logger = get_logger("SOLANA")
+
         self.chain_name = 'SOLANA'
         self.client = None
-        self.token_pool = token_pool
         self.tg_client = tg_client
 
         self.jup_api_base = "https://lite-api.jup.ag/"
@@ -80,20 +75,7 @@ class SolanaHandler:
             token for token in USABLE_TOKENS if token in DEX_ROUTER_DATA[self.chain_name]
         ]
         self.token_decimals = DEX_ROUTER_DATA['SOLANA']['token_decimals']
-        
-        #cache
-        self.pool_cache_path = TOKEN_DATA_BASE_PATH + f'{self.chain_name}_pool_data.json'
-        self.token_data = {
-            token: {
-                'pool_address': {
-                    'WSOL': None,
-                    'USDT': None,
-                    'USDC': None,
-                }
-            } for token in self.token_pool
-        }
-        self.pool_cached = False
-        self._last_pool_update_time = None
+
         self._initialized = False
         
         #background tasks
@@ -126,11 +108,10 @@ class SolanaHandler:
         cls,
         tg_client: TelegramClient,
         private_key_base58: str,
-        token_pool: list,
         blockhash_update_interval: int = GAS_UPDATE_INTERVAL,
         dex: Literal['RAYDIUM', 'JUPITER'] = 'RAYDIUM'
     ):
-        instance = cls(tg_client, private_key_base58, token_pool, blockhash_update_interval, dex)
+        instance = cls(tg_client, private_key_base58, blockhash_update_interval, dex)
         await instance._initialize()
         return instance
     
@@ -141,24 +122,9 @@ class SolanaHandler:
         # Initialize blockhash cache
         await self._initialize_blockchain_cache_vars()
         
-        # Initialize token data structure
-        for token_address in self.token_pool:
-            self.token_data[token_address] = {
-                'pool_address': {base_token: None for base_token in self.usable_tokens}
-            }
-        
-        # Load cached pool addresses
-        cached_pools = self._load_pool_cache()
-        if cached_pools:
-            for token, pool_data in cached_pools.items():
-                if token in self.token_data:
-                    self.token_data[token]['pool_address'] = pool_data
-            self.pool_cached = True
-        
         # Start background tasks
         self._blockhash_updater_task = asyncio.create_task(self._blockhash_updater_loop())
         self._gas_token_price_updater_task = asyncio.create_task(self._gas_token_price_updater_loop())
-        self._pool_updater_task = asyncio.create_task(self._pool_updater_loop())
         await self._start_take_profit_tasks()
         
         self._initialized = True
@@ -170,18 +136,11 @@ class SolanaHandler:
         if self._blockhash_updater_task and not self._blockhash_updater_task.done():
             tasks_to_cancel.append(self._blockhash_updater_task)
         
-        if self._pool_updater_task and not self._pool_updater_task.done():
-            tasks_to_cancel.append(self._pool_updater_task)
-        
         if self._gas_token_price_updater_task and not self._gas_token_price_updater_task.done():
             tasks_to_cancel.append(self._gas_token_price_updater_task)
 
         if len(self._take_profit_tasks) > 0:
             tasks_to_cancel.extend([t for t in self._take_profit_tasks if not t.done()])
-        
-        # Save pool cache before closing
-        if self.token_data:
-            self._save_pool_cache()
         
         #закрываем все таски
         if tasks_to_cancel:
@@ -190,7 +149,7 @@ class SolanaHandler:
             
             #ожидаем завершения всех тасков
             await asyncio.gather(*tasks_to_cancel, return_exceptions=True)
-            logger.info(f"[{self.chain_name}] All background tasks cancelled ({len(tasks_to_cancel)} tasks)")
+            self.logger.info(f"All background tasks cancelled ({len(tasks_to_cancel)} tasks)")
 
     async def _initialize_blockchain_cache_vars(self):
         self._blockhash_cache = await self.client.get_latest_blockhash()
@@ -205,23 +164,23 @@ class SolanaHandler:
                 self._blockhash_cache = blockhash_cache.value.blockhash
                 await asyncio.sleep(self.blockhash_update_interval)
             except Exception as e:
-                logger.error(f"[{self.chain_name}] Blockhash update error: {str(e)}")
+                if any(i in str(traceback.format_exc()) for i in ['ReadTimeout', 'Timeout', 'ConnectTimeout']):
+                    self.logger.warning("Blockhash update - RPC ReadTimeout error")
+                    await asyncio.sleep(self.blockhash_update_interval)
+                self.logger.error(f"Blockhash update error: {traceback.format_exc()}")
                 await asyncio.sleep(self.blockhash_update_interval)
 
     async def _gas_token_price_updater_loop(self, init:bool=False):
         """
         Цикл обновления цены нативки, нужен для рассчета мкапы если свапаем к нативке
         """
-        pool_address = await self.query_raydium_pool(
-            DEX_ROUTER_DATA[self.chain_name]['gas_token'],
-            DEX_ROUTER_DATA[self.chain_name]['USDT']
-        )
+        pool_address = "58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2" 
         while True:
             try:
                 _, price = await self.raydium_client.get_swap_data_and_price(
                     pool_address,
                     DEX_ROUTER_DATA[self.chain_name]['gas_token'],
-                    DEX_ROUTER_DATA[self.chain_name]['USDT'],
+                    DEX_ROUTER_DATA[self.chain_name]['USDC'],
                     self._blockhash_cache
                 )
                 if price: 
@@ -230,80 +189,8 @@ class SolanaHandler:
                     return price
                 await asyncio.sleep(10)
             except Exception as e:
-                logger.error(f"[{self.chain_name}] Native token price update error: {str(e)}")
+                self.logger.error(f"Native token price update error: {str(e)}")
                 await asyncio.sleep(10)
-
-    def _load_pool_cache(self) -> dict:
-        """
-        Загружает кэшированные адреса пулов из файла
-        """
-        if not os.path.exists(self.pool_cache_path):
-            logger.info(f"[{self.chain_name}] No pool cache file found")
-            return {}
-
-        if FORCE_UPDATE_ON_START:
-            logger.info(f"[{self.chain_name}] Forcing pool cache update")
-            return {}
-        
-        try:
-            with open(self.pool_cache_path, 'r', encoding='utf-8') as f:
-                raw_data = json.load(f)
-                
-            if not isinstance(raw_data, list) or len(raw_data) != 2:
-                logger.warning(f"[{self.chain_name}] Invalid pool cache format, creating new")
-                return {}
-            
-            last_check, cache_data = raw_data
-            last_check = datetime.fromisoformat(last_check)
-            
-            #проверяем кэш на свежесть
-            if datetime.now() - last_check > timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS):
-                logger.info(f"[{self.chain_name}] Pool cache is older than {PARSED_DATA_CHECK_DELAY_DAYS} days, will refresh")
-                return {}
-            else:
-                self._last_pool_update_time = last_check
-                self.pool_cached = True
-            
-            logger.warning(f"[{self.chain_name}] Loaded {len(cache_data)} cached pool addresses out of {len(self.token_pool)} parsed tokens")
-            return cache_data
-            
-        except Exception as e:
-            logger.error(f"[{self.chain_name}] Error loading pool cache: {str(e)}")
-            return {}
-    
-    def _save_pool_cache(self):
-        """
-        Сохраняет текущие адреса пулов из self.token_data в файл
-        """
-        os.makedirs(os.path.dirname(self.pool_cache_path), exist_ok=True)
-        
-        #загружаем уже существующий кэш из json
-        if os.path.exists(self.pool_cache_path):
-            with open(self.pool_cache_path, 'r', encoding='utf-8') as f:
-                raw_data = json.load(f)
-                if not isinstance(raw_data, list) or len(raw_data) != 2:
-                    logger.info(f"[{self.chain_name}] Invalid pool cache format, creating new")
-                    pool_addresses = {}
-                else:
-                    pool_addresses = raw_data[1]
-        else:
-            pool_addresses = {}
-        
-        #обновляем загруженный кэш
-        pool_addresses = {
-            token: data['pool_address']
-            for token, data in self.token_data.items()
-            if data.get('pool_address') and any(data['pool_address'].values())
-        }
-        
-        #сохраняем обновленный 
-        cache_data = [datetime.now().isoformat(), pool_addresses]
-        with open(self.pool_cache_path, 'w', encoding='utf-8') as f:
-            json.dump(cache_data, f, indent=4, ensure_ascii=False)
-        
-        #берем непустые пулы
-        non_empty_pools = sum(1 for pools in pool_addresses.values() if any(pools.values()))
-        logger.info(f"[{self.chain_name}] Saved {non_empty_pools} pool addresses to cache")
     
     async def get_jupiter_quote(
         self,
@@ -331,10 +218,10 @@ class SolanaHandler:
                     #print(ujson.dumps(data, indent=4))
                     return data
                 else:
-                    logger.error(f"[{self.chain_name}] Jupiter quote error: {data.get('error')}")
+                    self.logger.error(f"Jupiter quote error: {data.get('error')}")
                     return None
             except Exception as e:
-                logger.error(f"[{self.chain_name}] Jupiter quote error: {str(e)}")
+                self.logger.error(f"Jupiter quote error: {str(e)}")
                 return None
     
     async def _sign_raw_tx(self, raw_tx: str, in_base64: bool = False) -> str:
@@ -370,7 +257,7 @@ class SolanaHandler:
             amount=amount_in*10**self.token_decimals
         )
         get_quote_time = time.perf_counter() - start_time
-        logger.info(f"[{self.chain_name}] Get quote time: {(get_quote_time)*1000:.2f}ms")
+        self.logger.info(f"Get quote time: {(get_quote_time)*1000:.2f}ms")
 
         tx = quote_tx.get('transaction') 
         signed_transaction = await self._sign_raw_tx(tx)
@@ -385,7 +272,7 @@ class SolanaHandler:
         )
         
         end_time = time.perf_counter()
-        logger.info(f"[{self.chain_name}] TX sent: {response.value} | Time: {(end_time - start_time)*1000:.2f}ms")
+        self.logger.info(f"TX sent: {response.value} | Time: {(end_time - start_time)*1000:.2f}ms")
         return str(response.value)
     
     async def query_raydium_swap_data_with_jupiter(
@@ -406,200 +293,11 @@ class SolanaHandler:
                 if route_plan and len(route_plan) > 0:
                     return route_plan[0].get('swapInfo').get('ammKey')
                 else:
-                    logger.error(f"[{self.chain_name}] Jupiter quote error: {data.get('error')}")
+                    self.logger.error(f"Jupiter quote error: {data.get('error')}")
                     return None
             except Exception as e:
-                logger.error(f"[{self.chain_name}] Jupiter quote error: {str(e)}")
+                self.logger.error(f"Jupiter quote error: {str(e)}")
                 return None
-
-    async def query_raydium_pool(
-        self,
-        token_one: str,
-        token_two: str,
-        ):
-        url = f'https://api-v3.raydium.io/pools/info/mint?mint1={token_one}&mint2={token_two}&poolType=standard&poolSortField=liquidity&sortType=desc&pageSize=1&page=1'
-        async with AsyncSession() as session:
-            for i in range(ERROR_429_RETRIES):
-                try:
-                    resp = await session.get(url)
-                    resp.raise_for_status()
-                    data = ujson.loads(resp.text).get('data', {})
-                    #print(resp.text)
-                    pool_id = None
-                    
-                    if data and data.get('count', 0):
-                        pool_data = data.get('data', [{}])[0]
-                        if pool_data.get('id', None) and pool_data.get('tvl', 0) > MIN_POOL_TVL:
-                            pool_id = pool_data.get('id', None)
-                            return pool_id
-                        #logger.success(f"[{self.chain_name}] {token_one} - {token_two} Raydium pool found")
-                    return None
-
-                except Exception as e:
-                    if '429' in str(e) or 'rate limit' in str(e):
-                        logger.warning(f"[{self.chain_name}] [{i+1}/{ERROR_429_RETRIES} retries] Rate limit exceeded for {token_one} with {token_two}: {str(e)}")
-                        await asyncio.sleep(ERROR_429_DELAY)
-                    else:
-                        logger.warning(f"[{self.chain_name}] error getting raydium pool for {token_one} with {token_two}: {str(e)}")
-                        return None
-
-    async def get_pool_address_realtime(
-        self,
-        token_address: str,
-        ):
-        _, pool_addresses, success = await self._update_single_token_pool(token_address)
-        if success:
-            for base_token in self.usable_tokens:
-                pool_address = pool_addresses.get(base_token)
-                if pool_address:
-                    return (base_token, pool_address)
-        else:
-            return (None, None)
-
-    def _get_first_available_pool_cached(self, token_address: str) -> tuple:
-        """
-        Возвращает данные для свапа на первом доступном пуле из кэша
-        Returns: (base_token_name, base_token_address, pool_address) или (None, None, None)
-        """
-        token_data = self.token_data.get(token_address, {})
-        pool_addresses = token_data.get('pool_address', {})
-        
-        for base_token in self.usable_tokens:
-            pool_address = pool_addresses.get(base_token)
-            if pool_address:
-                base_token_address = DEX_ROUTER_DATA[self.chain_name].get(base_token)
-                return (base_token, base_token_address, pool_address)
-        
-        return (None, None, None)
-    
-    def get_pool_address_cached(self, token_address: str, base_token: str = None) -> str:
-        """
-        Возвращает адрес пула для токена из кэша
-        Если base_token не указан, возвращает адрес первого доступного пула
-        """
-        if base_token is None:
-            _, _, pool_address = self._get_first_available_pool_cached(token_address)
-            return pool_address if pool_address else None
-        
-        return self.token_data.get(token_address, {}).get('pool_address', {}).get(base_token)
-    
-    async def _update_single_token_pool(self, token_address: str) -> tuple:
-        """
-        Получает адреса пулов для токена по всем базовым токенам
-        Returns: (token_address, pool_addresses_dict, success)
-        """
-        pool_addresses = {}
-        any_success = False
-
-        #для каждого базового токена проверяем наличие пула
-        for base_token in self.usable_tokens:
-            base_token_address = DEX_ROUTER_DATA[self.chain_name].get(base_token)
-            if not base_token_address:
-                pool_addresses[base_token] = None
-                continue
-  
-            pool_address = await self.query_raydium_pool(
-                base_token_address,
-                token_address,
-            )
-            
-            if pool_address:
-                pool_addresses[base_token] = pool_address
-                any_success = True
-            else:
-                pool_addresses[base_token] = None
-
-        #обновляем кэш
-        if any_success:
-            self.token_data[token_address]['pool_address'] = pool_addresses
-            return (token_address, pool_addresses, True)
-        else:
-            #logger.warning(f"[{self.chain_name}] No pools found for {token_address}")
-            return (token_address, pool_addresses, False)
-    
-    async def _pool_updater_loop(self):
-        """
-        Цикл обновления адресов пулов для всех токенов
-        """
-        update_pools = True if not self.pool_cached else False
-        first_run = True
-        
-        if update_pools:
-            logger.info(f"[{self.chain_name}] Starting pool address updater")
-        
-        while True:
-            try:
-                #проверяем время ласт обновления
-                if self._last_pool_update_time and self._last_pool_update_time < datetime.now() - timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS):
-                    update_pools = True
-                    logger.debug(f"[{self.chain_name}] refreshing pool addresses")
-                
-                #если не нужно обновлять пулы, ждем пока не придет время
-                if not update_pools:
-                    logger.debug(f"[{self.chain_name}] pool data is up to date")
-                    time_sleep = self._last_pool_update_time + timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS) - datetime.now()
-                    await asyncio.sleep(int(time_sleep.total_seconds()))
-                    continue
-                
-                if not self.token_pool:
-                    logger.warning(f"[{self.chain_name}] Token pool is empty, skipping pool update")
-                    return 0
-                
-                
-                start_time = time.perf_counter()
-                total_successful = 0
-                total_failed = 0
-                #гоним пачками
-                for i in range(0, len(self.token_pool), CACHE_UPDATE_BATCH_SIZE):
-                    batch = self.token_pool[i:i + CACHE_UPDATE_BATCH_SIZE]
-                    batch_start = time.perf_counter()
-                    batch_successful = 0
-                    batch_failed = 0
-                    
-                    tasks = [
-                        self._update_single_token_pool(token_address)
-                        for token_address in batch
-                    ]
-                    results = await asyncio.gather(*tasks, return_exceptions=True)
-                    
-                    #итерация результатов
-                    for result in results:
-                        if isinstance(result, Exception):
-                            batch_failed += 1
-                        elif result[2]:  #success flag
-                            batch_successful += 1
-                        else:
-                            batch_failed += 1
-                    
-                    batch_elapsed = (time.perf_counter() - batch_start) * 1000
-                    total_successful += batch_successful
-                    total_failed += batch_failed
-
-                    if first_run:#выводим только при первом запуске
-                        logger.info(f"[{self.chain_name}] Batch {i//CACHE_UPDATE_BATCH_SIZE + 1}/{len(self.token_pool)//CACHE_UPDATE_BATCH_SIZE + 1}: {batch_successful}/{len(batch)} tokens updated in {batch_elapsed:.2f}ms")
-                    
-                    #Delay between batches
-                    if i + CACHE_UPDATE_BATCH_SIZE < len(self.token_pool):
-                        await asyncio.sleep(DELAY_BETWEEN_BATCHES)
-                
-                elapsed_ms = (time.perf_counter() - start_time) * 1000
-                
-                #сохраняем кэш после апдейта
-                if total_successful > 0:
-                    self._save_pool_cache()
-                    self._last_pool_update_time = datetime.now()
-                    self.pool_cached = True
-                
-                if first_run:
-                    logger.info(f"[{self.chain_name}] Initial pool update completed: {total_successful} successful, {total_failed} no poolData in {elapsed_ms:.2f}ms")
-                    first_run = False
-                    update_pools = False  #убираем флаг
-                else:
-                    logger.debug(f"[{self.chain_name}] Pool update: {total_successful}/{len(self.token_pool)} tokens updated in {elapsed_ms:.2f}ms")
-                
-            except Exception as e:
-                logger.error(f"[{self.chain_name}] Pool updater loop error: {traceback.format_exc()}")
-                await asyncio.sleep(10)
     
     def _get_buy_size_and_tp_id(self, mcap: int, sell_token: str) -> int:
         
@@ -608,7 +306,7 @@ class SolanaHandler:
                 if config['enabled']:
                     return config['size'][sell_token], config['tp_ladder_id']
                 else: 
-                    logger.warning(f"[{self.chain_name}] Market cap config {config['min_cap']} - {config['max_cap']} is disabled, skipping")
+                    self.logger.warning(f"Market cap config {config['min_cap']} - {config['max_cap']} is disabled, skipping")
         return 0, None
 
     """
@@ -644,7 +342,7 @@ class SolanaHandler:
             request_id = data.get('requestId')
             
             if not (unsigned_tx and request_id):
-                logger.error(f"[{self.chain_name}] Failed to create Jupiter trigger order")
+                self.logger.error(f"Failed to create Jupiter trigger order")
                 raise Exception(f"Failed to parse Jupiter trigger order: {data}")
 
             signed_tx = await self._sign_raw_tx(unsigned_tx, in_base64=True)
@@ -661,7 +359,7 @@ class SolanaHandler:
             if not data.get('status', '').lower() == 'success':
                 raise Exception(f"Failed to execute Jupiter trigger order: {data}")
             else: 
-                logger.info(f"[{self.chain_name}] Jupiter trigger order placed successfully")
+                self.logger.info(f"Jupiter trigger order placed successfully")
             
             return 1
 
@@ -679,7 +377,7 @@ class SolanaHandler:
         base_token_address = DEX_ROUTER_DATA[self.chain_name][base_token_name]
         base_decimals = DEX_ROUTER_DATA[self.chain_name]['token_decimals'][base_token_name]
         if not total_balance:
-            logger.error(f"[{self.chain_name}] Failed to get token balance for {sell_token_address}")
+            self.logger.error(f"Failed to get token balance for {sell_token_address}")
             return None
         
         ladder_config = TP_LADDERS[tp_ladder_id]
@@ -703,11 +401,11 @@ class SolanaHandler:
                         int(buy_amount*10**base_decimals),
                         int(sell_amount*10**sell_token_decimals)
                     )
-                    logger.info(f"[{self.chain_name}] [{i+1}/{steps}] tp order on {sell_token_address} created successfully")
+                    self.logger.info(f"[{i+1}/{steps}] tp order on {sell_token_address} created successfully")
                     await asyncio.sleep(0.5)
                     break
                 except Exception as e:
-                    logger.error(f"[{self.chain_name}] [{j+1}/3] retrying to create tp order on {sell_token_address} due to error: {str(e)}")
+                    self.logger.error(f"[{j+1}/3] retrying to create tp order on {sell_token_address} due to error: {str(e)}")
                     await asyncio.sleep(5)
     """
 
@@ -718,7 +416,7 @@ class SolanaHandler:
                 with open(self.tp_cache_path, 'r', encoding='utf-8') as f:
                     self._take_profit_cache = json.load(f)
             except Exception as e:
-                logger.error(f"[{self.chain_name}] Failed to load TP cache: {str(e)}")
+                self.logger.error(f"Failed to load TP cache: {str(e)}")
                 self._take_profit_cache = {}
         
         return self._take_profit_cache
@@ -729,14 +427,14 @@ class SolanaHandler:
             with open(self.tp_cache_path, 'w', encoding='utf-8') as f:
                 json.dump(self._take_profit_cache, f, indent=4)
         except Exception as e:
-            logger.error(f"[{self.chain_name}] Failed to save TP cache in json: {str(e)}")
+            self.logger.error(f"Failed to save TP cache in json: {str(e)}")
 
     async def _start_take_profit_tasks(self,):
         await self._load_take_profit_cache()
         if len(self._take_profit_cache) > 0:
-            logger.info(f"[{self.chain_name}] Starting TP tasks for {len(self._take_profit_cache)} tokens")
+            self.logger.info(f"Starting TP tasks for {len(self._take_profit_cache)} tokens")
         else: 
-            logger.info(f"[{self.chain_name}] No TP tasks to start")
+            self.logger.info(f"No TP tasks to start")
             return
         for token_address, tp_data in self._take_profit_cache.items():
             self._take_profit_tasks.append(
@@ -747,7 +445,8 @@ class SolanaHandler:
                         tp_data['pool_address'],
                         tp_data['take_profit_ladder_id'],
                         tp_data['price_bought'],
-                        tp_data['steps_done']
+                        tp_data['steps_done'],
+                        custom_tp_ladder=tp_data['custom_tp_ladder']
                     )
                 )
             )
@@ -760,7 +459,8 @@ class SolanaHandler:
         take_profit_ladder_id: int, 
         price_bought: float,
         steps_done: int = 0,
-        tx_failure_counter: int = 10
+        tx_failure_counter: int = 10,
+        custom_tp_ladder: dict = None
     ):
         """
         Мониторит цену токена и продает по лестнице тейк-профитов или в стоплосс
@@ -775,9 +475,9 @@ class SolanaHandler:
         """
         
         # Получаем конфигурацию лестницы
-        ladder_config = TP_LADDERS.get(take_profit_ladder_id)
+        ladder_config = TP_LADDERS.get(take_profit_ladder_id) if custom_tp_ladder is None else custom_tp_ladder
         if not ladder_config or not ladder_config.get('enabled'):
-            logger.warning(f"[{self.chain_name}] | TP task | TP ladder {take_profit_ladder_id} is disabled or not found")
+            self.logger.warning(f"TP task | TP ladder {take_profit_ladder_id} is disabled or not found")
             await self.tg_client.send_error_alert(
                 "TP task FAILED", 
                 f"{self.chain_name} TP ladder {take_profit_ladder_id} is disabled or not found",
@@ -794,7 +494,7 @@ class SolanaHandler:
         price_bought = price_bought * price_corrector
 
         #ставим дефолтный стоплосс
-        stop_loss_price = price_bought * (1 + ladder_config['SP_from_entry_percent'])
+        stop_loss_price = price_bought * (1 + ladder_config['SL_from_entry_percent'])
         
         # Получаем параметры лестницы
         first_tp_percent = ladder_config['first_tp_percent']
@@ -808,7 +508,7 @@ class SolanaHandler:
             balances = await self.raydium_client.get_token_balances(Pubkey.from_string(token_address_to_sell))
             total_balance = balances.get('uiAmount',0)
         except Exception as e:
-            logger.error(f"[{self.chain_name}] | TP task | Failed to get token balance: {str(e)}")
+            self.logger.error(f"TP task | Failed to get token balance: {str(e)}")
             await self.tg_client.send_error_alert(
                 "TP task FAILED", 
                 f"{self.chain_name} Failed to get token balance for {token_address_to_sell}",
@@ -817,7 +517,7 @@ class SolanaHandler:
             return 0
         
         if total_balance == 0:
-            logger.warning(f"[{self.chain_name}] | TP task | Zero balance for {token_address_to_sell}")
+            self.logger.warning(f"TP task | Zero balance for {token_address_to_sell}")
             await self.tg_client.send_error_alert(
                 "TP task DISABLED", 
                 f"{self.chain_name} Zero balance for {token_address_to_sell}",
@@ -832,11 +532,12 @@ class SolanaHandler:
             'take_profit_ladder_id': take_profit_ladder_id,
             'price_bought': raw_price_bought,
             'steps_done': steps_done,
+            'custom_tp_ladder': custom_tp_ladder
 
         }
         await self._update_take_profit_json()
         
-        logger.info(f"[{self.chain_name}] | TP task | Starting TP task for {token_address_to_sell} | Ladder id: {take_profit_ladder_id} | Balance: {total_balance:.4f} | SL at {stop_loss_price:.4f}")
+        self.logger.info(f"TP task | Starting TP task for {token_address_to_sell} | Ladder id: {take_profit_ladder_id} | Balance: {total_balance:.4f} | SL at {stop_loss_price:.4f}")
         
         # Рассчитываем ценовые уровни для каждого шага
         price_step_percent = (total_percent - first_tp_percent) / (steps - 1) if steps > 1 else 0
@@ -854,7 +555,7 @@ class SolanaHandler:
                 'size_percent': distribution[i],
                 'executed': False if i >= steps_done else True
             })
-        logger.info(f"[{self.chain_name}] | TP task | TP levels calculated: {steps-steps_done}/{steps} steps left from {tp_levels[0]['target_price']:.6f} to {tp_levels[-1]['target_price']:.6f}")
+        self.logger.info(f"TP task | TP levels calculated: {steps-steps_done}/{steps} steps left from {tp_levels[0]['target_price']:.6f} to {tp_levels[-1]['target_price']:.6f}")
         
         # Мониторинг цены и выполнение продаж
         poll_interval = PRICE_UPDATE_DELAY[self.chain_name]
@@ -864,7 +565,7 @@ class SolanaHandler:
 
             #Если количество неуспешных транзакций превысило лимит, завершаем задачу
             if tx_failure >= tx_failure_counter:
-                logger.error(f"[{self.chain_name}] | TP task | Failed to execute TP levels for {token_address_to_sell}")
+                self.logger.error(f"TP task | Failed to execute TP levels for {token_address_to_sell}")
                 await self.tg_client.send_error_alert(
                     "TP task FAILED", 
                     f"{self.chain_name} TP task failed for {token_address_to_sell}, can't sell token",
@@ -873,7 +574,7 @@ class SolanaHandler:
                 break
             #Проверяем, все ли уровни выполнены
             if all(level['executed'] for level in tp_levels):
-                logger.success(f"[{self.chain_name}] | TP task | All TP levels executed for {token_address_to_sell}")
+                self.logger.success(f"TP task | All TP levels executed for {token_address_to_sell}")
                 #удаляем данные о тп когда он выполнен
                 if token_address_to_sell in self._take_profit_cache:
                     del self._take_profit_cache[token_address_to_sell]
@@ -889,7 +590,7 @@ class SolanaHandler:
                     self._blockhash_cache
                 )
                 if token_data is None:
-                    logger.warning(f"[{self.chain_name}] | TP task | Failed to get current price for {token_address_to_sell}")
+                    self.logger.warning(f"TP task | Failed to get current price for {token_address_to_sell}")
                     await asyncio.sleep(poll_interval)
                     continue
                 else: 
@@ -898,7 +599,7 @@ class SolanaHandler:
 
                 #Триггерим стоплосс, передаем единственный тейкпрофит - продажа всего
                 if current_price <= stop_loss_price:
-                    logger.warning(f"[{self.chain_name}] | TP task | Stop loss triggered for {token_address_to_sell}")
+                    self.logger.warning(f"TP task | Stop loss triggered for {token_address_to_sell}")
                     balances = await self.raydium_client.get_token_balances(Pubkey.from_string(token_address_to_sell))
                     balance = balances.get('uiAmount',0)
                     if not balance:
@@ -921,7 +622,7 @@ class SolanaHandler:
                     
                     #готовим продажу если цена тп достигнута
                     if price_reached:
-                        logger.info(f"[{self.chain_name}] | TP task | {token_address_to_sell} | TP level {level['step']} triggered: Current: {current_price:.6f}, Target: {level['target_price']:.6f}")
+                        self.logger.info(f"TP task | {token_address_to_sell} | TP level {level['step']} triggered: Current: {current_price:.6f}, Target: {level['target_price']:.6f}")
                         
                         # Строим и отправляем транзакцию                       
                         tx = await self.raydium_client.swap(
@@ -941,7 +642,7 @@ class SolanaHandler:
                             if token_address_to_sell in self._take_profit_cache:
                                 self._take_profit_cache[token_address_to_sell]['steps_done'] = level['step']
                                 await self._update_take_profit_json()
-                            logger.success(f"[{self.chain_name}] | TP task | {token_address_to_sell} | TP level {level['step']} executed: {level['size_percent']}% sold at {current_price:.6f} | TX: {tx}")
+                            self.logger.success(f"TP task | {token_address_to_sell} | TP level {level['step']} executed: {level['size_percent']}% sold at {current_price:.6f} | TX: {tx}")
                             await self.tg_client.tp_task_message(
                                 self.chain_name,
                                 token_address_to_sell,
@@ -952,7 +653,7 @@ class SolanaHandler:
                             )
                         else:
                             tx_failure += 1
-                            logger.error(f"[{self.chain_name}] | TP task | {token_address_to_sell} | Failed to execute TP level {level['step']}")
+                            self.logger.error(f"TP task | {token_address_to_sell} | Failed to execute TP level {level['step']}")
                             await self.tg_client.send_error_alert(
                                 "TP task FAILED", 
                                 f"{self.chain_name} Failed to execute TP level {level['step']}",
@@ -962,7 +663,7 @@ class SolanaHandler:
                     await asyncio.sleep(poll_interval)       
                 
             except Exception as e:
-                logger.error(f"[{self.chain_name}] | TP task | Error in TP monitoring loop: {traceback.format_exc()}")
+                self.logger.error(f"TP task | Error in TP monitoring loop: {traceback.format_exc()}")
                 await self.tg_client.send_error_alert(
                     "TP task ERROR", 
                     f"{self.chain_name} Error in TP monitoring loop but still running",
@@ -973,25 +674,32 @@ class SolanaHandler:
     
     async def execute_swap(
         self,
-        token_address: str,
-        token_supply: int
-    ):
+        token_supply:int,
+        pool_data:dict,
+        position_size: int = None,
+        custom_tp_ladder: dict = None
+    ) -> str:
+
         """
+            supply_data = 1234
+            pool_data = {
+                'token_address': token_address,
+                'chain': 'ARBITRUM',
+                'base_token': base_token_name,
+                'dex_type': 'amm',
+                'liquidity': pool_tvl,
+                'pair_address': pool_address,
+                'fee_tier': 0
+            }
         Выполняет свап токена
         Если base_token не указан, использует первый доступный пул из кэша
         """
        
-        t1 = time.perf_counter()
-        base_token_name, base_token_address, pool_address = self._get_first_available_pool_cached(token_address)
-        if not base_token_address:
-            logger.warning(f"[{self.chain_name}] No cached pool found for token {token_address} - Starting real-time query")
-            base_token_name, pool_address = await self.get_pool_address_realtime(token_address)
-            if not pool_address:
-                logger.error(f"[{self.chain_name}] No Raydium pool found for token {token_address}")
-                return None
-            base_token_address = DEX_ROUTER_DATA[self.chain_name][base_token_name]
-        t2 = time.perf_counter()
-        logger.debug(f"[{self.chain_name}] | execute_swap | Pool query time: {(t2-t1)*1000:.2f}ms")
+        base_token_name = pool_data.get('base_token')
+        base_token_address = DEX_ROUTER_DATA[self.chain_name][base_token_name]
+        pool_address = pool_data.get('pair_address')
+        token_address = pool_data.get('token_address')
+        dex_type = pool_data.get('dex_type')
         
         t3 = time.perf_counter()
         token_data = await self.raydium_client.get_swap_data_and_price(
@@ -1001,7 +709,7 @@ class SolanaHandler:
             cached_blockhash=self._blockhash_cache
         )
         t4 = time.perf_counter()
-        logger.debug(f"[{self.chain_name}] | execute_swap | Swap data query time: {(t4-t3)*1000:.2f}ms")
+        self.logger.debug(f"| execute_swap | Swap data query time: {(t4-t3)*1000:.2f}ms")
 
         t5 = time.perf_counter()
         if token_data: 
@@ -1012,10 +720,17 @@ class SolanaHandler:
                 mcap_usd_converter = price
             mcap = mcap_usd_converter * token_supply
             amount_in, tp_id = self._get_buy_size_and_tp_id(mcap, base_token_name)
+
+            if position_size:
+                if base_token_address == DEX_ROUTER_DATA[self.chain_name]['gas_token']:
+                    amount_in = position_size/self.gas_token_price
+                else:
+                    amount_in = position_size
+
             if not amount_in:
                 return None
         else: 
-            logger.error(f"[{self.chain_name}] No Raydium data found for token {token_address}")
+            self.logger.error(f"No Raydium data found for token {token_address}")
             return None
 
         swap =  await self.raydium_client.swap(
@@ -1028,8 +743,7 @@ class SolanaHandler:
 
         )
         t6 = time.perf_counter()
-        logger.debug(f"[{self.chain_name}] | execute_swap | send swap time: {(t6-t5)*1000:.2f}ms")
-        logger.debug(f"[{self.chain_name}] | execute_swap | Total time: {(t6-t1)*1000:.2f}ms")
+        self.logger.debug(f"| execute_swap | send swap time: {(t6-t5)*1000:.2f}ms")
 
         if swap:
             await asyncio.sleep(DELAY_BEFORE_TP)
@@ -1038,7 +752,8 @@ class SolanaHandler:
                 base_token_address,
                 pool_address,
                 tp_id,
-                1/price
+                1/price,
+                custom_tp_ladder=custom_tp_ladder
             ))
         return swap
 

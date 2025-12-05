@@ -183,6 +183,20 @@ erc20_abi = [
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
+            {   
+                "constant": True,
+                "payable": False,
+                "stateMutability": "view",
+                "type": "function",
+                "name": "decimals",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ]
+            },
             {
                 "constant": False,
                 "inputs": [

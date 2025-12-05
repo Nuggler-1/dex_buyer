@@ -4,6 +4,7 @@
         "fee_tier": 500,
         "take_profit_ladder_id": 5,
         "price_bought": 0.0069205291269660565,
-        "steps_done": 0
+        "steps_done": 0,
+        "custom_tp_ladder": null
     }
 }

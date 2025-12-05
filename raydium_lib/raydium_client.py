@@ -4,7 +4,8 @@ import os
 import struct
 import time
 from typing import Optional
-from loguru import logger
+from utils import get_logger
+import traceback
 
 from solana.rpc.async_api import AsyncClient
 from solana.rpc.commitment import Processed, Confirmed
@@ -37,7 +38,6 @@ from .constants import (
 from .pool_keys import AmmV4PoolKeys
 from .layouts import LIQUIDITY_STATE_LAYOUT_V4, MARKET_STATE_LAYOUT_V3
 
-
 class RaydiumClient:
     
     def __init__(
@@ -53,8 +53,8 @@ class RaydiumClient:
         self.compute_unit_limit = compute_unit_limit
         self.compute_unit_price = compute_unit_price
         self._pool_keys_cache = {}
-        
-        logger.info(f"[SOLANA | RAYDIUM] Raydium client initialized | Wallet: {str(self.pubkey)[:8]}...")
+        self.logger = get_logger("SOL|RAYDIUM")
+        self.logger.info(f"Raydium client initialized | Wallet: {str(self.pubkey)[:8]}...")
     
     async def fetch_pool_keys(self, pair_address: str, use_cache: bool = True) -> Optional[AmmV4PoolKeys]:
         if use_cache and pair_address in self._pool_keys_cache:
@@ -105,9 +105,11 @@ class RaydiumClient:
             return pool_keys
             
         except Exception as e:
-            import traceback
-            logger.error(traceback.format_exc())
-            logger.error(f"[SOLANA | RAYDIUM] Error fetching pool keys: {e}")
+            
+            if any(i in str(traceback.format_exc()) for i in ['ReadTimeout', 'Timeout', 'ConnectTimeout']):
+                self.logger.warning("RPC ReadTimeout error")
+                return None
+            self.logger.error(f"Error fetching pool keys: {traceback.format_exc()}")
             return None
     
     async def get_token_balances(self, mint: Pubkey) -> Optional[float]:
@@ -126,7 +128,7 @@ class RaydiumClient:
             return {}
             
         except Exception as e:
-            logger.error(f"[SOLANA | RAYDIUM] Error getting token balance: {e}")
+            self.logger.error(f"Error getting token balance: {e}")
             return {}
     
     async def get_reserves(self, pool_keys: AmmV4PoolKeys) -> tuple:
@@ -141,15 +143,17 @@ class RaydiumClient:
             quote_balance = balances[1].data.parsed['info']['tokenAmount']['uiAmount']
             
             if base_balance is None or quote_balance is None:
-                logger.error("[SOLANA | RAYDIUM] One of the reserves is None")
+                self.logger.error("One of the reserves is None")
                 return None, None, None, None
             
             return base_balance, quote_balance, pool_keys.base_decimals, pool_keys.quote_decimals
             
         except Exception as e:
-            import traceback
-            logger.error(f"[SOLANA | RAYDIUM] Error getting reserves: {e}")
-            logger.error(traceback.format_exc())
+            
+            if any(i in str(traceback.format_exc()) for i in ['ReadTimeout', 'Timeout', 'ConnectTimeout']):
+                self.logger.warning("RPC ReadTimeout error")
+                return None, None, None, None
+            self.logger.error(f"Error getting reserves: {traceback.format_exc()}")
             return None, None, None, None
     
     def calculate_amount_out(
@@ -257,9 +261,10 @@ class RaydiumClient:
         """
         try:
             # Fetch pool keys
+            #print(pair_address)
             pool_keys = await self.fetch_pool_keys(pair_address)
             if not pool_keys:
-                logger.error("[SOLANA | RAYDIUM] Failed to fetch pool keys")
+                self.logger.error("Failed to fetch pool keys")
                 return None
             
             token_in_mint_pubkey = Pubkey.from_string(token_in_mint)
@@ -275,7 +280,7 @@ class RaydiumClient:
                 output_decimal = pool_keys.base_decimals
                 is_base_input = False
             else:
-                logger.error("[SOLANA | RAYDIUM] Input token not in pool")
+                self.logger.error("Input token not in pool")
                 return None
             
             # Gather reserves and account data in parallel
@@ -324,10 +329,12 @@ class RaydiumClient:
             return (pool_data, price)
             
         except Exception as e:
-            import traceback
-            logger.error(traceback.format_exc())
-            logger.error(f"[SOLANA | RAYDIUM] Error getting swap data and price: {str(e)}")
-            return None
+            
+            if any(i in str(traceback.format_exc()) for i in ['ReadTimeout', 'Timeout', 'ConnectTimeout']):
+                self.logger.warning("RPC ReadTimeout error")
+                return None, None
+            self.logger.error(f"Error getting swap data and price: {traceback.format_exc()}")
+            return None, None
     
     async def _confirm_tx(self, tx_sig:str):
 
@@ -338,14 +345,16 @@ class RaydiumClient:
             )
             
             if confirmation.value[0].err is None:
-                logger.success(f"[SOLANA | RAYDIUM] Transaction confirmed successfully")
+                self.logger.success(f"Transaction confirmed successfully")
                 return str(tx_sig)
             else:
-                logger.error(f"[SOLANA | RAYDIUM] Transaction failed: {confirmation.value[0].err}")
+                self.logger.error(f"Transaction failed: {confirmation.value[0].err}")
                 return None
                 
         except Exception as e:
-            logger.error(f"[SOLANA | RAYDIUM] Confirmation error: {e}")
+            
+            
+            self.logger.error(f"Confirmation error: {traceback.format_exc()}")
             return None
 
     #можно попробовать ускорить на 200-250ms если найти сервис, который вместе с адресом пула выдаст всю остальную дату, чтобы не делать дополнтиельный запрос к RPC 
@@ -367,16 +376,15 @@ class RaydiumClient:
                 if not cached_blockhash:
                     cached_blockhash = await self.client.get_latest_blockhash()
                     cached_blockhash = cached_blockhash.value.blockhash
-                result = await self.get_swap_data_and_price(
+                pool_data, _ = await self.get_swap_data_and_price(
                     pair_address,
                     token_in_mint,
                     token_out_mint,
                     cached_blockhash
                 )
-                if result is None:
+                if pool_data is None:
                     return None
                 
-                pool_data, _ = result  
             
             (pool_keys, base_reserve, quote_reserve, token_account_in_check, token_account_out_check,
              blockhash, is_base_input, input_decimal, output_decimal) = pool_data
@@ -464,5 +472,5 @@ class RaydiumClient:
             return await self._confirm_tx(txn_sig)
             
         except Exception as e:
-            logger.error(f"[SOLANA | RAYDIUM] Swap error: {e}")
+            self.logger.error(f"Swap error: {e}")
             return None

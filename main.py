@@ -5,7 +5,7 @@ import warnings
 import traceback
 import sys
 from loguru import logger
-from config import DEFAULT_LOGS_FILE, LOGS_SIZE
+from config import DEFAULT_LOGS_FILE, LOGS_SIZE, SOFT_NAME
 
 asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())
 warnings.filterwarnings("ignore", message="Curlm alread closed")
@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore", message="Curlm alread closed")
 logger.remove()
 logger.add(
     sys.stdout,
-    format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> |  <level>{message}</level>",
+    format=f"<green>{{time:HH:mm:ss}}</green> | [{SOFT_NAME}] | <level>{{level: <8}}</level> | <level>{{message}}</level>",
     colorize=True
 )
 logger.add(DEFAULT_LOGS_FILE, rotation=LOGS_SIZE)

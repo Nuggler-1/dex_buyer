@@ -3,8 +3,6 @@ from config import (
     CMC_API_KEY,
     PARSED_DATA_CHECK_DELAY_DAYS, 
     SUPPLY_DATA_PATH, 
-    SUPPLY_CHECK_DELAY_DAYS, 
-    LAST_CHECK_PATH,
     EXHANGE_SLUG_TO_BOT_SLUG,
     ALL_BASE_TOKEN_TICKERS,
     EXCHANGE_SLUGS, MIN_POOL_TVL,
@@ -13,6 +11,7 @@ from config import (
     CHAIN_NAMES,
     ALL_BASE_TOKEN_TICKERS,
     TOKEN_DATA_BASE_PATH, 
+    FORCE_UPDATE_ON_START,
     ERROR_429_DELAY,
     ERROR_429_RETRIES,
     GECKO_API_KEY,
@@ -23,18 +22,36 @@ from curl_cffi.requests import AsyncSession
 from web3 import Web3
 from web3 import AsyncWeb3
 import json
-from loguru import logger
+from utils import get_logger
 import asyncio
 import os
 import time
-from chains.consts import DEX_ROUTER_DATA, pool_abi
+from chains.consts import DEX_ROUTER_DATA, pool_abi, erc20_abi
 from datetime import datetime, timedelta
 import ujson
+import base58
 
 class HelperSOL: 
 
     def __init__(self,):
-        pass 
+        self.logger = get_logger("PARSER")
+
+    def _is_valid_solana_address(self, address: str) -> bool:
+        """Validate if a string is a valid Solana Base58 address"""
+        if not address or not isinstance(address, str):
+            return False
+        try:
+            # Solana addresses are 32-44 characters in Base58
+            if len(address) < 32 or len(address) > 44:
+                return False
+            # Try to decode as base58
+            decoded = base58.b58decode(address)
+            # Solana public keys are 32 bytes
+            if len(decoded) != 32:
+                return False
+            return True
+        except Exception:
+            return False
 
     async def _query_raydium_pool(
         self,
@@ -56,15 +73,15 @@ class HelperSOL:
                         pool_tvl = pool_data.get('tvl', 0)
                         if pool_address and pool_tvl:
                             return pool_address, pool_tvl
-                        #logger.success(f"[{self.chain_name}] {token_one} - {token_two} Raydium pool found")
+                        #self.logger.success(f"[{self.chain_name}] {token_one} - {token_two} Raydium pool found")
                     return None, None
 
                 except Exception as e:
                     if '429' in str(e) or 'rate limit' in str(e):
-                        logger.warning(f"[TOKEN_PARSER] [{i+1}/{ERROR_429_RETRIES} retries] Rate limit exceeded for {token_one} with {token_two}: {str(e)}")
+                        self.logger.warning(f"[{i+1}/{ERROR_429_RETRIES} retries] Rate limit exceeded for {token_one} with {token_two}: {str(e)}")
                         await asyncio.sleep(ERROR_429_DELAY)
                     else:
-                        logger.warning(f"[TOKEN_PARSER] error getting raydium pool for {token_one} with {token_two}: {str(e)}")
+                        self.logger.warning(f"error getting raydium pool for {token_one} with {token_two}: {str(e)}")
                         return None, None
 
     async def get_pools_tvl_sorted(self, token_address: str):
@@ -73,7 +90,7 @@ class HelperSOL:
             base_token_address = DEX_ROUTER_DATA['SOLANA'].get(base_token)
             if not base_token_address: 
                 continue
-            pool_address, pool_tvl = self._query_raydium_pool(base_token, token_address)
+            pool_address, pool_tvl = await self._query_raydium_pool(base_token_address, token_address)
             if pool_address and pool_tvl > MIN_POOL_TVL:
                 pools.append({
                     'token_address': token_address,
@@ -94,6 +111,7 @@ class HelperEVM:
         self.headers = {
             'x-cg-demo-api-key': GECKO_API_KEY
         }
+        self.logger = get_logger("PARSER")
 
     async def _get_pools_tvl_sorted(
         self,
@@ -116,15 +134,15 @@ class HelperEVM:
 
             except Exception as e:
                 if any(['429' in str(e), 'rate limit' in str(e)]):
-                    logger.warning(f"[TOKEN_PARSER] tvl query Rate limited, waiting {ERROR_429_DELAY} seconds")
+                    self.logger.warning(f"tvl query Rate limited, waiting {ERROR_429_DELAY} seconds")
                     await asyncio.sleep(ERROR_429_DELAY)
                 else:
-                    logger.error(f"[TOKEN_PARSER] Error getting pool TVL for {token_address} on {chain_name}: {str(e)}: {data}")
+                    self.logger.error(f"Error getting pool TVL for {token_address} on {chain_name}: {str(e)}: {data}")
                     return []
 
         parsed_pools = data.get('data',[])
         if not parsed_pools:
-            logger.warning(f"[TOKEN_PARSER] Pools for {token_address} on {chain_name} not found")
+            self.logger.warning(f"Pools for {token_address} on {chain_name} not found")
 
         pools = []
         for pool in parsed_pools:
@@ -177,16 +195,20 @@ class HelperEVM:
                 return pool
         return None
     
-    async def _get_pool_fee_tier(self, pool_address: str, chain_name: str):
+    async def _get_pool_fee_tier_and_token_decimals(self,token_address:str, pool_address: str, chain_name: str):
         try:
             w3= AsyncWeb3(AsyncWeb3.AsyncHTTPProvider(RPC[chain_name]))
-            contract = w3.eth.contract(address=pool_address, abi=pool_abi)
-            fee = await contract.functions.fee().call()
+            pool_contract = w3.eth.contract(address=pool_address, abi=pool_abi)
+            token_contract = w3.eth.contract(address=token_address, abi=erc20_abi)
+            fee, decimals = await asyncio.gather( 
+                pool_contract.functions.fee().call(),
+                token_contract.functions.decimals().call()
+            )
             await w3.provider.disconnect()
-            return fee
+            return fee, decimals
         except Exception as e:
-            logger.error(f"[TOKEN_PARSER] Error getting pool fee tier for {pool_address} on {chain_name}: {str(e)}")
-            return None
+            self.logger.error(f"Error getting pool fee tier for {pool_address} on {chain_name}: {str(e)}")
+            return None, None
 
     async def _get_single_pool_data(self, pool_address: str, chain_name: str):
 
@@ -218,16 +240,17 @@ class HelperEVM:
 
             except Exception as e:
                 if any(['429' in str(e), 'rate limit' in str(e)]):
-                    logger.error(f"[TOKEN_PARSER] tvl query Rate limited, waiting {ERROR_429_DELAY} seconds")
+                    self.logger.error(f"tvl query Rate limited, waiting {ERROR_429_DELAY} seconds")
                     await asyncio.sleep(ERROR_429_DELAY)
                 else:
-                    logger.error(f"[TOKEN_PARSER] Error getting pool TVL: {str(e)}")
+                    self.logger.error(f"Error getting pool TVL: {str(e)}")
                     break
         return {}
 
 class SupplyParser:
 
     def __init__(self):
+        self.logger = get_logger("PARSER")
         self.supported_platforms_ids = list(CMC_PLATFORM_IDS.keys())
         self.supported_platforms_names = list(CMC_PLATFORM_IDS.values())
         self.main_token_data, self._last_update_time = self._load_token_data()
@@ -323,21 +346,25 @@ class SupplyParser:
                 else: 
                     return data[1], datetime.fromisoformat(data[0])
         except FileNotFoundError:
-            logger.warning(f'[TOKEN_PARSER] Token data file not found, returning empty dict')
+            self.logger.warning(f'Token data file not found, returning empty dict')
             return None, None
 
     def _should_run_parse(self):
         if self.main_token_data is None:
             return True
         
+        if FORCE_UPDATE_ON_START:
+            self.logger.info(f'FORCE_UPDATE_ON_START is set to True, running parse')
+            return True
+        
         time_since_last_run = datetime.now() - self._last_update_time
-        should_run = time_since_last_run >= timedelta(days=SUPPLY_CHECK_DELAY_DAYS)
+        should_run = time_since_last_run >= timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS)
         
         if should_run:
-            logger.info(f'[TOKEN_PARSER] Last run was {time_since_last_run.days} days ago, running parse')
+            self.logger.info(f'Last parsing run was {time_since_last_run.days} days ago, running parse')
         else:
-            days_until_next = SUPPLY_CHECK_DELAY_DAYS - time_since_last_run.days
-            logger.info(f'[TOKEN_PARSER] Last run was {time_since_last_run.days} days ago, next run in {days_until_next} days')
+            days_until_next = PARSED_DATA_CHECK_DELAY_DAYS - time_since_last_run.days
+            self.logger.info(f'Last parsing run was {time_since_last_run.days} days ago, next run in {days_until_next} days')
         
         return should_run
 
@@ -361,13 +388,13 @@ class SupplyParser:
             for _ in range(ERROR_429_RETRIES):
                 response = await session.get(url, headers=self.headers)
                 if response.status_code == 429:
-                    logger.warning(f'[TOKEN_PARSER] Received 429 error, retrying in {ERROR_429_DELAY} seconds')
+                    self.logger.warning(f'Received 429 error, retrying in {ERROR_429_DELAY} seconds')
                     await asyncio.sleep(ERROR_429_DELAY)
                 else: 
                     break
 
             if response.status_code != 200:
-                logger.warning(f'[TOKEN_PARSER] Received non-200 status code: {response.status_code}')
+                self.logger.warning(f'Received non-200 status code: {response.status_code}')
                 return []
 
             data = response.json().get('data',{}).get('marketPairs',[])
@@ -404,7 +431,10 @@ class SupplyParser:
                     pair_address = '' if not pool_data.get('pairContractAddress') else Web3.to_checksum_address(pool_data.get('pairContractAddress'))
                 else: 
                     token_address = pool_data.get('tokenAddress')
-                    pair_address = '' if not pool_data.get('pairContractAddress') else pool_data.get('pairContractAddress')
+                    pair_address = pool_data.get('pairContractAddress', '')
+                    # Validate Solana address - if invalid, clear it so we fetch from Raydium
+                    if pair_address and not self.helper_sol._is_valid_solana_address(pair_address):
+                        pair_address = ''
 
                 if 'W' in base_symbol: #found wrapped base token, removing unwrapped as well
                     base_tokens_unused.remove(base_symbol.split('W')[1])
@@ -419,6 +449,7 @@ class SupplyParser:
 
                 #quote data from gecko/raydium
                 fee = 0
+                decimals = 0
                 if chain_name != 'SOLANA':
                     if not pair_address:
                         token_pool = await self.helper_evm._get_pool_by_token_address(token_address, base_symbol, chain_name)
@@ -426,13 +457,15 @@ class SupplyParser:
                             continue
                         pair_address = token_pool.get('pair_address')
                         liquidity = token_pool.get('liquidity')
-                    fee = await self.helper_evm._get_pool_fee_tier(pair_address, chain_name)
+                    fee, decimals = await self.helper_evm._get_pool_fee_tier_and_token_decimals(token_address, pair_address, chain_name)
                     if not fee:
                         continue
                     
                 else: 
                     if not pair_address: 
-                        base_token_address = DEX_ROUTER_DATA['SOLANA'][base_symbol]
+                        base_token_address = DEX_ROUTER_DATA['SOLANA'].get(base_symbol)
+                        if not base_token_address: 
+                            continue
                         buy_token_address = token_address
                         pair_address, liquidity = await self.helper_sol._query_raydium_pool(base_token_address, buy_token_address)
                         if not(pair_address and liquidity > MIN_POOL_TVL):
@@ -441,12 +474,13 @@ class SupplyParser:
                 supported_pools.append(
                     {
                         'token_address': token_address,
+                        'token_decimals': decimals,
                         'chain': pool_data.get('platformName').upper(),
                         'base_token': base_symbol,
                         'dex_type': exchange_slug,
                         'liquidity': liquidity,
                         'pair_address': pair_address,
-                        'fee_tier': fee
+                        'fee_tier': fee,
                     }
                 )
 
@@ -454,15 +488,26 @@ class SupplyParser:
             return sorted_pools
 
     async def _update_token_cache_json(self):
-        logger.info(f'[TOKEN_PARSER] Saving main data to {SUPPLY_DATA_PATH}')
+        self.logger.info(f'Saving main data to {SUPPLY_DATA_PATH}')
 
         # Создаем директорию для главного файла, если не существует
         os.makedirs(os.path.dirname(SUPPLY_DATA_PATH), exist_ok=True)
+
+        with open(SUPPLY_DATA_PATH, 'r', encoding='utf-8') as f:
+            raw_data = json.load(f)
+            if isinstance(raw_data, list) and len(raw_data) == 2:
+                existing_data = raw_data[1]
+            else: 
+                existing_data = {}
+
+        merged_data = existing_data.copy()
+        for ticker, data in self.main_token_data.items():
+            merged_data[ticker] = data
         
         self._last_update_time = datetime.now()
         with open(SUPPLY_DATA_PATH, 'w', encoding='utf-8') as f:
             f.write(json.dumps(
-                [self._last_update_time.isoformat(), self.main_token_data], 
+                [self._last_update_time.isoformat(), merged_data], 
                 indent=4
             ))
         """
@@ -485,7 +530,7 @@ class SupplyParser:
                         original_update = raw_data[0]
                         existing_data = raw_data[1]
             else:
-                logger.info(f'[TOKEN_PARSER] Creating new pool data file for {chain_name}')
+                self.logger.info(f'Creating new pool data file for {chain_name}')
             
             # Merge
             new_pool_data = self.chain_separated_pool_dict.get(chain_name, {})
@@ -520,18 +565,22 @@ class SupplyParser:
             with open(pool_data_path, 'w', encoding='utf-8') as f:
                 json.dump([original_update, merged_data], f, indent=4)
             
-            logger.info(f'[TOKEN_PARSER] Updated pool data for {chain_name}: {len(merged_data)} tokens')
+            self.logger.info(f'Updated pool data for {chain_name}: {len(merged_data)} tokens')
             """
     async def _parse_tokens(self, ):
         
         #получаем весь набор токенов мекс + топ 2000 кмк (айди и цирк сапплай)
-        logger.info(f'[TOKEN_PARSER] Fetching tokens list for MEXC')
+        self.logger.info(f'Fetching tokens list for MEXC')
         mexc_token_list = await self._search_query(1, 2500, additional_params='exchangeIds=544')
-        logger.info(f'[TOKEN_PARSER] Fetching tokens list for CMC top 2000')
+        self.logger.info(f'Fetching tokens list for CMC top 2000')
         top_2000_token_list = await self._search_query(1, 2000)
+        self.logger.info(f'Fetching tokens list for Uniswap v3 ARB')
         top_200_univ3_arb = await self._search_query(1, 200, additional_params='exchangeIds=1478')
+        self.logger.info(f'Fetching tokens list for Uniswap v3 ETH')
         top_400_univ3_eth = await self._search_query(1, 400, additional_params='exchangeIds=1348')
+        self.logger.info(f'Fetching tokens list for Uniswap v3 BSC')
         top_400_cakev3_bsc = await self._search_query(1, 400, additional_params='exchangeIds=6706')
+        self.logger.info(f'Fetching tokens list for Raydium')
         top_200_raydium = await self._search_query(1, 200, additional_params='exchangeIds=1342')
         raw_token_dict = {token['id']: token for token in mexc_token_list + top_2000_token_list + top_200_univ3_arb + top_400_univ3_eth + top_400_cakev3_bsc + top_200_raydium}
         unique_tokens = list(raw_token_dict.values())
@@ -544,15 +593,13 @@ class SupplyParser:
             }
             for token in unique_tokens
         ]
-        logger.info(f'[TOKEN_PARSER] Parsed {len(parsed_token_list)} tokens')
+        self.logger.info(f'Parsed {len(parsed_token_list)} tokens')
 
         main_data_dict = {}
-        chain_separated_pool_dict = {
-            chain_name: {} for chain_name in CHAIN_NAMES
-        }
         chunk_size = CACHE_UPDATE_BATCH_SIZE
+        pool_count = 0
         for i in range(0, len(parsed_token_list), chunk_size):
-            logger.info(f'[TOKEN_PARSER] Processing chunk {i//chunk_size+1}/{len(parsed_token_list)//chunk_size+1}')
+            self.logger.info(f'Processing chunk {i//chunk_size+1}/{len(parsed_token_list)//chunk_size+1}')
             chunk = parsed_token_list[i:i + chunk_size]
 
             tasks = []
@@ -564,10 +611,11 @@ class SupplyParser:
             for token, result in zip(chunk, results):
                 if not result:
                     continue
-                main_data_dict[token.get('symbol').lower().replace(' ', '').replace('.', '').replace('$', '')] = {
+                main_data_dict[token.get('symbol','').lower().replace(' ', '').replace('.', '').replace('$', '')] = {
                     'circulating_supply': token.get('circulating_supply'),
                     'pools': result
                 }
+                pool_count += len(result)
                 """
                 for pool in result:
                     chain_name = pool.get('chain')
@@ -588,40 +636,44 @@ class SupplyParser:
                         }
                 """
 
-            logger.success(f'[TOKEN_PARSER] Processed chunk {i//chunk_size+1}/{len(parsed_token_list)//chunk_size+1}')
+            self.logger.success(f'Processed chunk {i//chunk_size+1}/{len(parsed_token_list)//chunk_size+1}')
             await asyncio.sleep(DELAY_BETWEEN_BATCHES)
         
         # Обновляем данные в памяти
         self.main_token_data = main_data_dict
-        self.chain_separated_pool_dict = chain_separated_pool_dict
+        self.logger.success(f'Found {pool_count} pools for {len(main_data_dict)} tokens')
         
         # Сохраняем данные в JSON файлы
         await self._update_token_cache_json()
         
-        logger.success(f'[TOKEN_PARSER] Token data updated and saved successfully')
+        self.logger.success(f'Token data updated and saved successfully')
         
     async def _scheduled_parse_loop(self):
         while True:
             try:
                 if self._should_run_parse():
-                    logger.info(f'[TOKEN_PARSER] Starting scheduled parse')
+                    self.logger.info(f'Starting scheduled parse')
                     await self._parse_tokens()
                 
                 await asyncio.sleep(PARSED_DATA_CHECK_DELAY_DAYS * 24 * 60 * 60)
                 
             except Exception as e:
-                logger.error(f'[TOKEN_PARSER] Error in scheduled parse loop: {str(e)}')
-                logger.warning(f'[TOKEN_PARSER] Waiting 1 hour before retrying')
+                self.logger.error(f'Error in scheduled parse loop: {str(e)}')
+                self.logger.warning(f'Waiting 1 hour before retrying')
                 await asyncio.sleep(60 * 60)
 
-    def start_scheduled_parsing_loop_task(self):
+    async def start_scheduled_parsing_loop_task(self):
         if self._parser_task is None or self._parser_task.done():
+            if self._should_run_parse():
+                await self._parse_tokens()
             self._parser_task = asyncio.create_task(self._scheduled_parse_loop())
+            return True
         else:
-            logger.warning(f'[TOKEN_PARSER] Scheduled parsing task already running')
+            self.logger.warning(f'Scheduled parsing task already running')
+            return False
 
     async def force_parse(self):
-        logger.info(f'[TOKEN_PARSER] Force parsing requested')
+        self.logger.info(f'Force parsing requested')
         await self._parse_tokens()
 
     async def get_token_data(self, token_ticker: str):
@@ -641,14 +693,14 @@ class SupplyParser:
             if token_data:
                 return token_data
             else:
-                logger.warning(f'[TOKEN_PARSER] No parsed token data for {token_ticker}. Quering from API')
+                self.logger.warning(f'No parsed token data for {token_ticker}. Quering from API')
                 t_start = time.perf_counter()
                 token_data = await self._get_token_data_by_token_ticker(token_ticker)
                 t_end = time.perf_counter()
-                logger.debug(f'[TOKEN_PARSER] Query token data took {(t_end - t_start)*1000:.2f}ms')
+                self.logger.debug(f'Query token data took {(t_end - t_start)*1000:.2f}ms')
                 return token_data
         except Exception as e:
             import traceback
-            logger.error(f'[TOKEN_PARSER] Error getting token data for {token_ticker}: {str(e)}')
-            logger.error(traceback.format_exc())
+            self.logger.error(f'Error getting token data for {token_ticker}: {str(e)}')
+            self.logger.error(traceback.format_exc())
             return {}

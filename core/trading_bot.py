@@ -48,8 +48,8 @@ class TradingBot:
         #функция кидает в пул задачи экзекьютора на выполнение свапов параллельно 
 
         logger = get_logger(f"{msg_type}_WS")
-        
-        ticker = ''
+
+        tickers = []
         custom_size = None
         custom_tp_ladder = None
         if msg_type == "NEWS": 
@@ -66,6 +66,7 @@ class TradingBot:
             if data.get('custom_tp_ladder', {}):
                 custom_tp_ladder = data.get('custom_tp_ladder', {})
                 logger.info(f"set custom tp ladder: {custom_tp_ladder} for {ticker}")
+            tickers.append(ticker)
 
         if msg_type == "LISTINGS": 
             detections = data.get('detections', [])
@@ -74,75 +75,76 @@ class TradingBot:
             for detection in detections:
                 ticker = detection.get('ticker', '')
                 if ticker:
-                    break
+                    tickers.append(ticker)
         
-        if not ticker:
+        if not tickers:
             logger.info(f"no ticker found in {msg_type} signal")
             return
 
-        token_data = await self.supply_parser.get_token_data(ticker)
-        if not token_data:
-            logger.error(f"Buy signal received on {ticker} but no token data found")
-            await self.tg_client.send_error_alert(
-                "BUY_FAILED",
+        for ticker in tickers:
+            token_data = await self.supply_parser.get_token_data(ticker)
+            if not token_data:
+                logger.error(f"Buy signal received on {ticker} but no token data found")
+                await self.tg_client.send_error_alert(
+                    "BUY_FAILED",
                 f"Buy ticker {ticker} failed",
                 "token not found"
             )
-            return
-
-        circulating_supply = token_data.get('circulating_supply', 0)
-        if not circulating_supply:
-            logger.error(f"Buy signal received on {ticker} but no circulating supply found")
-            await self.tg_client.send_error_alert(
-                "BUY_FAILED",
-                f"Buy {ticker} failed",
-                "no circulating supply found"
-            )
-            return
-        
-        pools = token_data.get('pools', [])
-        if not pools:
-            logger.error(f"Buy signal received on {ticker} but no pools found")
-            await self.tg_client.send_error_alert(
-                "BUY_FAILED",
-                f"Buy {ticker} failed",
-                "no pools found"
-            )
-            return
-
-        selected_pool = None
-        for pool in pools:
-            if pool.get('liquidity') < MIN_POOL_TVL:
                 continue
-            if pool.get('base_token') not in USABLE_TOKENS:
-                continue
-            selected_pool = pool
-            break
-        
-        if not selected_pool:
-            logger.error(f"Buy signal received on {ticker} but no usable pools found due to TVL and BASE_TOKEN filters")
-            await self.tg_client.send_error_alert(
-                "BUY_FAILED",
-                f"Buy {ticker} failed",
-                "no usable pools found due to filters"
-            )
-            return
-        
-        chain = selected_pool.get('chain', '')
-        address = selected_pool.get('token_address', '')
-        token_data = {
-            'chain': chain,
-            'ticker': ticker,
-            'token_address': address,
-            'circulating_supply': circulating_supply,
-            'pool_data': selected_pool,
-            'custom_size': custom_size,
-            'custom_tp_ladder': custom_tp_ladder
-        }
 
-        logger.info(f"Buy signal received: {ticker} on {chain} | Address: {address}")
- 
-        asyncio.create_task(self.executor.execute_trade(token_data))
+            circulating_supply = token_data.get('circulating_supply', 0)
+            if not circulating_supply:
+                logger.error(f"Buy signal received on {ticker} but no circulating supply found")
+                await self.tg_client.send_error_alert(
+                    "BUY_FAILED",
+                    f"Buy {ticker} failed",
+                    "no circulating supply found"
+                )
+                continue
+            
+            pools = token_data.get('pools', [])
+            if not pools:
+                logger.error(f"Buy signal received on {ticker} but no pools found")
+                await self.tg_client.send_error_alert(
+                    "BUY_FAILED",
+                    f"Buy {ticker} failed",
+                    "no pools found"
+                )
+                continue
+
+            selected_pool = None
+            for pool in pools:
+                if pool.get('liquidity') < MIN_POOL_TVL:
+                    continue
+                if pool.get('base_token') not in USABLE_TOKENS:
+                    continue
+                selected_pool = pool
+                break
+            
+            if not selected_pool:
+                logger.error(f"Buy signal received on {ticker} but no usable pools found due to TVL and BASE_TOKEN filters")
+                await self.tg_client.send_error_alert(
+                    "BUY_FAILED",
+                    f"Buy {ticker} failed",
+                    "no usable pools found due to filters"
+                )
+                continue
+            
+            chain = selected_pool.get('chain', '')
+            address = selected_pool.get('token_address', '')
+            token_data = {
+                'chain': chain,
+                'ticker': ticker,
+                'token_address': address,
+                'circulating_supply': circulating_supply,
+                'pool_data': selected_pool,
+                'custom_size': custom_size,
+                'custom_tp_ladder': custom_tp_ladder
+            }
+
+            logger.info(f"Buy signal received: {ticker} on {chain} | Address: {address}")
+    
+            asyncio.create_task(self.executor.execute_trade(token_data))
     
     async def start(self):
         

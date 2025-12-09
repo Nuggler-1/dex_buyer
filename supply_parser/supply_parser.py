@@ -383,7 +383,7 @@ class SupplyParser:
             self.logger.error(f'No pools found for {token_ticker}')
             return None
         return {
-            'supply': supply,
+            'circulating_supply': supply,
             'pools': pools
         }
 

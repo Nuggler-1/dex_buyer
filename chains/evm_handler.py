@@ -322,7 +322,27 @@ class EVMHandler:
         except Exception as e:
             self.logger.warning(f"error getting onchain swap data for {buy_token_address} with {sell_token_address}: {str(e)}")
             return None
-    
+
+    def encode_uniswap_v2_single_swap(
+        self,
+        token_in: str,
+        token_out:str,
+        amount_in: int,
+        amount_out_minimum: int,
+        deadline: int
+        ) -> bytes:
+        function_selector = self.w3.keccak(text="swapExactTokensForTokens(uint256,uint256,address[],address,uint256)")[:4]
+        
+        path = [token_in, token_out]
+        
+        encoded_params = encode(
+            ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+            [amount_in, amount_out_minimum, path, self.account.address, deadline]
+        )
+        
+        data = function_selector + encoded_params
+        
+        return data
 
     def encode_uniswap_v3_single_swap(
         self,

@@ -112,6 +112,21 @@ class HelperEVM:
             'x-cg-demo-api-key': GECKO_API_KEY
         }
         self.logger = get_logger("PARSER")
+        self.w3_providers = {
+            chain_name: AsyncWeb3(AsyncWeb3.AsyncHTTPProvider(RPC[chain_name])) for chain_name in CHAIN_NAMES if chain_name != 'SOLANA'
+        }
+
+    async def _disconnect_all_providers(self):
+        for provider in self.w3_providers.values():
+            if not provider.provider.is_connected():
+                continue
+            await provider.provider.disconnect()
+
+    async def _connect_all_providers(self):
+        for provider in self.w3_providers.values():
+            if provider.provider.is_connected():
+                continue
+            await provider.provider.connect()
 
     async def _get_pools_tvl_sorted(
         self,
@@ -195,20 +210,25 @@ class HelperEVM:
                 return pool
         return None
     
-    async def _get_pool_fee_tier_and_token_decimals(self,token_address:str, pool_address: str, chain_name: str):
+    async def _get_token_decimals(self,token_address:str, chain_name: str):
         try:
-            w3= AsyncWeb3(AsyncWeb3.AsyncHTTPProvider(RPC[chain_name]))
-            pool_contract = w3.eth.contract(address=pool_address, abi=pool_abi)
+            w3= self.w3_providers.get(chain_name)
             token_contract = w3.eth.contract(address=token_address, abi=erc20_abi)
-            fee, decimals = await asyncio.gather( 
-                pool_contract.functions.fee().call(),
-                token_contract.functions.decimals().call()
-            )
-            await w3.provider.disconnect()
-            return fee, decimals
+            decimals = await token_contract.functions.decimals().call()
+            return decimals
+        except Exception as e:
+            self.logger.error(f"Error getting token decimals for {token_address} on {chain_name}: {str(e)}")
+            return None
+    
+    async def _get_pool_fee_tier(self,pool_address: str, chain_name: str):
+        try:
+            w3= self.w3_providers.get(chain_name)
+            pool_contract = w3.eth.contract(address=pool_address, abi=pool_abi)
+            fee = await pool_contract.functions.fee().call()
+            return fee
         except Exception as e:
             self.logger.error(f"Error getting pool fee tier for {pool_address} on {chain_name}: {str(e)}")
-            return None, None
+            return None
 
     async def _get_single_pool_data(self, pool_address: str, chain_name: str):
 
@@ -308,19 +328,40 @@ class SupplyParser:
             data = response.json().get('data')
         return data
 
-    async def _get_supply_by_token_ticker(self, token_ticker: str):
-        
-        url = f'https://dapi.coinmarketcap.com/dex/v1/search?q={token_ticker}'
+    async def _get_token_id_from_search(self, token_ticker: str):
+
+        url = f'https://api.coinmarketcap.com/gravity/v4/gravity/global-search'
+        payload = { 
+            "keyword": token_ticker,
+            "limit": 5,
+            "scene": "community"
+        }
         async with AsyncSession() as session: 
-            response = await session.get(url, headers=self.headers)
+            response = await session.post(url, headers=self.headers, json=payload)
             response.raise_for_status()
-            data = response.json().get('data',{}).get('tks',[])
+            data = response.json().get('data',{}).get('suggestions',[])
             if not data:
                 return None
-            tk_id = data[0].get('cid', 0)
+
+            tokens = []
+            for suggestion in data:
+                if suggestion.get('type') == 'token':
+                    tokens = suggestion.get('tokens', [])
+            if not tokens:
+                return None
+
+            tk_id = 0
+            for token in tokens:
+                if token.get('symbol', '').lower() == token_ticker.lower():
+                    tk_id = token.get('id')
+                    break
             if not tk_id:
                 return None
-            url = f"https://api.coinmarketcap.com/data-api/v3/cryptocurrency/quote/latest?id={tk_id}"
+        return tk_id
+        
+    async def _get_supply_by_token_id(self, token_id: int):
+        async with AsyncSession() as session:
+            url = f"https://api.coinmarketcap.com/data-api/v3/cryptocurrency/quote/latest?id={token_id}"
             response = await session.get(url, headers=self.headers)
             response.raise_for_status()
             data = response.json().get('data',[])
@@ -329,12 +370,21 @@ class SupplyParser:
             return None
 
     async def _get_token_data_by_token_ticker(self, token_ticker: str):
-        supply = await self._get_supply_by_token_ticker(token_ticker)
+        token_id = await self._get_token_id_from_search(token_ticker)
+        if not token_id:
+            self.logger.error(f'No token id found for {token_ticker}')
+            return None
+        supply = await self._get_supply_by_token_id(token_id)
         if not supply:
+            self.logger.error(f'No supply found for {token_ticker}')
+            return None
+        pools = await self._get_pools_tvl_sorted(token_id)
+        if not pools:
+            self.logger.error(f'No pools found for {token_ticker}')
             return None
         return {
             'supply': supply,
-            'pools': await self._get_pools_tvl_sorted(token_ticker)
+            'pools': pools
         }
 
     def _load_token_data(self):
@@ -449,18 +499,16 @@ class SupplyParser:
 
                 #quote data from gecko/raydium
                 fee = 0
-                decimals = 0
-                if chain_name != 'SOLANA':
+                if chain_name != 'SOLANA' and 'v2' not in exchange_slug:
                     if not pair_address:
                         token_pool = await self.helper_evm._get_pool_by_token_address(token_address, base_symbol, chain_name)
                         if not token_pool:
                             continue
                         pair_address = token_pool.get('pair_address')
                         liquidity = token_pool.get('liquidity')
-                    fee, decimals = await self.helper_evm._get_pool_fee_tier_and_token_decimals(token_address, pair_address, chain_name)
+                    fee = await self.helper_evm._get_pool_fee_tier(pair_address, chain_name)
                     if not fee:
                         continue
-                    
                 else: 
                     if not pair_address: 
                         base_token_address = DEX_ROUTER_DATA['SOLANA'].get(base_symbol)
@@ -471,6 +519,7 @@ class SupplyParser:
                         if not(pair_address and liquidity > MIN_POOL_TVL):
                             continue
                         
+                decimals = 0 if chain_name == 'SOLANA' else await self.helper_evm._get_token_decimals(token_address, chain_name)
                 supported_pools.append(
                     {
                         'token_address': token_address,

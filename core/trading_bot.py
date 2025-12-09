@@ -160,13 +160,15 @@ class TradingBot:
             name="NEWS_WS",
             msg_type="NEWS",
             uri=NEWS_WS_URL,
-            on_message_callback_handler=self.on_token_signal
+            on_message_callback_handler=self.on_token_signal,
+            tg_client=self.tg_client
         )
         ws_listings_client = WebSocketClient(
             name="LISTINGS_WS",
             msg_type="LISTINGS",
             uri=LISTINGS_WS_URL,
-            on_message_callback_handler=self.on_token_signal
+            on_message_callback_handler=self.on_token_signal,
+            tg_client=self.tg_client
         )
         self.ws_clients = [ws_news_client, ws_listings_client]
 

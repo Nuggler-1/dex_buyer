@@ -152,7 +152,8 @@ class SolanaHandler:
             self.logger.info(f"All background tasks cancelled ({len(tasks_to_cancel)} tasks)")
 
     async def _initialize_blockchain_cache_vars(self):
-        self._blockhash_cache = await self.client.get_latest_blockhash()
+        blockhash_resp = await self.client.get_latest_blockhash()
+        self._blockhash_cache = blockhash_resp.value.blockhash
         self._gas_token_price = await self._gas_token_price_updater_loop(init=True)
         #self.priority_fee = await self._priority_fee_updater_loop(init=True)
         return 

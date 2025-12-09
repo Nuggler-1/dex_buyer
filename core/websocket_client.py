@@ -6,6 +6,7 @@ from typing import Callable, Literal
 import traceback
 from config import RECONNECT_ATTEMPTS, RECONNECT_DELAY
 from utils import get_logger
+from tg_bot import TelegramClient
 
 class WebSocketClient:
     
@@ -16,7 +17,8 @@ class WebSocketClient:
         msg_type: Literal['NEWS', 'LISTINGS'],
         on_message_callback_handler:Callable,
         reconnect_delay: int = RECONNECT_DELAY,
-        max_reconnect_attempts: int = RECONNECT_ATTEMPTS
+        max_reconnect_attempts: int = RECONNECT_ATTEMPTS,
+        tg_client: TelegramClient = None
     ):  
         self.logger = get_logger(name)
         self.name = name
@@ -28,6 +30,7 @@ class WebSocketClient:
         self.reconnect_delay = reconnect_delay
         self.max_reconnect_attempts = max_reconnect_attempts
         self._should_reconnect = True
+        self.tg_client = tg_client
         
     async def listen(self):
         callback = self.on_message_callback_handler
@@ -71,10 +74,15 @@ class WebSocketClient:
                 
             except Exception as e:
                 self.logger.error(f"WebSocket error: {traceback.format_exc()}")
-            
+
             # Check if we should attempt reconnection
             if self.max_reconnect_attempts and reconnect_attempts >= self.max_reconnect_attempts:
                 self.logger.error(f"Max reconnection attempts ({self.max_reconnect_attempts}) reached, giving up")
+                await self.tg_client.send_error_alert(
+                    "WEBSOCKET_ERROR",
+                    f"{self.name} disconnected",
+                    f"Max reconnection attempts ({self.max_reconnect_attempts}) reached, giving up"
+                )
                 break
             
             if self._should_reconnect:

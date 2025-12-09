@@ -302,7 +302,11 @@ class RaydiumClient:
                 token_out_task
             )
             
-            blockhash = cached_blockhash if cached_blockhash else await self.client.get_latest_blockhash()
+            if cached_blockhash:
+                blockhash = cached_blockhash
+            else:
+                blockhash = await self.client.get_latest_blockhash()
+                blockhash = blockhash.value.blockhash
             
             if base_reserve is None:
                 return None
@@ -371,11 +375,12 @@ class RaydiumClient:
         skip_confirmation: bool = True
     ) -> Optional[str]:
         try:
+
+            if not cached_blockhash:
+                cached_blockhash = await self.client.get_latest_blockhash()
+                cached_blockhash = cached_blockhash.value.blockhash
             
             if pool_data is None:
-                if not cached_blockhash:
-                    cached_blockhash = await self.client.get_latest_blockhash()
-                    cached_blockhash = cached_blockhash.value.blockhash
                 pool_data, _ = await self.get_swap_data_and_price(
                     pair_address,
                     token_in_mint,

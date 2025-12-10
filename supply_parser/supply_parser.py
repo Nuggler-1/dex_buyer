@@ -348,6 +348,8 @@ class SupplyParser:
                 if suggestion.get('type') == 'token':
                     tokens = suggestion.get('tokens', [])
             if not tokens:
+                self.logger.error(f'No tokens found for {token_ticker}')
+                self.logger.debug(json.dumps(data, indent=4))
                 return None
 
             tk_id = 0
@@ -366,7 +368,12 @@ class SupplyParser:
             response.raise_for_status()
             data = response.json().get('data',[])
             if data:
-                return data[0].get('circulatingSupply', 0)
+                supply = max(float(data[0].get('circulatingSupply', 0)), float(data[0].get('selfReportedCirculatingSupply')))
+                if not supply:
+                    self.logger.error(f'No supply found for {token_id}')
+                    self.logger.debug(json.dumps(data, indent=4))
+                    return None
+                return supply
             return None
 
     async def _get_token_data_by_token_ticker(self, token_ticker: str):
@@ -449,6 +456,8 @@ class SupplyParser:
 
             data = response.json().get('data',{}).get('marketPairs',[])
             if not data:
+                self.logger.warning(f'No pools found for {token_id}')
+                self.logger.debug(json.dumps(response.json(), indent=4))
                 return []
             supported_pools = []
             base_tokens_unwrapped = ['SOL', 'ETH', 'BNB']
@@ -532,6 +541,11 @@ class SupplyParser:
                         'fee_tier': fee,
                     }
                 )
+            
+            if not supported_pools:
+                self.logger.warning(f'No pools found for {token_id}')
+                self.logger.debug(json.dumps(response.json(), indent=4))
+                return []
 
             sorted_pools = sorted(supported_pools, key=lambda x: x['liquidity'], reverse=True)
             return sorted_pools
@@ -638,7 +652,7 @@ class SupplyParser:
                 'id': token.get('id'),
                 'name': token.get('name'),
                 'symbol': token.get('symbol'),
-                'circulating_supply': max(int(token.get('circulatingSupply')), int(token.get('selfReportedCirculatingSupply')))
+                'circulating_supply': max(float(token.get('circulatingSupply', 0)), float(token.get('selfReportedCirculatingSupply', 0)))
             }
             for token in unique_tokens
         ]

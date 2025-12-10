@@ -385,7 +385,7 @@ class SupplyParser:
         if not supply:
             self.logger.error(f'No supply found for {token_ticker}')
             return None
-        pools = await self._get_pools_tvl_sorted(token_id)
+        pools = await self._get_pools_tvl_sorted(token_id, trace=True)
         if not pools:
             self.logger.error(f'No pools found for {token_ticker}')
             return None
@@ -425,7 +425,7 @@ class SupplyParser:
         
         return should_run
 
-    async def _get_pools_tvl_sorted(self, token_id: int):
+    async def _get_pools_tvl_sorted(self, token_id: int, trace: bool = False):
         """
         returns list of pools supported sorted by TVL 
         [
@@ -456,8 +456,9 @@ class SupplyParser:
 
             data = response.json().get('data',{}).get('marketPairs',[])
             if not data:
-                self.logger.warning(f'No pools found for {token_id}')
-                self.logger.debug(json.dumps(response.json(), indent=4))
+                if trace:
+                    self.logger.warning(f'No pools found for {token_id}')
+                    self.logger.debug(json.dumps(response.json(), indent=4))
                 return []
             supported_pools = []
             base_tokens_unwrapped = ['SOL', 'ETH', 'BNB']
@@ -542,8 +543,8 @@ class SupplyParser:
                     }
                 )
             
-            if not supported_pools:
-                self.logger.warning(f'No pools found for {token_id}')
+            if not supported_pools and trace:
+                self.logger.warning(f'No supported pools found for {token_id}')
                 self.logger.debug(json.dumps(response.json(), indent=4))
                 return []
 

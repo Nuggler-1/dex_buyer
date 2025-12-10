@@ -49,7 +49,7 @@ class WebSocketClient:
                     def on_ws_frame(self, transport: WSTransport, frame: WSFrame):
                         if frame.msg_type == WSMsgType.TEXT:
                             try:
-                                data = ujson.loads(frame.get_payload_as_ascii_text())
+                                data = ujson.loads(frame.get_payload_as_utf8_text())
                                 asyncio.create_task(callback(msg_type, data))
                             except Exception as e:
                                 logger.error(f"Error processing frame: {e}")

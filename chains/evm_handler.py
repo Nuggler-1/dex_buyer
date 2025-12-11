@@ -602,10 +602,14 @@ class EVMHandler:
                 ):
                     amount_received = transfer['value']
                     actual_price = (amount_in/amount_received) * (10**buy_token_decimals /10**self.token_decimals[base_token_address])
+                
             if actual_price == 0:
                 self.logger.warning(f"failed to calculate actual price, using cached price")
             else: 
-                self.logger.info(f"actual price: {actual_price * self.gas_token_price}")
+                if base_token_address == DEX_ROUTER_DATA[self.chain_name]['gas_token']:
+                    self.logger.info(f"actual price: {actual_price * self.gas_token_price}")
+                else: 
+                    self.logger.info(f"actual price: {actual_price}")
 
             #запускаем тп таск  
             await asyncio.sleep(DELAY_BEFORE_TP)

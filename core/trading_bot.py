@@ -2,7 +2,7 @@ import asyncio
 from .websocket_client import WebSocketClient
 from .executor import TransactionExecutor
 from chains import EVMHandler, SolanaHandler
-from config import CHAIN_NAMES, PK_EVM, PK_SOL, NEWS_WS_URL, LISTINGS_WS_URL, MIN_POOL_TVL, USABLE_TOKENS
+from config import CHAIN_NAMES, NEWS_WS_URL, LISTINGS_WS_URL, MIN_POOL_TVL, USABLE_TOKENS
 from utils import get_logger
 from supply_parser import SupplyParser
 from tg_bot import TelegramClient
@@ -13,8 +13,8 @@ class TradingBot:
     
     def __init__(
         self, 
-        pk_sol: str = PK_SOL,
-        pk_evm: str = PK_EVM,
+        pk_sol: str,
+        pk_evm: str,
     ):
         self.executor = TransactionExecutor()
         self.supply_parser = SupplyParser()

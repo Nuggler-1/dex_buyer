@@ -1,6 +1,7 @@
 aiogram==2.2
 base58==2.1.1
 construct==2.10.68
+cryptography==43.0.3
 curl_cffi==0.7.4
 eth_abi==5.2.0
 eth_account==0.13.7

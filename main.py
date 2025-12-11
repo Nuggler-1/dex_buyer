@@ -1,6 +1,7 @@
 import asyncio
 from asyncio import WindowsSelectorEventLoopPolicy
 from core.trading_bot import TradingBot
+from core.key_manager import KeyManager
 import warnings
 import traceback
 import sys
@@ -19,7 +20,12 @@ logger.add(
 logger.add(DEFAULT_LOGS_FILE, rotation=LOGS_SIZE)
 
 async def main():
-    bot = TradingBot()
+    # Initialize key manager and load/decrypt keys
+    key_manager = KeyManager()
+    sol_pk, evm_pk = key_manager.initialize_keys()
+    
+    # Create bot with decrypted keys
+    bot = TradingBot(pk_sol=sol_pk, pk_evm=evm_pk)
     try:
         await bot.start()
     except Exception:

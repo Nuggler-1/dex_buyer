@@ -33,6 +33,14 @@ class WebSocketClient:
         self.tg_client = tg_client
         
     async def listen(self):
+        if not self.uri: 
+            self.logger.error(f"No URI provided for {self.name} client")
+            await self.tg_client.send_error_alert(
+                "WEBSOCKET_ERROR",
+                f"{self.name} client failed to start",
+                "No URI provided"
+            )
+            return
         callback = self.on_message_callback_handler
         name = self.name
         msg_type = self.msg_type

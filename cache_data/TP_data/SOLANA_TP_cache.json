@@ -1,10 +1,1 @@
-{
-    "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump": {
-        "base_token_address": "So11111111111111111111111111111111111111112",
-        "pool_address": "4AZRPNEfCJ7iw28rJu5aUyeQhYcvdcNm8cswyL51AY9i",
-        "take_profit_ladder_id": 5,
-        "price_bought": 0.0006352275127862531,
-        "steps_done": 1,
-        "custom_tp_ladder": null
-    }
-}
+{}

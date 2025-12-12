@@ -168,6 +168,8 @@ cython_debug/
 !*example.txt
 progress.json
 !notes.txt
+*TP_cache.json
+*token_data.json
 
 # Ignore specific file
 *test*

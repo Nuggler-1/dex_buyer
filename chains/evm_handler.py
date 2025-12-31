@@ -81,7 +81,7 @@ class EVMHandler:
         self.w3_latency = AsyncWeb3(WebSocketProvider(
             RPC_FOR_LATENCY_ACTIONS[chain_name],
             websocket_kwargs={'ping_interval': 20, 'ping_timeout': 10}
-        ))
+        ) if 'wss' in RPC_FOR_LATENCY_ACTIONS[chain_name] else AsyncWeb3(AsyncHTTPProvider(RPC_FOR_LATENCY_ACTIONS[chain_name])))
 
         # if chain_name in ['BSC', 'POLYGON']:
         #     self.w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
@@ -140,8 +140,10 @@ class EVMHandler:
         if self._initialized:
             return
         
-        await self.w3.provider.connect()
-        await self.w3_latency.provider.connect()
+        if self.using_websocket:
+            await self.w3.provider.connect()
+        if 'wss' in RPC_FOR_LATENCY_ACTIONS[self.chain_name]:
+            await self.w3_latency.provider.connect()
 
         self.dex_instances = {}
         for dex_name, dex_class in DEX_MAP.items():
@@ -194,7 +196,7 @@ class EVMHandler:
                 if not await self.w3.provider.is_connected():
                     await self.w3.provider.connect()
                     self.logger.info(f"WebSocket connection reestablished")
-                if not await self.w3_latency.provider.is_connected():
+                if 'wss' in RPC_FOR_LATENCY_ACTIONS[self.chain_name] and not await self.w3_latency.provider.is_connected():
                     await self.w3_latency.provider.connect()
                     self.logger.info(f"WebSocket latency-sensetive connection reestablished")
                 await asyncio.sleep(self.ws_connection_check_interval)

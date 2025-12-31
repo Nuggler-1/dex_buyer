@@ -137,10 +137,6 @@ class EVMHandler:
         await self.w3.provider.connect()
         await self.w3_latency.provider.connect()
 
-        #готовим кэшированные данные и отправляем approve
-        await self._initialize_blockchain_cache_vars()
-        await self._approve_all_dexes()
-
         self.dex_instances = {}
         for dex_name, dex_class in DEX_MAP.items():
             try:
@@ -150,6 +146,10 @@ class EVMHandler:
             except Exception as e:
                 self.logger.error(f"Failed to initialize {dex_name}: {e}")
                 continue
+
+        #готовим кэшированные данные и отправляем approve
+        await self._initialize_blockchain_cache_vars()
+        await self._approve_all_dexes()
         
         self.logger.info(f"Initialized {len(self.dex_instances)} DEX instances for {self.chain_name}")
         

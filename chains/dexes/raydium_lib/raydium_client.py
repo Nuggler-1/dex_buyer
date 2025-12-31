@@ -43,11 +43,13 @@ class RaydiumClient:
     def __init__(
         self,
         rpc_url: str,
+        rpc_url_latency: str,
         private_key_base58: str,
         compute_unit_limit: int = 400_000,
         compute_unit_price: int = 100_000,
     ):
         self.client = AsyncClient(rpc_url)
+        self.client_latency = AsyncClient(rpc_url_latency)
         self.keypair = Keypair.from_base58_string(private_key_base58)
         self.pubkey = self.keypair.pubkey()
         self.compute_unit_limit = compute_unit_limit
@@ -131,9 +133,10 @@ class RaydiumClient:
             self.logger.error(f"Error getting token balance: {e}")
             return {}
     
-    async def get_reserves(self, pool_keys: AmmV4PoolKeys) -> tuple:
+    async def get_reserves(self, pool_keys: AmmV4PoolKeys, fast: bool = False) -> tuple:
         try:
-            balances_response = await self.client.get_multiple_accounts_json_parsed(
+            client = self.client_latency if fast else self.client
+            balances_response = await client.get_multiple_accounts_json_parsed(
                 [pool_keys.base_vault, pool_keys.quote_vault],
                 Processed
             )
@@ -250,7 +253,8 @@ class RaydiumClient:
         pair_address: str,
         token_in_mint: str,
         token_out_mint: str,
-        cached_blockhash: Optional[str] = None
+        cached_blockhash: Optional[str] = None,
+        fast: bool = False
     ) -> Optional[tuple]:
         """
         Получает все данные для свапа и рассчитывает цену токена.
@@ -283,14 +287,15 @@ class RaydiumClient:
                 self.logger.error("Input token not in pool")
                 return None
             
-            # Gather reserves and account data in parallel
-            reserves_task = self.get_reserves(pool_keys)
-            token_in_task = self.client.get_token_accounts_by_owner(
+            # Gather reserves and account data in parallel (use fast client if requested)
+            client = self.client_latency if fast else self.client
+            reserves_task = self.get_reserves(pool_keys, fast=fast)
+            token_in_task = client.get_token_accounts_by_owner(
                 self.pubkey, 
                 TokenAccountOpts(token_in_mint_pubkey), 
                 Processed
             )
-            token_out_task = self.client.get_token_accounts_by_owner(
+            token_out_task = client.get_token_accounts_by_owner(
                 self.pubkey,
                 TokenAccountOpts(token_out_mint_pubkey),
                 Processed
@@ -305,7 +310,7 @@ class RaydiumClient:
             if cached_blockhash:
                 blockhash = cached_blockhash
             else:
-                blockhash = await self.client.get_latest_blockhash()
+                blockhash = await client.get_latest_blockhash()
                 blockhash = blockhash.value.blockhash
             
             if base_reserve is None:
@@ -372,12 +377,14 @@ class RaydiumClient:
         skip_preflight: bool = True,
         pool_data: Optional[tuple] = None,
         cached_blockhash: Optional[str] = None,
-        skip_confirmation: bool = True
+        skip_confirmation: bool = True,
+        fast: bool = False
     ) -> Optional[str]:
         try:
+            client = self.client_latency if fast else self.client
 
             if not cached_blockhash:
-                cached_blockhash = await self.client.get_latest_blockhash()
+                cached_blockhash = await client.get_latest_blockhash()
                 cached_blockhash = cached_blockhash.value.blockhash
             
             if pool_data is None:
@@ -385,7 +392,8 @@ class RaydiumClient:
                     pair_address,
                     token_in_mint,
                     token_out_mint,
-                    cached_blockhash
+                    cached_blockhash,
+                    fast=fast
                 )
                 if pool_data is None:
                     return None
@@ -466,7 +474,7 @@ class RaydiumClient:
                 blockhash,
             )
             
-            txn_sig = (await self.client.send_transaction(
+            txn_sig = (await client.send_transaction(
                 txn=VersionedTransaction(compiled_message, [self.keypair]),
                 opts=TxOpts(skip_preflight=skip_preflight),
             )).value

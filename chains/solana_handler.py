@@ -12,6 +12,7 @@ from config import (
     GAS_LIMIT, 
     DELAY_BEFORE_TP,
     RPC,
+    RPC_FOR_LATENCY_ACTIONS,
     USE_WEBSOCKET,
     ERROR_429_RETRIES,
     ERROR_429_DELAY,
@@ -65,6 +66,7 @@ class SolanaHandler:
 
         self.chain_name = 'SOLANA'
         self.client = None
+        self.client_latency = None
         self.tg_client = tg_client
 
         self.jup_api_base = "https://lite-api.jup.ag/"
@@ -89,11 +91,13 @@ class SolanaHandler:
         self.pubkey = self.keypair.pubkey()
         self.raydium_client = RaydiumClient(
             rpc_url=RPC['http'][self.chain_name],
+            rpc_url_latency=RPC_FOR_LATENCY_ACTIONS[self.chain_name],
             private_key_base58=private_key_base58,
             compute_unit_limit=GAS_LIMIT[self.chain_name],
             compute_unit_price=SOLANA_PRIORITY_FEE,
         )
-        self.client = AsyncClient(RPC[self.chain_name])
+        self.client = AsyncClient(RPC['http'][self.chain_name])
+        self.client_latency = AsyncClient(RPC_FOR_LATENCY_ACTIONS[self.chain_name])
         
         #cache
         self._blockhash_cache = None
@@ -706,7 +710,8 @@ class SolanaHandler:
             pool_address, 
             base_token_address,
             token_address, 
-            cached_blockhash=self._blockhash_cache
+            cached_blockhash=self._blockhash_cache,
+            fast=True  # Use fast connection for latency-sensitive buy operations
         )
         t4 = time.perf_counter()
         self.logger.debug(f"| execute_swap | Swap data query time: {(t4-t3)*1000:.2f}ms")
@@ -740,7 +745,7 @@ class SolanaHandler:
             amount_in,
             slippage = SLIPPAGE_PERCENT['SOLANA'],
             pool_data = pool_data,
-
+            fast=True  # Use fast connection for latency-sensitive buy operations
         )
         t6 = time.perf_counter()
         self.logger.debug(f"| execute_swap | send swap time: {(t6-t5)*1000:.2f}ms")

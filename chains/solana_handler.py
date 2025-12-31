@@ -12,7 +12,6 @@ from config import (
     GAS_LIMIT, 
     DELAY_BEFORE_TP,
     RPC,
-    WS_RPC,
     USE_WEBSOCKET,
     ERROR_429_RETRIES,
     ERROR_429_DELAY,
@@ -27,7 +26,7 @@ from config import (
     MIN_POOL_TVL
 )
 from typing import Literal, Callable
-from raydium_lib import RaydiumClient
+from .dexes import RaydiumClient
 from solders.message import MessageV0
 import base58
 from tg_bot import TelegramClient
@@ -89,7 +88,7 @@ class SolanaHandler:
         self.keypair = Keypair.from_bytes(secret_key)
         self.pubkey = self.keypair.pubkey()
         self.raydium_client = RaydiumClient(
-            rpc_url=RPC[self.chain_name],
+            rpc_url=RPC['http'][self.chain_name],
             private_key_base58=private_key_base58,
             compute_unit_limit=GAS_LIMIT[self.chain_name],
             compute_unit_price=SOLANA_PRIORITY_FEE,
@@ -631,7 +630,7 @@ class SolanaHandler:
                             token_address_to_sell,
                             base_token_address,
                             level['sell_amount'],
-                            SLIPPAGE_PERCENT,
+                            SLIPPAGE_PERCENT["SOLANA"],
                             cached_blockhash=self._blockhash_cache,
                             skip_confirmation = False
                         )
@@ -739,7 +738,7 @@ class SolanaHandler:
             base_token_address,
             token_address,
             amount_in,
-            slippage = SLIPPAGE_PERCENT,
+            slippage = SLIPPAGE_PERCENT['SOLANA'],
             pool_data = pool_data,
 
         )

@@ -2,7 +2,7 @@ import asyncio
 from .websocket_client import WebSocketClient
 from .executor import TransactionExecutor
 from chains import EVMHandler, SolanaHandler
-from config import CHAIN_NAMES, NEWS_WS_URL, LISTINGS_WS_URL, MIN_POOL_TVL, USABLE_TOKENS
+from config import CHAIN_NAMES, WS_URL, MIN_POOL_TVL, USABLE_TOKENS, EVENTS
 from utils import get_logger
 from supply_parser import SupplyParser
 from tg_bot import TelegramClient
@@ -44,15 +44,17 @@ class TradingBot:
         )
         self.executor.register_handler('SOLANA', solana_handler)
     
-    async def on_token_signal(self, msg_type: Literal['NEWS', 'LISTINGS'], data: dict):
+    async def on_token_signal(self, data: dict):
         #функция кидает в пул задачи экзекьютора на выполнение свапов параллельно 
 
-        logger = get_logger(f"{msg_type}_WS")
+        logger = get_logger(f"SIGNAL")
 
         tickers = []
+        contracts = []
         custom_size = None
         custom_tp_ladder = None
-        if msg_type == "NEWS": 
+        msg_type = data.get('service_type')
+        if msg_type == "news_ms": 
             ticker = data.get('ticker', '')
             if data.get('direction', '').lower() != 'long':
                 logger.info(f"signal received on {ticker} but direction is not long")
@@ -68,21 +70,40 @@ class TradingBot:
                 logger.info(f"set custom tp ladder: {custom_tp_ladder} for {ticker}")
             tickers.append(ticker)
 
-        if msg_type == "LISTINGS": 
-            detections = data.get('detections', [])
-            if not detections:
+        if msg_type == "listing_ms": 
+            exchange = data.get('exchange')
+            if not exchange in EVENTS:
+                logger.debug(f"Buy signal on {exchange} received but exchange not supported")
+                return 
+                
+            event_type = data.get('type')
+            if not event_type in EVENTS[exchange]:
+                logger.debug(f"Buy signal on {exchange} - {event_type} received but event type not supported")
                 return
+
+            detections = data.get('detections', [])
             for detection in detections:
                 ticker = detection.get('ticker', '')
-                if ticker:
-                    tickers.append(ticker)
-        
+                tickers.append(ticker)
+                contract = detection.get('onchain', {}).get('contract', '')
+                chain = detection.get('onchain', {}).get('chain', '')
+                contract_data = {
+                    'contract': contract,
+                    'chain': chain.upper()
+                } if chain.upper() in CHAIN_NAMES else {}
+                contracts.append(contract_data)
+                
         if not tickers:
             logger.info(f"no ticker found in {msg_type} signal")
             return
 
-        for ticker in tickers:
-            token_data = await self.supply_parser.get_token_data(ticker)
+        for ticker, contract_data in zip(tickers, contracts):
+            
+            token_data = await self.supply_parser.get_token_data(
+                ticker, 
+                token_contract = contract_data.get('contract'),
+                chain = contract_data.get('chain')
+            )
             if not token_data:
                 logger.error(f"Buy signal received on {ticker} but no token data found")
                 await self.tg_client.send_error_alert(
@@ -91,35 +112,36 @@ class TradingBot:
                 "token not found"
             )
                 continue
-
+            
             circulating_supply = token_data.get('circulating_supply', 0)
-            if not circulating_supply:
-                logger.error(f"Buy signal received on {ticker} but no circulating supply found")
+            selected_pool = token_data.get('pool_selected')
+            if not circulating_supply and not selected_pool:
+                logger.error(f"Buy signal received on {ticker} but no circulating supply and no pool found")
                 await self.tg_client.send_error_alert(
                     "BUY_FAILED",
                     f"Buy {ticker} failed",
                     "no circulating supply found"
                 )
                 continue
-            
-            pools = token_data.get('pools', [])
-            if not pools:
-                logger.error(f"Buy signal received on {ticker} but no pools found")
-                await self.tg_client.send_error_alert(
-                    "BUY_FAILED",
-                    f"Buy {ticker} failed",
-                    "no pools found"
-                )
-                continue
 
-            selected_pool = None
-            for pool in pools:
-                if pool.get('liquidity') < MIN_POOL_TVL:
+            if not selected_pool:
+                pools = token_data.get('pools', [])
+                if not pools:
+                    logger.error(f"Buy signal received on {ticker} but no pools found")
+                    await self.tg_client.send_error_alert(
+                        "BUY_FAILED",
+                        f"Buy {ticker} failed",
+                        "no pools found"
+                    )
                     continue
-                if pool.get('base_token') not in USABLE_TOKENS:
-                    continue
-                selected_pool = pool
-                break
+
+                for pool in pools:
+                    if pool.get('liquidity') < MIN_POOL_TVL:
+                        continue
+                    if pool.get('base_token') not in USABLE_TOKENS:
+                        continue
+                    selected_pool = pool
+                    break
             
             if not selected_pool:
                 logger.error(f"Buy signal received on {ticker} but no usable pools found due to TVL and BASE_TOKEN filters")
@@ -139,7 +161,7 @@ class TradingBot:
                 'circulating_supply': circulating_supply,
                 'pool_data': selected_pool,
                 'custom_size': custom_size,
-                'custom_tp_ladder': custom_tp_ladder
+                'custom_tp_ladder': custom_tp_ladder,
             }
 
             logger.info(f"Buy signal received: {ticker} on {chain} | Address: {address}")
@@ -156,21 +178,13 @@ class TradingBot:
         await self._init_handlers()
         
         #подключаем вебсокеты
-        ws_news_client = WebSocketClient(
-            name="NEWS_WS",
-            msg_type="NEWS",
-            uri=NEWS_WS_URL,
+        ws_client = WebSocketClient(
+            name="WS_CLIENT",
+            uri=WS_URL,
             on_message_callback_handler=self.on_token_signal,
             tg_client=self.tg_client
         )
-        ws_listings_client = WebSocketClient(
-            name="LISTINGS_WS",
-            msg_type="LISTINGS",
-            uri=LISTINGS_WS_URL,
-            on_message_callback_handler=self.on_token_signal,
-            tg_client=self.tg_client
-        )
-        self.ws_clients = [ws_news_client, ws_listings_client]
+        self.ws_clients = [ws_client]
 
         #слушаем
         await asyncio.gather(

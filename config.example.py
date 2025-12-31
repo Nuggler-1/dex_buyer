@@ -2,41 +2,45 @@ SOFT_NAME = "SOFT_NAME"
 
 
 RPC = {
-    "ARBITRUM": 'https://arb-mainnet.g.alchemy.com/v2/',
-    "ETHEREUM": 'https://eth-mainnet.g.alchemy.com/v2/',
-    "BSC": 'https://lb.drpc.live/bsc/', 
-    "SOLANA": 'https://lb.drpc.live/solana/',
+    "http":{
+        "ARBITRUM": 'https://rpc.ankr.com/arbitrum/460c3368e39ee4029476310fc1f098c5608bdb458a469b08c6857e373ef02b84',
+        "ETHEREUM": 'https://eth-mainnet.g.alchemy.com/v2/m3E4cfjkK53jSu1zq9C7DVQ5YdNmhMgp',
+        "BSC": 'wss://lb.drpc.live/bsc/Ao7ya0msFUeiigkiZRZwqx8xQhizyg0R8JYQQmlfqV1j', 
+        "SOLANA": 'https://mainnet.helius-rpc.com/?api-key=d1491ed3-d3e8-4348-a6e1-fd61c13b5580',
+    },
+    "wss": {
+        "ARBITRUM": 'wss://arbitrum-one-rpc.publicnode.com',
+        "ETHEREUM": 'wss://lb.drpc.live/ethereum/Ao7ya0msFUeiigkiZRZwqx8xQhizyg0R8JYQQmlfqV1j',
+        "BSC": 'wss://lb.drpc.live/bsc/Ao7ya0msFUeiigkiZRZwqx8xQhizyg0R8JYQQmlfqV1j',
+        "SOLANA": '',#соль без поддержки вебсокета пока
+    },
 }
 
-
-WS_RPC = {
-    "ARBITRUM": 'wss://lb.drpc.live/arbitrum/',
-    "ETHEREUM": 'wss://lb.drpc.live/ethereum/',
-    "BSC": 'wss://lb.drpc.live/bsc/',
-    "SOLANA": '',#соль без поддержки вебсокета пока
+RPC_FOR_LATENCY_ACTIONS = {
+    "ARBITRUM": 'wss://arbitrum-one-rpc.publicnode.com',
+    "ETHEREUM": 'wss://lb.drpc.live/ethereum/Ao7ya0msFUeiigkiZRZwqx8xQhizyg0R8JYQQmlfqV1j',
+    "BSC": 'wss://lb.drpc.live/bsc/Ao7ya0msFUeiigkiZRZwqx8xQhizyg0R8JYQQmlfqV1j',
+    "SOLANA": 'https://mainnet.helius-rpc.com/?api-key=d1491ed3-d3e8-4348-a6e1-fd61c13b5580',
 }
+
 #для EVM чейнов
 USE_WEBSOCKET = True
 
 #адрес сервера который присылает сигнал
-LISTINGS_WS_URL = ""
-NEWS_WS_URL = ""
+WS_URL = "ws://54.64.177.89:8443"
 RECONNECT_ATTEMPTS = 10
 RECONNECT_DELAY = 5
-
-#имена чейнов для софта
-CHAIN_NAMES = {
-    'ETHEREUM',
-    'ARBITRUM',
-    'BSC',
-    'SOLANA'
-}
 
 
 #===========================POSITION CONFIG===========================
 
 #макс слиппадж
-SLIPPAGE_PERCENT = 30 #максимально допустимый слиппадж
+SLIPPAGE_PERCENT = {
+    'ETHEREUM': 15,
+    'BSC': 20, 
+    'ARBITRUM': 20,
+    'SOLANA': 15
+} #максимально допустимый слиппадж
 DELAY_BEFORE_TP = 10 #сколько секунд ждать перед запуском таска на продажу 
 
 #какие токены будет использовать для покупку (нужно иметь баланс во всех включенных токенах)
@@ -48,6 +52,41 @@ USABLE_TOKENS = [
     'WETH', 
     'WSOL'
 ]
+
+EVENTS = {
+    'binance': [
+        'alpha',
+        'spot',
+        'futures',
+        #'hodler_airdrop',
+        #'megadrop',
+        #'launchpool',
+        #'pre-market'
+    ],
+    'bybit': [
+        'spot',
+        'futures',
+        'soon-spot',
+        'soon-futures',
+        #'launchpad',
+        #'pre-market'
+    ],
+    'coinbase': [
+        'spot'
+    ],
+    'coinbaseinternational':[
+        'futures'
+    ],
+    'robinhood': [
+        'spot'
+    ],
+    'bithumb': [
+        'spot'
+    ],
+    'upbit':[
+        'spot'
+    ]
+}
 
 MARKET_CAP_CONFIG = [
         {
@@ -184,6 +223,9 @@ GAS_LIMIT = {
 SOLANA_PRIORITY_FEE = 1_000_000 #приорити фии под солану
 MIN_POOL_TVL = 10_000 #минимальный tvl для пула
 
+V4_MAX_POOL_FEE = 10_000 #1% 
+V4_MAX_POOL_TICK = 200
+
 #===========================PARSER CONFIG===========================
 
 PARSED_DATA_CHECK_DELAY_DAYS = 7 #раз в сколько дней обновлять данные 
@@ -208,6 +250,41 @@ ALL_BASE_TOKEN_TICKERS = [
 
 #------CMC DATA
 
+CMC_SEARCH_LISTS = {
+    "mexc": {
+        "params": 'exchangeIds=544',
+        "limit": 2500
+    },
+    "base top 300": {
+        "params": 'platformIds=199',
+        "limit": 300
+    },
+    "bsc top 600": {
+        "params": 'platformIds=1839',
+        "limit": 600
+    },
+    "bsc pancake v4 top 100": {
+        "params": 'exchangeIds=12714',
+        "limit": 100
+    },
+    "bsc pancake v2 top 400": {
+        "params": 'exchangeIds=1344',
+        'limit': 400,
+    },
+    "arbitrum top 200": {
+        "params": 'platformIds=11841',
+        "limit": 200
+    },
+    "eth top 500": {
+        "params": 'platformIds=1027',
+        "limit": 500
+    }, 
+    "raydium top 200": { 
+        "params": 'exchangeIds=1342',
+        "limit": 200
+    }
+}
+
 EXCHANGE_SLUGS = [
     'uniswap-v3-arbitrum',
     'uniswap_v3_arbitrum',
@@ -217,23 +294,48 @@ EXCHANGE_SLUGS = [
     'uniswap_v3',
     'raydium',
 
-    #'pancakeswap-v2',
-    #'uniswap-v2',
+    'uniswap-v4',
+    'uniswap_v4',
+    'uniswap-v4-ethereum',
+    'uniswap-v4-arbitrum',
+    'uniswap_v4_arbitrum',
+    'pancakeswap-v4-clamm-bsc',
+    'pancakeswap_v4_clamm_bsc',
+    'pancakeswap-infinity-clmm',
+
+    'uniswap-v2',
+    'uniswap_v2',
+    'pancakeswap-v2',
+    'pancakeswap_v2',
+
     #'uniswap-v2-arbitrum',
     #'meteora-dlmm'
 ]
 
 EXHANGE_SLUG_TO_BOT_SLUG = {
-    'uniswap-v3-arbitrum': 'v3',
-    'uniswap_v3_arbitrum': 'v3',
-    'pancakeswap-v3': 'v3',
-    'pancakeswap-v3-bsc': 'v3',
-    'uniswap-v3': 'v3',
-    'uniswap_v3': 'v3',
+    'uniswap-v3-arbitrum': 'uni_v3',
+    'uniswap_v3_arbitrum': 'uni_v3',
+    'pancakeswap-v3': 'cake_v3',
+    'pancakeswap-v3-bsc': 'cake_v3',
+    'uniswap-v3': 'uni_v3',
+    'uniswap_v3': 'uni_v3',
     'raydium': 'amm',
-    #'pancakeswap-v2': 'v2',
-    #'uniswap-v2': 'v2',
-    #'uniswap-v2-arbitrum': 'v2',
+
+    'uniswap-v4': 'uni_v4',
+    'uniswap_v4': 'uni_v4',
+    'uniswap-v4-ethereum': 'uni_v4',
+    'uniswap-v4-arbitrum': 'uni_v4',
+    'uniswap_v4_arbitrum': 'uni_v4',
+    'pancakeswap-v4-clamm-bsc': 'cake_v4',
+    'pancakeswap_v4_clamm_bsc': 'cake_v4',
+    'pancakeswap-infinity-clmm': 'cake_v4',
+    
+    'pancakeswap-v2': 'cake_v2',
+    'pancakeswap_v2': 'cake_v2',
+    'uniswap-v2': 'uni_v2',
+    'uniswap_v2': 'uni_v2',
+    'uniswap-v2-arbitrum': 'uni_v2',
+    'uniswap_v2_arbitrum': 'uni_v2',
     #'meteora-dlmm': 'dlmm'
 }
 

@@ -16,6 +16,10 @@ from config import (
     ERROR_429_RETRIES,
     GECKO_API_KEY,
     GECKO_CHAIN_NAMES,
+    CMC_SEARCH_LISTS,
+    V4_MAX_POOL_FEE, 
+    V4_MAX_POOL_TICK,
+    USABLE_TOKENS,
     RPC
 )
 from curl_cffi.requests import AsyncSession
@@ -26,7 +30,7 @@ from utils import get_logger
 import asyncio
 import os
 import time
-from chains.consts import DEX_ROUTER_DATA, pool_abi, erc20_abi
+from chains.consts import DEX_ROUTER_DATA, pool_abi, erc20_abi, manager_abi, manager_abi_cake
 from datetime import datetime, timedelta
 import ujson
 import base58
@@ -113,7 +117,7 @@ class HelperEVM:
         }
         self.logger = get_logger("PARSER")
         self.w3_providers = {
-            chain_name: AsyncWeb3(AsyncWeb3.AsyncHTTPProvider(RPC[chain_name])) for chain_name in CHAIN_NAMES if chain_name != 'SOLANA'
+            chain_name: AsyncWeb3(AsyncWeb3.AsyncHTTPProvider(RPC['http'][chain_name])) for chain_name in CHAIN_NAMES if chain_name != 'SOLANA'
         }
 
     async def _disconnect_all_providers(self):
@@ -140,19 +144,21 @@ class HelperEVM:
         }
 
         url = f'https://api.coingecko.com/api/v3/onchain/search/pools?query={token_address}&network={gecko_chain_name}&include=base_token'
+        data = {}
         for _ in range(ERROR_429_RETRIES):
             try:
                 async with AsyncSession() as session:
                     response = await session.get(url, headers=self.headers)
-                    data = ujson.loads(response.text)
                     response.raise_for_status()
+                    data = ujson.loads(response.text)
+                    break
 
             except Exception as e:
                 if any(['429' in str(e), 'rate limit' in str(e)]):
                     self.logger.warning(f"tvl query Rate limited, waiting {ERROR_429_DELAY} seconds")
                     await asyncio.sleep(ERROR_429_DELAY)
                 else:
-                    self.logger.error(f"Error getting pool TVL for {token_address} on {chain_name}: {str(e)}: {data}")
+                    self.logger.error(f"Error getting pool TVL for {token_address} on {chain_name}: {str(e)}")
                     return []
 
         parsed_pools = data.get('data',[])
@@ -187,7 +193,7 @@ class HelperEVM:
                 continue
 
             pool_address = pool.get('attributes',{}).get('address','')
-            if pool_address: 
+            if pool_address and len(pool_address) == 42: 
                 pool_address = Web3.to_checksum_address(pool_address)
 
             pools.append(
@@ -198,20 +204,23 @@ class HelperEVM:
                     'dex_type': dex,
                     'liquidity': tvl_usd,
                     'pair_address': pool_address,
+                    'gecko_mcap': pool.get('attributes',{}).get('market_cap_usd', 0)
                 }
             )
         sorted_pools = sorted(pools, key=lambda x: x['liquidity'], reverse=True)
         return sorted_pools
 
-    async def _get_pool_by_token_address(self, token_address: str, base_token_name:str, chain_name: str):
+    async def _get_pool_by_token_address(self, token_address: str, base_token_name:str, chain_name: str, pool_slug:str):
         pools = await self._get_pools_tvl_sorted(chain_name, token_address)
         for pool in pools:
-            if pool['base_token'] == base_token_name:
+            if pool['base_token'] == base_token_name and pool['dex_type'] == pool_slug:
                 return pool
         return None
     
     async def _get_token_decimals(self,token_address:str, chain_name: str):
         try:
+            if token_address.lower() == '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee':
+                return 18
             w3= self.w3_providers.get(chain_name)
             token_contract = w3.eth.contract(address=token_address, abi=erc20_abi)
             decimals = await token_contract.functions.decimals().call()
@@ -220,7 +229,7 @@ class HelperEVM:
             self.logger.error(f"Error getting token decimals for {token_address} on {chain_name}: {str(e)}")
             return None
     
-    async def _get_pool_fee_tier(self,pool_address: str, chain_name: str):
+    async def _v3_get_pool_fee_tier(self,pool_address: str, chain_name: str):
         try:
             w3= self.w3_providers.get(chain_name)
             pool_contract = w3.eth.contract(address=pool_address, abi=pool_abi)
@@ -229,6 +238,52 @@ class HelperEVM:
         except Exception as e:
             self.logger.error(f"Error getting pool fee tier for {pool_address} on {chain_name}: {str(e)}")
             return None
+
+    async def _v4_get_pool_data(self,pool_id:str, chain_name:str):
+        try:
+            w3 = self.w3_providers.get(chain_name)
+            if chain_name == 'BSC': 
+                manager_contract = w3.eth.contract(address=DEX_ROUTER_DATA[chain_name]['dex_contracts']['cake_v4']['manager_address'], abi=manager_abi_cake)
+            else:
+                manager_contract = w3.eth.contract(address=DEX_ROUTER_DATA[chain_name]['dex_contracts']['uni_v4']['manager_address'], abi=manager_abi)
+                
+            pool_data = await manager_contract.functions.poolKeys(pool_id[:52]).call()
+            if len(pool_data) == 0:
+                self.logger.warning(f"Pool {pool_id} not found on {chain_name}")
+                return {}
+            else: 
+                if chain_name == 'BSC': 
+                    pool_keys = {
+                        'currency0': pool_data[0],
+                        'currency1': pool_data[1],
+                        'hook': pool_data[2],
+                        'pool_manager': pool_data[3],
+                        'fee': pool_data[4],
+                        'parameters': '0x' + pool_data[5].hex(),  # Convert bytes32 to hex string for JSON
+                        'tick_spacing':  int.from_bytes(pool_data[5][-5:-2], 'big', signed=True)
+                    }
+                else:
+                    pool_keys = {
+                        'currency0': pool_data[0],
+                        'currency1': pool_data[1],
+                        'fee': pool_data[2],
+                        'tick_spacing': pool_data[3],
+                        'hook': pool_data[4]
+                    }
+                if pool_keys.get("tick_spacing")> V4_MAX_POOL_TICK:
+                    self.logger.warning(f"Filtered v4 pool by tick spacing: {pool_keys.get('tick_spacing')} > {V4_MAX_POOL_TICK}") 
+                    return {}
+                
+                if pool_keys.get("fee")> V4_MAX_POOL_FEE: 
+                    self.logger.warning(f"Filtered v4 pool by fee: {pool_keys.get('fee')} > {V4_MAX_POOL_FEE}")
+                    return {}
+
+                return pool_keys
+
+        except Exception as e:
+            self.logger.error(f"Error getting pool data for {pool_id} on {chain_name}: {str(e)}")
+            return None
+            
 
     async def _get_single_pool_data(self, pool_address: str, chain_name: str):
 
@@ -488,7 +543,9 @@ class SupplyParser:
     
                 if pool_data.get('platformName').upper() != 'SOLANA':
                     token_address = Web3.to_checksum_address(pool_data.get('tokenAddress'))
-                    pair_address = '' if not pool_data.get('pairContractAddress') else Web3.to_checksum_address(pool_data.get('pairContractAddress'))
+                    pair_address = '' if not pool_data.get('pairContractAddress') else pool_data.get('pairContractAddress')
+                    if len(pair_address) == 42:
+                        pair_address = Web3.to_checksum_address(pair_address)
                 else: 
                     token_address = pool_data.get('tokenAddress')
                     pair_address = pool_data.get('pairContractAddress', '')
@@ -509,16 +566,31 @@ class SupplyParser:
 
                 #quote data from gecko/raydium
                 fee = 0
-                if chain_name != 'SOLANA' and 'v2' not in exchange_slug:
-                    if not pair_address:
-                        token_pool = await self.helper_evm._get_pool_by_token_address(token_address, base_symbol, chain_name)
-                        if not token_pool:
+                onchain_pool_data = {}
+                if chain_name != 'SOLANA' :
+                    if 'v3' in exchange_slug:
+                        if not pair_address:
+                            token_pool = await self.helper_evm._get_pool_by_token_address(token_address, base_symbol, chain_name, exchange_slug)
+                            if not token_pool:
+                                continue
+                            pair_address = token_pool.get('pair_address')
+                            liquidity = token_pool.get('liquidity')
+                        fee = await self.helper_evm._v3_get_pool_fee_tier(pair_address, chain_name)
+                        if not fee:
                             continue
-                        pair_address = token_pool.get('pair_address')
-                        liquidity = token_pool.get('liquidity')
-                    fee = await self.helper_evm._get_pool_fee_tier(pair_address, chain_name)
-                    if not fee:
-                        continue
+                    if 'v4' in exchange_slug:
+                        if not pair_address: 
+                            token_pool = await self.helper_evm._get_pool_by_token_address(token_address, base_symbol, chain_name, exchange_slug)
+                            if not token_pool:
+                                continue
+                            pair_address = token_pool.get('pair_address')
+                            liquidity = token_pool.get('liquidity')
+                        onchain_pool_data = await self.helper_evm._v4_get_pool_data(pair_address, chain_name)
+                        if not onchain_pool_data:
+                            continue
+                    if 'v2' in exchange_slug:
+                        pass           
+                        
                 else: 
                     if not pair_address: 
                         base_token_address = DEX_ROUTER_DATA['SOLANA'].get(base_symbol)
@@ -540,6 +612,7 @@ class SupplyParser:
                         'liquidity': liquidity,
                         'pair_address': pair_address,
                         'fee_tier': fee,
+                        'pool_data': onchain_pool_data
                     }
                 )
             
@@ -574,79 +647,15 @@ class SupplyParser:
                 [self._last_update_time.isoformat(), merged_data], 
                 indent=4
             ))
-        """
-        # Update pool data for each chain
-        for chain_name in CHAIN_NAMES:
-                
-            pool_data_path = f'{TOKEN_DATA_BASE_PATH}/{chain_name}_pool_data.json'
-            
-            # Создаем директорию, если не существует
-            os.makedirs(os.path.dirname(pool_data_path), exist_ok=True)
-            
-            # Load existing data
-            existing_data = {}
-            original_update = self._last_update_time.isoformat()
-            
-            if os.path.exists(pool_data_path):
-                with open(pool_data_path, 'r', encoding='utf-8') as f:
-                    raw_data = json.load(f)
-                    if isinstance(raw_data, list) and len(raw_data) == 2:
-                        original_update = raw_data[0]
-                        existing_data = raw_data[1]
-            else:
-                self.logger.info(f'Creating new pool data file for {chain_name}')
-            
-            # Merge
-            new_pool_data = self.chain_separated_pool_dict.get(chain_name, {})
-            merged_data = existing_data.copy()
-            
-            for token_addr, dex_types_data in new_pool_data.items():
-                if token_addr not in merged_data:
-                    merged_data[token_addr] = dex_types_data
-                else:
-                    for dex_type, base_tokens_data in dex_types_data.items():
-                        if dex_type not in merged_data[token_addr]:
-                            merged_data[token_addr][dex_type] = base_tokens_data
-                        else:
-                            for base_token, new_info in base_tokens_data.items():
-                                if base_token not in merged_data[token_addr][dex_type]:
-                                    merged_data[token_addr][dex_type][base_token] = new_info
-                                else:
-                                    if chain_name != 'SOLANA':
-                                        # EVM: сравниваем pool_address в dict
-                                        old_info = merged_data[token_addr][dex_type][base_token]
-                                        new_addr = new_info.get('pool_address', '')
-                                        old_addr = old_info.get('pool_address', '') if isinstance(old_info, dict) else ''
-                                        
-                                        if new_addr != old_addr:
-                                            merged_data[token_addr][dex_type][base_token] = new_info
-                                    else:
-                                        # Solana: сравниваем pool_address как строку
-                                        old_pool_addr = merged_data[token_addr][dex_type][base_token]
-                                        if new_info != old_pool_addr:
-                                            merged_data[token_addr][dex_type][base_token] = new_info 
-            # Save
-            with open(pool_data_path, 'w', encoding='utf-8') as f:
-                json.dump([original_update, merged_data], f, indent=4)
-            
-            self.logger.info(f'Updated pool data for {chain_name}: {len(merged_data)} tokens')
-            """
+        
     async def _parse_tokens(self, ):
         
         #получаем весь набор токенов мекс + топ 2000 кмк (айди и цирк сапплай)
-        self.logger.info(f'Fetching tokens list for MEXC')
-        mexc_token_list = await self._search_query(1, 2500, additional_params='exchangeIds=544')
-        self.logger.info(f'Fetching tokens list for CMC top 2000')
-        top_2000_token_list = await self._search_query(1, 2000)
-        self.logger.info(f'Fetching tokens list for Uniswap v3 ARB')
-        top_200_univ3_arb = await self._search_query(1, 200, additional_params='exchangeIds=1478')
-        self.logger.info(f'Fetching tokens list for Uniswap v3 ETH')
-        top_400_univ3_eth = await self._search_query(1, 400, additional_params='exchangeIds=1348')
-        self.logger.info(f'Fetching tokens list for Uniswap v3 BSC')
-        top_400_cakev3_bsc = await self._search_query(1, 400, additional_params='exchangeIds=6706')
-        self.logger.info(f'Fetching tokens list for Raydium')
-        top_200_raydium = await self._search_query(1, 200, additional_params='exchangeIds=1342')
-        raw_token_dict = {token['id']: token for token in mexc_token_list + top_2000_token_list + top_200_univ3_arb + top_400_univ3_eth + top_400_cakev3_bsc + top_200_raydium}
+        token_list = []
+        for search_list_name, search_list in CMC_SEARCH_LISTS.items():
+            self.logger.info(f'Fetching tokens list for {search_list_name}')
+            token_list += await self._search_query(1, search_list['limit'], additional_params=search_list['params'])
+        raw_token_dict = {token['id']: token for token in token_list}
         unique_tokens = list(raw_token_dict.values())
         parsed_token_list = [ 
             {
@@ -657,6 +666,8 @@ class SupplyParser:
             }
             for token in unique_tokens
         ]
+
+        
         self.logger.info(f'Parsed {len(parsed_token_list)} tokens')
 
         main_data_dict = {}
@@ -680,25 +691,6 @@ class SupplyParser:
                     'pools': result
                 }
                 pool_count += len(result)
-                """
-                for pool in result:
-                    chain_name = pool.get('chain')
-                    if chain_name != 'SOLANA':
-                        chain_separated_pool_dict[chain_name][pool.get('token_address')] = {
-                            pool.get('dex_type'): {
-                                pool.get('base_token'): {
-                                    'pool_address': pool.get('pair_address'),
-                                    'fee_tier': 0
-                                }
-                            }
-                        }
-                    else: 
-                        chain_separated_pool_dict[chain_name][pool.get('token_address')] = {
-                            pool.get('dex_type'): {
-                                pool.get('base_token'): pool.get('pair_address')
-                            }
-                        }
-                """
 
             self.logger.success(f'Processed chunk {i//chunk_size+1}/{len(parsed_token_list)//chunk_size+1}')
             await asyncio.sleep(DELAY_BETWEEN_BATCHES)
@@ -740,12 +732,45 @@ class SupplyParser:
         self.logger.info(f'Force parsing requested')
         await self._parse_tokens()
 
-    async def get_token_data(self, token_ticker: str):
+    async def _get_token_pool_by_contract_evm(self, chain_name:str, contract:str):
+
+        try:
+            pools = await self.helper_evm._get_pools_tvl_sorted(chain_name, contract)
+            for pool in pools:
+                if pool.get('liquidity') < MIN_POOL_TVL:
+                    continue
+                if pool.get('base_token') not in USABLE_TOKENS:
+                    continue
+                selected_pool = pool
+                selected_pool['pool_data'] = {}
+                selected_pool['fee_tier'] = 0
+                break
+            
+            pool_type = selected_pool.get('dex_type')
+            if 'v4' in pool_type: 
+                onchain_pool_data = await self.helper_evm._v4_get_pool_data(pool.get('pair_address'), chain_name)
+                selected_pool['pool_data'] = onchain_pool_data 
+            elif 'v3' in pool_type: 
+                fee = await self.helper_evm._v3_get_pool_fee_tier(pool.get('pair_address'), chain_name)
+                selected_pool['fee_tier'] = fee 
+            else: 
+                pass
+            return selected_pool
+        except Exception as e:
+            import traceback
+            self.logger.error(f'Error getting token data for {contract}: {str(e)}')
+            self.logger.error(traceback.format_exc())
+            return {}
+                        
+
+    async def get_token_data(self, token_ticker: str, token_contract: str = None, chain: str = None):
 
         """
         Запросит токен сапплай из базы данных
         Если не найдет, запросит через API
         Если апи не даст ответ - вернет {}
+        
+        Если передать чейн и контракт - выдаст самый ликвидный пул и маркеткапу с геко
 
         Возвращает:
             dict: Словарь с данными: {circulating_supply: int, pools: list<dict>}
@@ -756,6 +781,12 @@ class SupplyParser:
             token_data = self.main_token_data.get(token_ticker)
             if token_data:
                 return token_data
+            elif token_contract and (chain and chain!='SOLANA'): 
+                pool = self._get_token_pool_by_contract_evm(chain, token_contract)
+                return {
+                    'circulating_supply': 0,
+                    'pool_selected': pool
+                }
             else:
                 self.logger.warning(f'No parsed token data for {token_ticker}. Quering from API')
                 t_start = time.perf_counter()

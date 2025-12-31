@@ -14,7 +14,6 @@ class WebSocketClient:
         self, 
         name: str, 
         uri: str, 
-        msg_type: Literal['NEWS', 'LISTINGS'],
         on_message_callback_handler:Callable,
         reconnect_delay: int = RECONNECT_DELAY,
         max_reconnect_attempts: int = RECONNECT_ATTEMPTS,
@@ -23,7 +22,6 @@ class WebSocketClient:
         self.logger = get_logger(name)
         self.name = name
         self.uri = uri
-        self.msg_type = msg_type
         self.on_message_callback_handler = on_message_callback_handler
         self._connection = None
         self._transport = None
@@ -43,7 +41,6 @@ class WebSocketClient:
             return
         callback = self.on_message_callback_handler
         name = self.name
-        msg_type = self.msg_type
         reconnect_attempts = 0
         logger = self.logger
         
@@ -58,7 +55,7 @@ class WebSocketClient:
                         if frame.msg_type == WSMsgType.TEXT:
                             try:
                                 data = ujson.loads(frame.get_payload_as_utf8_text())
-                                asyncio.create_task(callback(msg_type, data))
+                                asyncio.create_task(callback(data))
                             except Exception as e:
                                 logger.error(f"Error processing frame: {e}")
                                 traceback.print_exc()

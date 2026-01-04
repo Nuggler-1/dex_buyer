@@ -4,7 +4,7 @@ import ujson
 from picows import ws_connect, WSListener, WSMsgType, WSFrame, WSTransport
 from typing import Callable, Literal
 import traceback
-from config import RECONNECT_ATTEMPTS, RECONNECT_DELAY
+from config import RECONNECT_ATTEMPTS, RECONNECT_DELAY, SOFT_NAME
 from utils import get_logger
 from tg_bot import TelegramClient
 
@@ -55,19 +55,39 @@ class WebSocketClient:
                         if frame.msg_type == WSMsgType.TEXT:
                             try:
                                 data = ujson.loads(frame.get_payload_as_utf8_text())
-                                asyncio.create_task(callback(data))
+                                # Check if this is a ping message from server
+                                if isinstance(data, dict) and data.get('type') == 'ping':
+                                    #logger.debug(f"Received PING from server")
+                                    try:
+                                        pong_msg = ujson.dumps({"type": "pong"})
+                                        transport.send(WSMsgType.TEXT, pong_msg.encode('utf-8'))
+                                        #logger.debug(f"Sent PONG response")
+                                    except Exception as e:
+                                        logger.error(f"Failed to send pong: {e}")
+                                else:
+                                    # Normal message, pass to callback
+                                    asyncio.create_task(callback(data))
                             except Exception as e:
                                 logger.error(f"Error processing frame: {e}")
                                 traceback.print_exc()
                         elif frame.msg_type == WSMsgType.CLOSE:
                             logger.warning(f"Received CLOSE frame")
                         else:
-                            logger.warning(f"Received frame type: {frame.msg_type}")
+                            logger.debug(f"Received frame type: {frame.msg_type}")
                 
                 #коннектим, picows сама обрабатывает коллбеки на каждом новом сообщении
                 transport, client = await ws_connect(ClientListener, self.uri)
                 self._transport = transport
                 reconnect_attempts = 0  # Reset counter on successful connection
+                
+                # Send registration message
+                try:
+                    registration_msg = ujson.dumps({"server_name": SOFT_NAME})
+                    transport.send(WSMsgType.TEXT, registration_msg.encode('utf-8'))
+                    logger.info(f"Sent registration message: {registration_msg}")
+                except Exception as e:
+                    logger.error(f"Failed to send registration message: {e}")
+                
                 await transport.wait_disconnected() #слушаем
                 
                 # Connection closed
@@ -99,6 +119,7 @@ class WebSocketClient:
     async def close(self):
         self.logger.info(f"Closing WebSocket connection")
         self._should_reconnect = False  # Stop reconnection attempts
+        
         if self._transport is not None:
             try:
                 self._transport.disconnect()

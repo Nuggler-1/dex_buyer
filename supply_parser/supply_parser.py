@@ -1,4 +1,5 @@
 from config import (
+    BUY_ONLY_PARSED,
     CMC_PLATFORM_IDS, 
     CMC_API_KEY,
     PARSED_DATA_CHECK_DELAY_DAYS, 
@@ -20,6 +21,7 @@ from config import (
     V4_MAX_POOL_FEE, 
     V4_MAX_POOL_TICK,
     USABLE_TOKENS,
+    BUY_ONLY_PARSED,
     RPC
 )
 from curl_cffi.requests import AsyncSession
@@ -781,8 +783,10 @@ class SupplyParser:
             token_data = self.main_token_data.get(token_ticker)
             if token_data:
                 return token_data
+            elif BUY_ONLY_PARSED: 
+                return {}
             elif token_contract and (chain and chain!='SOLANA'): 
-                pool = self._get_token_pool_by_contract_evm(chain, token_contract)
+                pool = await self._get_token_pool_by_contract_evm(chain, token_contract)
                 return {
                     'circulating_supply': 0,
                     'pool_selected': pool

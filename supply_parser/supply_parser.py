@@ -22,6 +22,7 @@ from config import (
     V4_MAX_POOL_TICK,
     USABLE_TOKENS,
     BUY_ONLY_PARSED,
+    CHAIN_NAMES,
     RPC
 )
 from curl_cffi.requests import AsyncSession
@@ -522,6 +523,9 @@ class SupplyParser:
             base_tokens_unused = ALL_BASE_TOKEN_TICKERS.copy() + base_tokens_unwrapped
             for pool_data in data:
 
+                chain_name = pool_data.get('platformName', '').upper()
+                if chain_name not in CHAIN_NAMES: 
+                    continue
                 if pool_data.get('exchangeSlug','').lower() not in EXCHANGE_SLUGS:
                     continue
                 if not pool_data.get('tokenAddress', ''):
@@ -543,8 +547,8 @@ class SupplyParser:
                 elif liquidity < MIN_POOL_TVL:
                     continue
     
-                if pool_data.get('platformName').upper() != 'SOLANA':
-                    token_address = Web3.to_checksum_address(pool_data.get('tokenAddress'))
+                if chain_name != 'SOLANA':
+                    token_address = Web3.to_checksum_address(pool_data.get('tokenAddress').split("#")[0])
                     pair_address = '' if not pool_data.get('pairContractAddress') else pool_data.get('pairContractAddress')
                     if len(pair_address) == 42:
                         pair_address = Web3.to_checksum_address(pair_address)
@@ -564,7 +568,6 @@ class SupplyParser:
                 
                 base_tokens_unused.remove(base_symbol) #removing token from unused list
                 exchange_slug = EXHANGE_SLUG_TO_BOT_SLUG[pool_data.get('exchangeSlug').lower()]
-                chain_name = pool_data.get('platformName').upper()
 
                 #quote data from gecko/raydium
                 fee = 0
@@ -608,7 +611,7 @@ class SupplyParser:
                     {
                         'token_address': token_address,
                         'token_decimals': decimals,
-                        'chain': pool_data.get('platformName').upper(),
+                        'chain': chain_name,
                         'base_token': base_symbol,
                         'dex_type': exchange_slug,
                         'liquidity': liquidity,

@@ -171,6 +171,7 @@ class SolanaHandler:
                 if any(i in str(traceback.format_exc()) for i in ['ReadTimeout', 'Timeout', 'ConnectTimeout']):
                     self.logger.warning("Blockhash update - RPC ReadTimeout error")
                     await asyncio.sleep(self.blockhash_update_interval)
+                    continue
                 self.logger.error(f"Blockhash update error: {traceback.format_exc()}")
                 await asyncio.sleep(self.blockhash_update_interval)
 

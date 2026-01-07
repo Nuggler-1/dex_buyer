@@ -84,7 +84,8 @@ class TradingBot:
             detections = data.get('detections', [])
             for detection in detections:
                 ticker = detection.get('ticker', '')
-                tickers.append(ticker)
+                if ticker not in tickers:
+                    tickers.append(ticker)
                 contract = detection.get('onchain', {}).get('contract', '')
                 chain = detection.get('onchain', {}).get('chain', '')
                 contract_data = {

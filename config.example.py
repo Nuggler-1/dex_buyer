@@ -54,38 +54,104 @@ USABLE_TOKENS = [
 ]
 
 EVENTS = {
-    'binance': [
-        'alpha',
-        'spot',
-        'futures',
-        #'hodler_airdrop',
-        #'megadrop',
-        #'launchpool',
-        #'pre-market'
-    ],
-    'bybit': [
-        'spot',
-        'futures',
-        'soon-spot',
-        'soon-futures',
-        #'launchpad',
-        #'pre-market'
-    ],
-    'coinbase': [
-        'spot'
-    ],
-    'coinbaseinternational':[
-        'futures'
-    ],
-    'robinhood': [
-        'spot'
-    ],
-    'bithumb': [
-        'spot'
-    ],
-    'upbit':[
-        'spot'
-    ]
+    'binance': {
+        'alpha': {
+            "enabled": True,
+            "tp_ladder_id":1, # "mcap" или id тп ладдера,
+            "size": { }, # Словарь с указанными сайзами, если токен не указан, то будет расчет по мкапе
+            "blacklist": ["ABC", "DEF"], #тикеры через запятую для блеклиста 
+            "whitelist": "binance_alpha_whitelist.txt", # название файла в cache_data/whitelists/ заполняемого руками, либо None
+        },
+        'spot': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        },
+        'futures': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        }
+    },
+    'bybit': {
+        'spot': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        },
+        'futures': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        },
+        'soon-spot': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        },
+        'soon-futures': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        }
+    },
+    'coinbase': {
+        'spot': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        }
+    },
+    'coinbaseinternational': {
+        'futures': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        }
+    },
+    'robinhood': {
+        'spot': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        }
+    },
+    'bithumb': {
+        'spot': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        }
+    },
+    'upbit': {
+        'spot': {
+            'enabled': True,
+            'whitelist': None,
+            'blacklist': [],
+            'size': {},
+            'tp_ladder_id': None
+        }
+    }
 }
 
 MARKET_CAP_CONFIG = [
@@ -372,6 +438,7 @@ SUPPLY_DATA_PATH = TOKEN_DATA_BASE_PATH + 'token_data.json'
 LAST_CHECK_PATH = TOKEN_DATA_BASE_PATH + 'last_check.txt'
 
 TP_CACHE_PATH = TOKEN_DATA_BASE_PATH + '/TP_data/'
+WHITELIST_PATH = TOKEN_DATA_BASE_PATH + 'whitelists/'
 
 DEFAULT_LOGS_FILE = 'logs.txt'
 LOGS_SIZE = '10 MB'

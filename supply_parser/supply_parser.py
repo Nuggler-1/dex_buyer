@@ -119,7 +119,13 @@ class HelperEVM:
 
     def __init__(self):
         self.headers = {
-            'x-cg-demo-api-key': GECKO_API_KEY
+            'x-cg-demo-api-key': GECKO_API_KEY,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https://www.coingecko.com/',
+            'Origin': 'https://www.coingecko.com'
         }
         self.logger = get_logger("PARSER")
         self.w3_providers = {
@@ -148,7 +154,6 @@ class HelperEVM:
         base_token_address_to_name = {
             DEX_ROUTER_DATA[chain_name].get(token_name, ''): token_name for token_name in ALL_BASE_TOKEN_TICKERS
         }
-
         url = f'https://api.coingecko.com/api/v3/onchain/search/pools?query={token_address}&network={gecko_chain_name}&include=base_token'
         data = {}
         for _ in range(ERROR_429_RETRIES):

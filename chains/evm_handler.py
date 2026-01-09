@@ -78,10 +78,13 @@ class EVMHandler:
             self.using_websocket = False
             self.logger.debug("Using HTTP RPC")
 
-        self.w3_latency = AsyncWeb3(WebSocketProvider(
-            RPC_FOR_LATENCY_ACTIONS[chain_name],
-            websocket_kwargs={'ping_interval': 20, 'ping_timeout': 10}
-        ) if 'wss' in RPC_FOR_LATENCY_ACTIONS[chain_name] else AsyncWeb3(AsyncHTTPProvider(RPC_FOR_LATENCY_ACTIONS[chain_name])))
+        if 'wss' in RPC_FOR_LATENCY_ACTIONS[chain_name]:
+            self.w3_latency = AsyncWeb3(WebSocketProvider(
+                RPC_FOR_LATENCY_ACTIONS[chain_name],
+                websocket_kwargs={'ping_interval': 20, 'ping_timeout': 10}
+            ))
+        else:
+            self.w3_latency = AsyncWeb3(AsyncHTTPProvider(RPC_FOR_LATENCY_ACTIONS[chain_name]))
 
         # if chain_name in ['BSC', 'POLYGON']:
         #     self.w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)

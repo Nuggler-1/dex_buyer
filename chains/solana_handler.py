@@ -724,7 +724,7 @@ class SolanaHandler:
                 mcap_usd_converter = self.gas_token_price * price
             else:
                 mcap_usd_converter = price
-            mcap = mcap_usd_converter * token_supply
+            mcap = int(float(token_supply) * mcap_usd_converter) if token_supply else pool_data.get('gecko_mcap', 0)
             amount_in, tp_id = self._get_buy_size_and_tp_id(mcap, base_token_name)
 
             if position_size:

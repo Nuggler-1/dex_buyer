@@ -42,7 +42,8 @@ class TransactionExecutor:
             'ticker': ticker,
             'token_address': address,
             'circulating_supply': circulating_supply,
-            'pool_data': pool_data
+            'pool_data': pool_data,
+            'custom_size': None | size
         }"""
         chain = token_data.get('chain')
         ticker = token_data.get('ticker')

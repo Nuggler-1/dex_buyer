@@ -2,7 +2,7 @@ import asyncio
 from .websocket_client import WebSocketClient
 from .executor import TransactionExecutor
 from chains import EVMHandler, SolanaHandler
-from config import CHAIN_NAMES, WS_URL, MIN_POOL_TVL, USABLE_TOKENS, EVENTS
+from config import CHAIN_NAMES, TP_LADDERS, WS_URL, MIN_POOL_TVL, USABLE_TOKENS, EVENTS
 from utils import get_logger
 from supply_parser import SupplyParser
 from tg_bot import TelegramClient
@@ -77,7 +77,8 @@ class TradingBot:
                 return 
                 
             event_type = data.get('type')
-            if not event_type in EVENTS[exchange]:
+            event_settings = EVENTS.get(exchange, {}).get(event_type)
+            if not event_settings.get('enabled'):
                 logger.debug(f"Buy signal on {exchange} - {event_type} received but event type not supported")
                 return
 
@@ -155,6 +156,26 @@ class TradingBot:
             
             chain = selected_pool.get('chain', '')
             address = selected_pool.get('token_address', '')
+            
+            # Check whitelist if specified
+            whitelist_name = event_settings.get('whitelist')
+            if whitelist_name:
+                if not self.supply_parser.is_ticker_in_whitelist(ticker, whitelist_name):
+                    logger.warning(f"Buy signal received on {ticker} on {chain} but not in whitelist '{whitelist_name}'")
+                    return None
+                    
+            else: #check if blacklist is specified
+                if ticker in event_settings.get('blacklist', []): 
+                    logger.warning(f"Buy signal received on {ticker} on {chain} but blacklisted")
+                    return None
+            
+            if not custom_size: 
+                base_token = selected_pool.get("base_token")
+                custom_size = event_settings.get('size', {}).get(base_token)
+            if not custom_tp_ladder: 
+                tp_ladder_id = event_settings.get('tp_ladder_id',0)
+                custom_tp_ladder = TP_LADDERS.get(tp_ladder_id)
+            
             token_data = {
                 'chain': chain,
                 'ticker': ticker,

@@ -388,6 +388,20 @@ pool_abi = [
 erc20_abi = [
             {
                 "constant": True,
+                "inputs": [],
+                "name": "totalSupply",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": False,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": True,
                 "inputs": [
                     {
                         "name": "_owner",

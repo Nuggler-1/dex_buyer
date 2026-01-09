@@ -23,12 +23,15 @@ from config import (
     USABLE_TOKENS,
     BUY_ONLY_PARSED,
     CHAIN_NAMES,
-    RPC
+    RPC,
+    WHITELIST_PATH, 
+    EVENTS
 )
 from curl_cffi.requests import AsyncSession
 from web3 import Web3
 from web3 import AsyncWeb3
 import json
+import supply_parser
 from utils import get_logger
 import asyncio
 import os
@@ -231,6 +234,17 @@ class HelperEVM:
         except Exception as e:
             self.logger.error(f"Error getting token decimals for {token_address} on {chain_name}: {str(e)}")
             return None
+
+    async def _get_token_supply(self, token_address:str, chain_name:str):
+        try:
+            w3= self.w3_providers.get(chain_name)
+            token_contract = w3.eth.contract(address=token_address, abi=erc20_abi)
+            decimals = await token_contract.functions.decimals().call()
+            supply= await token_contract.functions.totalSupply().call()
+            return int(supply/10**decimals)
+        except Exception as e:
+            self.logger.error(f"Error getting token supply for {token_address} on {chain_name}: {str(e)}")
+            return None
     
     async def _v3_get_pool_fee_tier(self,pool_address: str, chain_name: str):
         try:
@@ -349,6 +363,8 @@ class SupplyParser:
             'Sec-Fetch-Site': 'same-site',
 
         }
+        self._whitelists = {}  # Cache for loaded whitelists
+
     async def stop(self): 
         if self._parser_task:
             self._parser_task.cancel()
@@ -451,6 +467,73 @@ class SupplyParser:
             'circulating_supply': supply,
             'pools': pools
         }
+
+    def _load_whitelist(self, whitelist_name: str) -> dict:
+        """
+        Load whitelist from file. Format: ticker:address:chain (one per line)
+        Returns dict: {ticker.lower(): {'address': str, 'chain': str}}
+        """
+        if whitelist_name in self._whitelists:
+            return self._whitelists[whitelist_name]
+        
+        whitelist_path = os.path.join(WHITELIST_PATH, whitelist_name)
+        whitelist_data = {}
+        
+        try:
+            with open(whitelist_path, 'r', encoding='utf-8') as f:
+                for line_num, line in enumerate(f, 1):
+                    line = line.strip()
+                    if not line or line.startswith('#'):
+                        continue
+                    
+                    parts = line.split(':')
+                    if len(parts) != 3:
+                        self.logger.warning(f"Invalid whitelist entry at line {line_num}: {line}")
+                        continue
+                    
+                    ticker, address, chain = parts
+                    ticker = ticker.strip().lower()
+                    address = address.strip()
+                    chain = chain.strip().upper()
+                    
+                    if chain not in CHAIN_NAMES:
+                        self.logger.warning(f"Invalid chain '{chain}' in whitelist at line {line_num}")
+                        continue
+                    if chain != 'SOLANA': 
+                        address = Web3.to_checksum_address(address)
+                    whitelist_data[ticker] = {'address': address, 'chain': chain}
+            
+            self._whitelists[whitelist_name] = whitelist_data
+            self.logger.info(f"Loaded whitelist '{whitelist_name}' with {len(whitelist_data)} tokens")
+            return whitelist_data
+            
+        except FileNotFoundError:
+            self.logger.error(f"Whitelist file not found: {whitelist_path}")
+            return {}
+        except Exception as e:
+            self.logger.error(f"Error loading whitelist '{whitelist_name}': {str(e)}")
+            return {}
+    
+    def is_ticker_in_whitelist(self, ticker: str, whitelist_name: str) -> bool:
+        """
+        Check if a ticker is in the specified whitelist
+        """
+        if not whitelist_name:
+            return True  # No whitelist means all tokens allowed
+        
+        whitelist = self._load_whitelist(whitelist_name)
+        return ticker.lower() in whitelist
+    
+    def get_whitelist_token_data(self, ticker: str, whitelist_name: str) -> dict:
+        """
+        Get token data (address, chain) from whitelist
+        Returns: {'address': str, 'chain': str} or None
+        """
+        if not whitelist_name:
+            return None
+        
+        whitelist = self._load_whitelist(whitelist_name)
+        return whitelist.get(ticker.lower())
 
     def _load_token_data(self):
         try:
@@ -650,10 +733,107 @@ class SupplyParser:
         with open(SUPPLY_DATA_PATH, 'w', encoding='utf-8') as f:
             f.write(json.dumps(
                 [self._last_update_time.isoformat(), merged_data], 
-                indent=4
+                indent=4,
+                ensure_ascii=False
             ))
         
-    async def _parse_tokens(self, ):
+    async def _fetch_whitelist_token_pools(self, ticker: str, address: str, chain: str):
+        """
+        Fetch pool data for a single whitelist token
+        First checks main_token_data, falls back to HelperEVM if not found
+        """
+        try:
+            # Normalize ticker for lookup
+            normalized_ticker = ticker.lower().replace(' ', '').replace('.', '').replace('$', '')
+            
+            # First try to get from main token data
+            if normalized_ticker in self.main_token_data:
+                pools = self.main_token_data[normalized_ticker].get('pools', [])
+                if pools:
+                    #self.logger.info(f'Loaded {ticker} from main_token_data with {len(pools)} pools')
+                    return {
+                        'symbol': ticker,
+                        'circulating_supply': self.main_token_data[normalized_ticker].get('circulating_supply', 0),
+                        'pools': pools
+                    }
+            
+            # Fallback to HelperEVM/HelperSOL
+            self.logger.info(f'Token {ticker} not in main_token_data, querying from Helper')
+            if chain == 'SOLANA':
+                pools = await self.helper_sol.get_pools_tvl_sorted(address)
+                supply = 0
+            else:
+                pools = await self.helper_evm._get_pools_tvl_sorted(chain, address)
+                supply = await self.helper_evm._get_token_supply(address, chain)
+            
+            if pools:
+                self.logger.info(f'Loaded {ticker} from Helper with {len(pools)} pools')
+                return {
+                    'symbol': ticker,
+                    'circulating_supply': supply,
+                    'pools': pools
+                }
+            else:
+                self.logger.warning(f'No pools found for whitelisted token {ticker} ({address}) on {chain}')
+                return None
+                
+        except Exception as e:
+            self.logger.error(f'Error loading whitelist token {ticker} ({address}) on {chain}: {str(e)}')
+            return None
+
+    async def _load_whitelist_tokens(self, whitelist_names: list) -> list:
+        """
+        Load tokens from whitelists and fetch their pool data
+        First queries from main_token_data, falls back to HelperEVM if missing
+        Processes in parallel batches for speed optimization
+        Returns list of token data dicts with pools
+        """
+        whitelist_tokens = []
+        all_tokens_to_fetch = []
+        
+        # Collect all tokens from all whitelists
+        for whitelist_name in whitelist_names:
+            whitelist = self._load_whitelist(whitelist_name)
+            if not whitelist:
+                continue
+    
+            for ticker, token_info in whitelist.items():
+                all_tokens_to_fetch.append({
+                    'ticker': ticker,
+                    'address': token_info['address'],
+                    'chain': token_info['chain']
+                })
+        
+        if not all_tokens_to_fetch:
+            return []
+        
+        # Process in batches for speed
+        batch_size = 10  # Process 10 tokens at a time
+        for i in range(0, len(all_tokens_to_fetch), batch_size):
+            batch = all_tokens_to_fetch[i:i + batch_size]
+            
+            # Create parallel tasks for this batch
+            tasks = [
+                self._fetch_whitelist_token_pools(
+                    token['ticker'],
+                    token['address'],
+                    token['chain']
+                )
+                for token in batch
+            ]
+            
+            # Execute batch in parallel
+            results = await asyncio.gather(*tasks)
+            
+            # Add successful results
+            for result in results:
+                if result:
+                    whitelist_tokens.append(result)
+        
+        self.logger.success(f'Loaded {len(whitelist_tokens)} tokens from whitelists')
+        return whitelist_tokens
+
+    async def _parse_tokens(self, whitelists_to_load: list = None):
         
         #получаем весь набор токенов мекс + топ 2000 кмк (айди и цирк сапплай)
         token_list = []
@@ -671,9 +851,8 @@ class SupplyParser:
             }
             for token in unique_tokens
         ]
-
         
-        self.logger.info(f'Parsed {len(parsed_token_list)} tokens')
+        self.logger.info(f'Parsed {len(parsed_token_list)} tokens from CMC')
 
         main_data_dict = {}
         chunk_size = CACHE_UPDATE_BATCH_SIZE
@@ -704,10 +883,34 @@ class SupplyParser:
         self.main_token_data = main_data_dict
         self.logger.success(f'Found {pool_count} pools for {len(main_data_dict)} tokens')
         
+        # Process whitelist tokens at the end, after main_token_data is populated
+        whitelists_to_load = []
+        for exchange_name, exchange_data in EVENTS.items():
+            for event_type, event_config in exchange_data.items():
+                if event_config.get('whitelist'): 
+                    whitelists_to_load.append(event_config.get('whitelist'))
+        
+        if whitelists_to_load:
+            self.logger.info(f'Processing whitelist tokens from {len(whitelists_to_load)} whitelist(s)')
+            whitelist_tokens = await self._load_whitelist_tokens(whitelists_to_load)
+            
+            # Add whitelist tokens to main_token_data
+            for wl_token in whitelist_tokens:
+                normalized_ticker = wl_token['symbol'].lower().replace(' ', '').replace('.', '').replace('$', '')
+                # Only add if not already in main_token_data (whitelist takes priority)
+                if normalized_ticker not in self.main_token_data:
+                    self.main_token_data[normalized_ticker] = {
+                        'circulating_supply': wl_token['circulating_supply'],
+                        'pools': wl_token['pools']
+                    }
+                    pool_count += len(wl_token['pools'])
+            
+            self.logger.success(f'Added {len(whitelist_tokens)} tokens from whitelists to main_token_data')
+        
         # Сохраняем данные в JSON файлы
         await self._update_token_cache_json()
         
-        self.logger.success(f'Token data updated and saved successfully')
+        self.logger.success(f'Token data updated and saved successfully with {pool_count} total pools')
         
     async def _scheduled_parse_loop(self):
         while True:

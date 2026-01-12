@@ -961,10 +961,10 @@ class SupplyParser:
             
             pool_type = selected_pool.get('dex_type')
             if 'v4' in pool_type: 
-                onchain_pool_data = await self.helper_evm._v4_get_pool_data(pool.get('pair_address'), chain_name)
+                onchain_pool_data = await self.helper_evm._v4_get_pool_data(selected_pool.get('pair_address'), chain_name)
                 selected_pool['pool_data'] = onchain_pool_data 
             elif 'v3' in pool_type: 
-                fee = await self.helper_evm._v3_get_pool_fee_tier(pool.get('pair_address'), chain_name)
+                fee = await self.helper_evm._v3_get_pool_fee_tier(selected_pool.get('pair_address'), chain_name)
                 selected_pool['fee_tier'] = fee 
             else: 
                 pass

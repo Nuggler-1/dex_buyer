@@ -19,7 +19,7 @@ class TradingBot:
         self.executor = TransactionExecutor()
         self.supply_parser = SupplyParser()
         self.tg_client = TelegramClient()
-        self.ws_clients = []
+        self.ws_client = None
         self._pk_sol = pk_sol
         self._pk_evm = pk_evm
         
@@ -200,23 +200,19 @@ class TradingBot:
         await self._init_handlers()
         
         #подключаем вебсокеты
-        ws_client = WebSocketClient(
+        self.ws_client = WebSocketClient(
             name="WS_CLIENT",
             uri=WS_URL,
             on_message_callback_handler=self.on_token_signal,
             tg_client=self.tg_client
         )
-        self.ws_clients = [ws_client]
 
         #слушаем
-        await asyncio.gather(
-            *[client.listen() for client in self.ws_clients]
-        )
+        await asyncio.create_task(self.ws_client.listen())
 
     async def stop(self):
         await self.executor.stop_handlers()
-        for client in self.ws_clients:
-            await client.close()
+        await self.ws_client.close()
         await self.tg_client.close()
         await self.supply_parser.stop()
         

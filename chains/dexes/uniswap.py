@@ -133,7 +133,7 @@ class UniswapV3(UniswapBase):
             'gas': GAS_LIMIT[self.chain_name],  
             'gasPrice': gas_price,  
             'nonce': nonce,
-            'chainId': self.w3.eth.chain_id,
+            'chainId': await self.w3.eth.chain_id,
             'data': data
         }
         

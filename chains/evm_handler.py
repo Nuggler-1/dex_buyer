@@ -703,7 +703,7 @@ class EVMHandler:
                     and transfer['token'].lower() == token_address.lower()
                 ):
                     amount_received = transfer['value']
-                    actual_price = (amount_in/amount_received) * (10**buy_token_decimals /10**self.token_decimals[base_token_address])
+                    actual_price = (amount_in_normalized/amount_received) * (10**buy_token_decimals /10**self.token_decimals[base_token_address])
                 
             if actual_price == 0:
                 self.logger.warning(f"failed to calculate actual price, using cached price")

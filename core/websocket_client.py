@@ -66,6 +66,7 @@ class WebSocketClient:
                                         logger.error(f"Failed to send pong: {e}")
                                 else:
                                     # Normal message, pass to callback
+                                    logger.debug(f"Frame received: {str(data)[:100]}...")
                                     asyncio.create_task(callback(data))
                             except Exception as e:
                                 logger.error(f"Error processing frame: {e}")

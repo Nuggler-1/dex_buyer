@@ -949,6 +949,7 @@ class SupplyParser:
 
         try:
             pools = await self.helper_evm._get_pools_tvl_sorted(chain_name, contract)
+            self.logger.debug(f'Found {len(pools)} pools for {contract}: {json.dumps(pools, indent=4)}')
             for pool in pools:
                 if pool.get('liquidity', 0) < MIN_POOL_TVL:
                     continue
@@ -993,11 +994,15 @@ class SupplyParser:
             token_ticker = token_ticker.lower().replace(' ', '').replace('.', '').replace('$', '')
             token_data = self.main_token_data.get(token_ticker)
             if token_data:
+                self.logger.info(f'Returning parsed token data for {token_ticker}')
                 return token_data
             elif BUY_ONLY_PARSED: 
+                self.logger.info(f'No parsed data and only parsed mode enabled, returning empty data for {token_ticker}')
                 return {}
             elif token_contract and (chain and chain!='SOLANA'): 
+                self.logger.info(f'Getting gecko pool data for {token_ticker}')
                 pool = await self._get_token_pool_by_contract_evm(chain, token_contract)
+                self.logger.info(f'{json.dumps(pool, indent=4)}')
                 return {
                     'circulating_supply': 0,
                     'pool_selected': pool

@@ -7,6 +7,7 @@ import traceback
 from config import RECONNECT_ATTEMPTS, RECONNECT_DELAY, SOFT_NAME
 from utils import get_logger
 from tg_bot import TelegramClient
+import json
 
 class WebSocketClient:
     
@@ -66,7 +67,8 @@ class WebSocketClient:
                                         logger.error(f"Failed to send pong: {e}")
                                 else:
                                     # Normal message, pass to callback
-                                    logger.debug(f"Frame received: {str(data)[:100]}...")
+                                    
+                                    logger.debug(f"Frame received: {json.dumps(data, indent=4)}")
                                     asyncio.create_task(callback(data))
                             except Exception as e:
                                 logger.error(f"Error processing frame: {e}")

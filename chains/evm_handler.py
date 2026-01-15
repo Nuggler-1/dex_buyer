@@ -614,7 +614,7 @@ class EVMHandler:
             return None
         
         # Query token price using DEX-specific method (use fast connection for buy operations)
-        self.logger.info(f"Querying token price based on cached pool data")
+        self.logger.info(f"Querying token price")
         t_before_query = time.perf_counter()
         price = await self._get_token_price(
             swapper,
@@ -638,7 +638,7 @@ class EVMHandler:
         else:
             mcap_usd_converter = 1/price 
 
-        mcap = int(float(token_supply) * mcap_usd_converter) if token_supply else pool_data.get('gecko_mcap', 0)
+        mcap = int(float(token_supply) * mcap_usd_converter) if token_supply else (pool_data.get('gecko_mcap') or 0)
         amount_in, tp_ladder_id = self._get_buy_size_and_tp_id(mcap, base_token_name)
         if position_size:
             if base_token_address == DEX_ROUTER_DATA[self.chain_name]['gas_token']:

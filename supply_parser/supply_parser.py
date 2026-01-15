@@ -215,7 +215,7 @@ class HelperEVM:
                     'dex_type': dex,
                     'liquidity': tvl_usd,
                     'pair_address': pool_address,
-                    'gecko_mcap': pool.get('attributes',{}).get('market_cap_usd', 0)
+                    'gecko_mcap': pool.get('attributes',{}).get('market_cap_usd') or 0
                 }
             )
         sorted_pools = sorted(pools, key=lambda x: x['liquidity'], reverse=True)
@@ -950,7 +950,7 @@ class SupplyParser:
         try:
             pools = await self.helper_evm._get_pools_tvl_sorted(chain_name, contract)
             for pool in pools:
-                if pool.get('liquidity') < MIN_POOL_TVL:
+                if pool.get('liquidity', 0) < MIN_POOL_TVL:
                     continue
                 if pool.get('base_token') not in USABLE_TOKENS:
                     continue

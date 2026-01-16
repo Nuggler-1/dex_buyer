@@ -70,7 +70,7 @@ class TradingBot:
                 logger.info(f"set custom tp ladder: {custom_tp_ladder} for {ticker}")
             tickers.append(ticker)
 
-        if msg_type == "listing_ms": 
+        if msg_type == "binance_alfa_ms": 
             exchange = data.get('exchange')
             if not exchange in EVENTS:
                 logger.debug(f"Buy signal on {exchange} received but exchange not supported")

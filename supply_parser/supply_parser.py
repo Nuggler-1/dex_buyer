@@ -903,12 +903,12 @@ class SupplyParser:
             for wl_token in whitelist_tokens:
                 normalized_ticker = wl_token['symbol'].lower().replace(' ', '').replace('.', '').replace('$', '')
                 # Only add if not already in main_token_data (whitelist takes priority)
-                if normalized_ticker not in self.main_token_data:
-                    self.main_token_data[normalized_ticker] = {
-                        'circulating_supply': wl_token['circulating_supply'],
-                        'pools': wl_token['pools']
-                    }
-                    pool_count += len(wl_token['pools'])
+                #if normalized_ticker not in self.main_token_data:
+                self.main_token_data[normalized_ticker] = {
+                    'circulating_supply': wl_token['circulating_supply'],
+                    'pools': wl_token['pools']
+                }
+                pool_count += len(wl_token['pools'])
             
             self.logger.success(f'Added {len(whitelist_tokens)} tokens from whitelists to main_token_data')
         

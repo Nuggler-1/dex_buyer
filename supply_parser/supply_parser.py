@@ -154,7 +154,7 @@ class HelperEVM:
         base_token_address_to_name = {
             DEX_ROUTER_DATA[chain_name].get(token_name, ''): token_name for token_name in ALL_BASE_TOKEN_TICKERS
         }
-        url = f'https://api.coingecko.com/api/v3/onchain/search/pools?query={token_address}&network={gecko_chain_name}&include=base_token'
+        url = f'https://pro-api.coingecko.com/api/v3/onchain/search/pools?query={token_address}&network={gecko_chain_name}&include=base_token'
         data = {}
         for _ in range(ERROR_429_RETRIES):
             try:

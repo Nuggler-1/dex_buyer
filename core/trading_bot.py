@@ -77,8 +77,8 @@ class TradingBot:
                 return 
                 
             event_type = data.get('type')
-            event_settings = EVENTS.get(exchange, {}).get(event_type)
-            if not event_settings.get('enabled'):
+            event_settings = EVENTS.get(exchange, {}).get(event_type, {})
+            if not event_settings.get('enabled', False):
                 logger.debug(f"Buy signal on {exchange} - {event_type} received but event type not supported")
                 return
 

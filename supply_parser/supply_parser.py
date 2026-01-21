@@ -17,6 +17,7 @@ from config import (
     ERROR_429_RETRIES,
     GECKO_API_KEY,
     GECKO_CHAIN_NAMES,
+    GECKO_PLATFORM_IDENTIFIERS,
     CMC_SEARCH_LISTS,
     V4_MAX_POOL_FEE, 
     V4_MAX_POOL_TICK,
@@ -24,7 +25,8 @@ from config import (
     BUY_ONLY_PARSED,
     CHAIN_NAMES,
     RPC,
-    WHITELIST_PATH, 
+    WHITELIST_PATH,
+    WHITELIST_AUTO_POPULATE,
     EVENTS
 )
 from curl_cffi.requests import AsyncSession
@@ -36,6 +38,7 @@ from utils import get_logger
 import asyncio
 import os
 import time
+import re
 from chains.consts import DEX_ROUTER_DATA, pool_abi, erc20_abi, manager_abi, manager_abi_cake
 from datetime import datetime, timedelta
 import ujson
@@ -838,6 +841,82 @@ class SupplyParser:
         self.logger.success(f'Loaded {len(whitelist_tokens)} tokens from whitelists')
         return whitelist_tokens
 
+    async def _populate_whitelists(self):
+        """Populate whitelists using WhitelistParser based on WHITELIST_AUTO_POPULATE config"""
+        if not WHITELIST_AUTO_POPULATE:
+            self.logger.info("No whitelist auto-population configured")
+            return
+        
+        def has_chinese_characters(text: str) -> bool:
+            if not text:
+                return False
+            chinese_pattern = re.compile(r'[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]')
+            return bool(chinese_pattern.search(text))
+        
+        def has_emoji(text: str) -> bool:
+            if not text:
+                return False
+            emoji_pattern = re.compile(
+                "["
+                "\U0001F600-\U0001F64F"
+                "\U0001F300-\U0001F5FF"
+                "\U0001F680-\U0001F6FF"
+                "\U0001F1E0-\U0001F1FF"
+                "\U00002702-\U000027B0"
+                "\U000024C2-\U0001F251"
+                "]+", flags=re.UNICODE
+            )
+            return bool(emoji_pattern.search(text))
+        
+        filter_map = {
+            'chinese': has_chinese_characters,
+            'emoji': has_emoji,
+            None: None
+        }
+        
+        for whitelist_name, config in WHITELIST_AUTO_POPULATE.items():
+            whitelist_path = os.path.join(WHITELIST_PATH, whitelist_name)
+            self.logger.info(f"Populating whitelist: {whitelist_name}")
+            
+            gecko_config = config.get('gecko', {})
+            if gecko_config.get('enabled'):
+                self.logger.info("Starting Gecko whitelist population")
+                from .whitelist_parser import WhitelistParser
+                gecko_parser = WhitelistParser(
+                    supply_parser=self,
+                    api_key=GECKO_API_KEY,
+                    platform_identifiers=GECKO_PLATFORM_IDENTIFIERS,
+                    rate_limit_delay=1.2
+                )
+                
+                filter_func_name = gecko_config.get('filter_func')
+                filter_func = filter_map.get(filter_func_name)
+                
+                await gecko_parser.populate_whitelist_from_gecko(
+                    exchange_id=gecko_config['exchange_id'],
+                    whitelist_path=whitelist_path,
+                    filter_func=filter_func,
+                    target_chains=gecko_config.get('target_chains'),
+                    max_pages=gecko_config.get('max_pages', 100)
+                )
+            
+            cmc_config = config.get('cmc', {})
+            if cmc_config.get('enabled'):
+                self.logger.info("Starting CMC whitelist population")
+                from .whitelist_parser import WhitelistParser
+                cmc_parser = WhitelistParser(
+                    supply_parser=self,
+                    api_key=GECKO_API_KEY,
+                    platform_identifiers=CMC_PLATFORM_IDS,
+                    rate_limit_delay=1.0
+                )
+                
+                await cmc_parser.populate_whitelist_from_cmc(
+                    search_lists=cmc_config['search_lists'],
+                    whitelist_path=whitelist_path,
+                    target_chains=cmc_config.get('target_chains')
+                )
+
     async def _parse_tokens(self, whitelists_to_load: list = None):
         
         #получаем весь набор токенов мекс + топ 2000 кмк (айди и цирк сапплай)
@@ -922,6 +1001,11 @@ class SupplyParser:
             try:
                 if self._should_run_parse():
                     self.logger.info(f'Starting scheduled parse')
+                    
+                    # Step 1: Populate whitelists first
+                    await self._populate_whitelists()
+                    
+                    # Step 2: Parse all tokens (including whitelisted ones)
                     await self._parse_tokens()
                 
                 await asyncio.sleep(PARSED_DATA_CHECK_DELAY_DAYS * 24 * 60 * 60)
@@ -934,6 +1018,7 @@ class SupplyParser:
     async def start_scheduled_parsing_loop_task(self):
         if self._parser_task is None or self._parser_task.done():
             if self._should_run_parse():
+                await self._populate_whitelists()
                 await self._parse_tokens()
             self._parser_task = asyncio.create_task(self._scheduled_parse_loop())
             return True

@@ -422,7 +422,29 @@ GECKO_CHAIN_NAMES = {
     'BSC': 'bsc',
     'ARBITRUM': 'arbitrum'
 }
+GECKO_PLATFORM_IDENTIFIERS = {
+    'ETHEREUM': ['ethereum', 'eth'],
+    'BSC': ['binance-smart-chain', 'bsc', 'binancecoin'],
+    'ARBITRUM': ['arbitrum-one', 'arbitrum'],
+    'SOLANA': ['solana', 'sol']
+}
 
+WHITELIST_AUTO_POPULATE = { 
+    'binance_alpha_whitelist.txt': {
+        'gecko': {
+            'enabled': True,
+            'exchange_id': 'pancakeswap_new',
+            'filter_func': 'chinese',  # or 'emoji', or None | Filter map находится в populate whitelists функции в SupplyParser
+            'target_chains': ['BSC'],
+            'max_pages': 50
+        },
+        'cmc': {
+            'enabled': True,
+            'search_lists': CMC_SEARCH_LISTS,
+            'target_chains': ['BSC']
+        }
+    }
+}
 #------RATELIMIT SETTINGS
 
 CACHE_UPDATE_BATCH_SIZE = 50  #количество распаралелленых запросов в пачке при обновлении ончейн-данных

@@ -1,11 +1,12 @@
 
 from typing import Dict, Callable
-from chains import EVMHandler, SolanaHandler
+from chains import TradeHandler
 from loguru import logger
 from typing import Literal
-from config import CHAIN_NAMES
+from config import CHAIN_NAMES, DELAY_BEFORE_TP
 from web3 import Web3
 import traceback
+from .dataclasses import TokenTrade
 
 #диспетчер обработки транзакций для отправки данных в нужный обработчик (EVM/SOL)
 
@@ -15,7 +16,7 @@ class TransactionExecutor:
         
         self.handlers: Dict[
             Literal[*CHAIN_NAMES],
-            EVMHandler | SolanaHandler
+            TradeHandler
         ] = {
             #chain_name: TxHandlerClass (EVMHandler/SolanaHandler)
         }
@@ -23,7 +24,7 @@ class TransactionExecutor:
     def register_handler(
         self, 
         chain: Literal[*CHAIN_NAMES], 
-        handler: EVMHandler | SolanaHandler
+        handler: TradeHandler
     ):
         """Регистрируем хендлеры по локальным именам в софте"""
         self.handlers[chain] = handler
@@ -35,29 +36,28 @@ class TransactionExecutor:
         return 
 
     #коллбек функция вебсокета, которая дальше определяет в какую сеть идет свап 
-    async def execute_trade(self, token_data: dict):
-        """
-         token_data = {
-            'chain': chain,
-            'ticker': ticker,
-            'token_address': address,
-            'circulating_supply': circulating_supply,
-            'pool_data': pool_data,
-            'custom_size': None | size
-        }"""
-        chain = token_data.get('chain')
-        ticker = token_data.get('ticker')
-        token_address = token_data.get('token_address')
-        circulating_supply = token_data.get('circulating_supply')
-        pool_data = token_data.get('pool_data')
- 
+    async def execute_trade(self, token_data: TokenTrade):
+        chain = token_data.chain
+        ticker = token_data.ticker
+        token_address = token_data.token_address
+
+        tx_handler = self.handlers.get(chain.upper())
+        if not tx_handler:
+            logger.error(f"no handler registered for chain {chain}")
+            return
+
         try:
-            tx_handler = self.handlers.get(chain)
-            custom_size = token_data.get('custom_size')
-            custom_tp_ladder = token_data.get('custom_tp_ladder')
-            tx_hash = await tx_handler.execute_swap(circulating_supply, pool_data, custom_size, custom_tp_ladder)
+            tx_hash = await tx_handler.execute_swap(
+                token_address=token_address,
+                base_token_name=token_data.ticker_to_sell,
+                mcap=token_data.mcap,
+                mcap_config=token_data.mcap_config,
+                position_size=token_data.custom_size,
+                custom_tp_ladder=token_data.custom_tp_ladder,
+                delay_before_tp=token_data.delay_before_tp if token_data.delay_before_tp else DELAY_BEFORE_TP,
+            )
             if tx_hash:
-                tx_handler.logger.success(f"bought {ticker} ({token_address}) | TX: {tx_hash}")
+                tx_handler.logger.success(f"bought {ticker} ({token_address}) on {chain} | TX: {tx_hash}")
                 await tx_handler.tg_client.send_trade_alert(
                     tx_handler.chain_name,
                     token_address,
@@ -65,14 +65,14 @@ class TransactionExecutor:
                     tx_hash=tx_hash
                 )
             else:
-                tx_handler.logger.error(f"buy {ticker} ({token_address}) failed")     
+                tx_handler.logger.error(f"buy {ticker} ({token_address}) failed")
                 await tx_handler.tg_client.send_error_alert(
                     "SWAP_FAILED",
                     f"{tx_handler.chain_name} buy {ticker} {token_address} failed",
                     "tx failed or not sent - check logs"
-                )       
+                )
         except Exception as e:
-            tx_handler.logger.error(f"buy {ticker} ({token_address}) failed | Error: {e}")
+            tx_handler.logger.error(f"buy {ticker} ({token_address}) failed | Error: {str(e)}")
             await tx_handler.tg_client.send_error_alert(
                 "SWAP_FAILED",
                 f"{tx_handler.chain_name} buy {ticker} {token_address} failed",

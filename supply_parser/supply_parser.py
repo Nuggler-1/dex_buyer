@@ -1,363 +1,44 @@
+import random
+from typing import Literal
 from config import (
-    BUY_ONLY_PARSED,
-    CMC_PLATFORM_IDS, 
-    CMC_API_KEY,
-    PARSED_DATA_CHECK_DELAY_DAYS, 
-    SUPPLY_DATA_PATH, 
-    EXHANGE_SLUG_TO_BOT_SLUG,
-    ALL_BASE_TOKEN_TICKERS,
-    EXCHANGE_SLUGS, MIN_POOL_TVL,
+    ONLY_PARSED,
+    PARSED_DATA_CHECK_DELAY_DAYS,
+    MCAP_UPDATE_INTERVAL_HOURS,
+    SUPPLY_DATA_PATH,
     CACHE_UPDATE_BATCH_SIZE,
     DELAY_BETWEEN_BATCHES,
     CHAIN_NAMES,
-    ALL_BASE_TOKEN_TICKERS,
-    TOKEN_DATA_BASE_PATH, 
     FORCE_UPDATE_ON_START,
     ERROR_429_DELAY,
     ERROR_429_RETRIES,
-    GECKO_API_KEY,
-    GECKO_CHAIN_NAMES,
-    GECKO_PLATFORM_IDENTIFIERS,
+    MIN_POOL_TVL,
+    SEARCH_ALTERNATE_TO_ETH,
     CMC_SEARCH_LISTS,
-    V4_MAX_POOL_FEE, 
-    V4_MAX_POOL_TICK,
-    USABLE_TOKENS,
-    BUY_ONLY_PARSED,
-    CHAIN_NAMES,
-    RPC,
-    WHITELIST_PATH,
-    WHITELIST_AUTO_POPULATE,
-    EVENTS
+    CMC_BLACKLISTS,
+    SUPPORTED_CEX_SLUGS,
+    PROXIES_PATH,
 )
 from curl_cffi.requests import AsyncSession
 from web3 import Web3
-from web3 import AsyncWeb3
 import json
-import supply_parser
 from utils import get_logger
 import asyncio
 import os
-import time
-import re
-from chains.consts import DEX_ROUTER_DATA, pool_abi, erc20_abi, manager_abi, manager_abi_cake
 from datetime import datetime, timedelta
-import ujson
-import base58
 
-class HelperSOL: 
-
-    def __init__(self,):
-        self.logger = get_logger("PARSER")
-
-    def _is_valid_solana_address(self, address: str) -> bool:
-        """Validate if a string is a valid Solana Base58 address"""
-        if not address or not isinstance(address, str):
-            return False
-        try:
-            # Solana addresses are 32-44 characters in Base58
-            if len(address) < 32 or len(address) > 44:
-                return False
-            # Try to decode as base58
-            decoded = base58.b58decode(address)
-            # Solana public keys are 32 bytes
-            if len(decoded) != 32:
-                return False
-            return True
-        except Exception:
-            return False
-
-    async def _query_raydium_pool(
-        self,
-        token_one: str,
-        token_two: str,
-        ):
-        url = f'https://api-v3.raydium.io/pools/info/mint?mint1={token_one}&mint2={token_two}&poolType=standard&poolSortField=liquidity&sortType=desc&pageSize=1&page=1'
-        async with AsyncSession() as session:
-            for i in range(ERROR_429_RETRIES):
-                try:
-                    resp = await session.get(url)
-                    resp.raise_for_status()
-                    data = ujson.loads(resp.text).get('data', {})
-                    #print(resp.text)
-                    
-                    if data and data.get('count', 0):
-                        pool_data = data.get('data', [{}])[0]
-                        pool_address = pool_data.get('id', None)
-                        pool_tvl = pool_data.get('tvl', 0)
-                        if pool_address and pool_tvl:
-                            return pool_address, pool_tvl
-                        #self.logger.success(f"[{self.chain_name}] {token_one} - {token_two} Raydium pool found")
-                    return None, None
-
-                except Exception as e:
-                    if '429' in str(e) or 'rate limit' in str(e):
-                        self.logger.warning(f"[{i+1}/{ERROR_429_RETRIES} retries] Rate limit exceeded for {token_one} with {token_two}: {str(e)}")
-                        await asyncio.sleep(ERROR_429_DELAY)
-                    else:
-                        self.logger.warning(f"error getting raydium pool for {token_one} with {token_two}: {str(e)}")
-                        return None, None
-
-    async def get_pools_tvl_sorted(self, token_address: str):
-        pools = []
-        for base_token in ALL_BASE_TOKEN_TICKERS: 
-            base_token_address = DEX_ROUTER_DATA['SOLANA'].get(base_token)
-            if not base_token_address: 
-                continue
-            pool_address, pool_tvl = await self._query_raydium_pool(base_token_address, token_address)
-            if pool_address and pool_tvl > MIN_POOL_TVL:
-                pools.append({
-                    'token_address': token_address,
-                    'chain': 'SOLANA',
-                    'base_token': base_token,
-                    'dex_type': 'raydium',
-                    'liquidity': pool_tvl,
-                    'pair_address': pool_address,
-                })
-
-        sorted_pools = sorted(pools, key=lambda x: x['liquidity'], reverse=True)
-        return sorted_pools
-        
-
-class HelperEVM:
-
-    def __init__(self):
-        self.headers = {
-            'x-cg-pro-api-key': GECKO_API_KEY,
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Referer': 'https://www.coingecko.com/',
-            'Origin': 'https://www.coingecko.com'
-        }
-        self.logger = get_logger("PARSER")
-        self.w3_providers = {
-            chain_name: AsyncWeb3(AsyncWeb3.AsyncHTTPProvider(RPC['http'][chain_name])) for chain_name in CHAIN_NAMES if chain_name != 'SOLANA'
-        }
-
-    async def _disconnect_all_providers(self):
-        for provider in self.w3_providers.values():
-            if not provider.provider.is_connected():
-                continue
-            await provider.provider.disconnect()
-
-    async def _connect_all_providers(self):
-        for provider in self.w3_providers.values():
-            if provider.provider.is_connected():
-                continue
-            await provider.provider.connect()
-
-    async def _get_pools_tvl_sorted(
-        self,
-        chain_name:str, 
-        token_address: str
-    ): 
-
-        gecko_chain_name = GECKO_CHAIN_NAMES.get(chain_name)
-        base_token_address_to_name = {
-            DEX_ROUTER_DATA[chain_name].get(token_name, ''): token_name for token_name in ALL_BASE_TOKEN_TICKERS
-        }
-        url = f'https://pro-api.coingecko.com/api/v3/onchain/search/pools?query={token_address}&network={gecko_chain_name}&include=base_token'
-        data = {}
-        for _ in range(ERROR_429_RETRIES):
-            try:
-                async with AsyncSession() as session:
-                    response = await session.get(url, headers=self.headers)
-                    response.raise_for_status()
-                    data = ujson.loads(response.text)
-                    break
-
-            except Exception as e:
-                if any(['429' in str(e), 'rate limit' in str(e)]):
-                    self.logger.warning(f"tvl query Rate limited, waiting {ERROR_429_DELAY} seconds")
-                    await asyncio.sleep(ERROR_429_DELAY)
-                else:
-                    self.logger.error(f"Error getting pool TVL for {token_address} on {chain_name}: {str(e)}")
-                    return []
-
-        parsed_pools = data.get('data',[])
-        if not parsed_pools:
-            self.logger.warning(f"Pools for {token_address} on {chain_name} not found")
-
-        pools = []
-        for pool in parsed_pools:
-            
-            #check if dex is supported and get its local name
-            dex = pool.get('relationships',{}).get('dex',{}).get('data',{}).get('id','')
-            if dex not in EXCHANGE_SLUGS: 
-                continue
-            dex = EXHANGE_SLUG_TO_BOT_SLUG[dex]
-
-            #get pool tvl
-            tvl_usd = float(pool.get('attributes',{}).get('reserve_in_usd', 0))
-            if tvl_usd < MIN_POOL_TVL:
-                continue
-
-            #check if the base token is supported and get its name
-            base_token_address = pool.get('relationships', {}).get('base_token',{}).get('data',{}).get('id', '0x')
-            base_token_address = base_token_address.split('_')[1]
-            quote_token_address = pool.get('relationships', {}).get('quote_token',{}).get('data',{}).get('id', '0x')
-            quote_token_address = quote_token_address.split('_')[1]
-            base_token_name ='' 
-            for address in [base_token_address, quote_token_address]: 
-                base_token_name = base_token_address_to_name.get(Web3.to_checksum_address(address))
-                if base_token_name: 
-                    break 
-            if not base_token_name:
-                continue
-
-            pool_address = pool.get('attributes',{}).get('address','')
-            if pool_address and len(pool_address) == 42: 
-                pool_address = Web3.to_checksum_address(pool_address)
-
-            pools.append(
-                {
-                    'token_address': token_address,
-                    'chain': chain_name,
-                    'base_token': base_token_name,
-                    'dex_type': dex,
-                    'liquidity': tvl_usd,
-                    'pair_address': pool_address,
-                    'gecko_mcap': pool.get('attributes',{}).get('market_cap_usd') or 0
-                }
-            )
-        sorted_pools = sorted(pools, key=lambda x: x['liquidity'], reverse=True)
-        return sorted_pools
-
-    async def _get_pool_by_token_address(self, token_address: str, base_token_name:str, chain_name: str, pool_slug:str):
-        pools = await self._get_pools_tvl_sorted(chain_name, token_address)
-        for pool in pools:
-            if pool['base_token'] == base_token_name and pool['dex_type'] == pool_slug:
-                return pool
-        return None
-    
-    async def _get_token_decimals(self,token_address:str, chain_name: str):
-        try:
-            if token_address.lower() == '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee':
-                return 18
-            w3= self.w3_providers.get(chain_name)
-            token_contract = w3.eth.contract(address=token_address, abi=erc20_abi)
-            decimals = await token_contract.functions.decimals().call()
-            return decimals
-        except Exception as e:
-            self.logger.error(f"Error getting token decimals for {token_address} on {chain_name}: {str(e)}")
-            return None
-
-    async def _get_token_supply(self, token_address:str, chain_name:str):
-        try:
-            w3= self.w3_providers.get(chain_name)
-            token_contract = w3.eth.contract(address=token_address, abi=erc20_abi)
-            decimals = await token_contract.functions.decimals().call()
-            supply= await token_contract.functions.totalSupply().call()
-            return int(supply/10**decimals)
-        except Exception as e:
-            self.logger.error(f"Error getting token supply for {token_address} on {chain_name}: {str(e)}")
-            return None
-    
-    async def _v3_get_pool_fee_tier(self,pool_address: str, chain_name: str):
-        try:
-            w3= self.w3_providers.get(chain_name)
-            pool_contract = w3.eth.contract(address=pool_address, abi=pool_abi)
-            fee = await pool_contract.functions.fee().call()
-            return fee
-        except Exception as e:
-            self.logger.error(f"Error getting pool fee tier for {pool_address} on {chain_name}: {str(e)}")
-            return None
-
-    async def _v4_get_pool_data(self,pool_id:str, chain_name:str):
-        try:
-            w3 = self.w3_providers.get(chain_name)
-            if chain_name == 'BSC': 
-                manager_contract = w3.eth.contract(address=DEX_ROUTER_DATA[chain_name]['dex_contracts']['cake_v4']['manager_address'], abi=manager_abi_cake)
-            else:
-                manager_contract = w3.eth.contract(address=DEX_ROUTER_DATA[chain_name]['dex_contracts']['uni_v4']['manager_address'], abi=manager_abi)
-                
-            pool_data = await manager_contract.functions.poolKeys(pool_id[:52]).call()
-            if len(pool_data) == 0:
-                self.logger.warning(f"Pool {pool_id} not found on {chain_name}")
-                return {}
-            else: 
-                if chain_name == 'BSC': 
-                    pool_keys = {
-                        'currency0': pool_data[0],
-                        'currency1': pool_data[1],
-                        'hook': pool_data[2],
-                        'pool_manager': pool_data[3],
-                        'fee': pool_data[4],
-                        'parameters': '0x' + pool_data[5].hex(),  # Convert bytes32 to hex string for JSON
-                        'tick_spacing':  int.from_bytes(pool_data[5][-5:-2], 'big', signed=True)
-                    }
-                else:
-                    pool_keys = {
-                        'currency0': pool_data[0],
-                        'currency1': pool_data[1],
-                        'fee': pool_data[2],
-                        'tick_spacing': pool_data[3],
-                        'hook': pool_data[4]
-                    }
-                if pool_keys.get("tick_spacing")> V4_MAX_POOL_TICK:
-                    self.logger.warning(f"Filtered v4 pool by tick spacing: {pool_keys.get('tick_spacing')} > {V4_MAX_POOL_TICK}") 
-                    return {}
-                
-                if pool_keys.get("fee")> V4_MAX_POOL_FEE: 
-                    self.logger.warning(f"Filtered v4 pool by fee: {pool_keys.get('fee')} > {V4_MAX_POOL_FEE}")
-                    return {}
-
-                return pool_keys
-
-        except Exception as e:
-            self.logger.error(f"Error getting pool data for {pool_id} on {chain_name}: {str(e)}")
-            return None
-            
-
-    async def _get_single_pool_data(self, pool_address: str, chain_name: str):
-
-        chain_name = GECKO_CHAIN_NAMES.get(chain_name)
-        if not chain_name:
-            return {}
-        url = f'https://api.coingecko.com/api/v3/onchain/networks/{chain_name}/pools/{pool_address}'
-        for _ in range(ERROR_429_RETRIES):
-            try:
-                async with AsyncSession() as session:
-                    response = await session.get(url, headers=self.headers)
-                    response.raise_for_status()
-                    data = response.json()
-
-                data = data.get('data', {})
-                #get pool tvl
-                tvl_usd = float(data.get('attributes',{}).get('reserve_in_usd', 0))
-                
-                #get pool fee tier
-                pool_fee = float(data.get('attributes', {}).get('pool_fee_percentage', 0.0))
-                pool_fee = int(pool_fee * 10_000)
-
-                return {
-                    'chain': chain_name,
-                    'liquidity': tvl_usd,
-                    'pair_address': pool_address,
-                    'fee_tier': pool_fee
-                }
-
-            except Exception as e:
-                if any(['429' in str(e), 'rate limit' in str(e)]):
-                    self.logger.error(f"tvl query Rate limited, waiting {ERROR_429_DELAY} seconds")
-                    await asyncio.sleep(ERROR_429_DELAY)
-                else:
-                    self.logger.error(f"Error getting pool TVL: {str(e)}")
-                    break
-        return {}
 
 class SupplyParser:
 
     def __init__(self):
         self.logger = get_logger("PARSER")
-        self.supported_platforms_ids = list(CMC_PLATFORM_IDS.keys())
-        self.supported_platforms_names = list(CMC_PLATFORM_IDS.values())
         self.main_token_data, self._last_update_time = self._load_token_data()
-        self.helper_sol = HelperSOL()
-        self.helper_evm = HelperEVM()
-        self.chain_separated_pool_dict = {}
         self._parser_task = None
+        self._mcap_task = None
+        self._proxies = self._load_proxies()
+        if self._proxies:
+            self.logger.info(f'Loaded {len(self._proxies)} proxies from {PROXIES_PATH}')
+        else:
+            self.logger.info('No proxies loaded — using direct connection')
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
             'platform': 'web',
@@ -369,179 +50,186 @@ class SupplyParser:
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-site',
-
         }
-        self._whitelists = {}  # Cache for loaded whitelists
 
-    async def stop(self): 
+    async def stop(self):
         if self._parser_task:
             self._parser_task.cancel()
             self._parser_task = None
-    
-    async def _search_query(
-        self, 
-        range_start: int, 
-        range_end: int,
-        aux: str = 'circulating_supply,total_supply,self_reported_circulating_supply',
-        additional_params: str = ''
-        
-    ):
-        """additional_params - дополнительные параметры для запроса в формате key=value&key2=value2"""
+        if self._mcap_task:
+            self._mcap_task.cancel()
+            self._mcap_task = None
 
-        url = f'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/listing?start={range_start}&limit={range_end}&sortBy=rank&sortType=desc&cryptoType=all&tagType=all&audited=false&aux={aux}&{additional_params}'
+    # ------------------------------------------------------------------
+    # Proxy helpers
+    # ------------------------------------------------------------------
 
-        async with AsyncSession() as session: 
-            response = await session.get(url, headers=self.headers)
-            response.raise_for_status() 
-            data = response.json().get('data').get('cryptoCurrencyList')
-        return data
-        
-    async def _get_cmc_tokens_data_by_ids(self, token_ids: list):
-
-        token_ids = ','.join(str(token_id) for token_id in token_ids)
-        url = f'https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?id={token_ids}&aux=platform'
-        headers = {
-            'X-CMC_PRO_API_KEY': CMC_API_KEY,
-            'Accept': 'application/json'
-        }
-        async with AsyncSession() as session: 
-            response = await session.get(url, headers=headers)
-            response.raise_for_status()
-            data = response.json().get('data')
-        return data
-
-    async def _get_token_id_from_search(self, token_ticker: str):
-
-        url = f'https://api.coinmarketcap.com/gravity/v4/gravity/global-search'
-        payload = { 
-            "keyword": token_ticker,
-            "limit": 5,
-            "scene": "community"
-        }
-        async with AsyncSession() as session: 
-            response = await session.post(url, headers=self.headers, json=payload)
-            response.raise_for_status()
-            data = response.json().get('data',{}).get('suggestions',[])
-            if not data:
-                return None
-
-            tokens = []
-            for suggestion in data:
-                if suggestion.get('type') == 'token':
-                    tokens = suggestion.get('tokens', [])
-            if not tokens:
-                self.logger.error(f'No tokens found for {token_ticker}')
-                self.logger.debug(json.dumps(data, indent=4))
-                return None
-
-            tk_id = 0
-            for token in tokens:
-                if token.get('symbol', '').lower() == token_ticker.lower():
-                    tk_id = token.get('id')
-                    break
-            if not tk_id:
-                return None
-        return tk_id
-        
-    async def _get_supply_by_token_id(self, token_id: int):
-        async with AsyncSession() as session:
-            url = f"https://api.coinmarketcap.com/data-api/v3/cryptocurrency/quote/latest?id={token_id}"
-            response = await session.get(url, headers=self.headers)
-            response.raise_for_status()
-            data = response.json().get('data',[])
-            if data:
-                supply = max(float(data[0].get('circulatingSupply', 0)), float(data[0].get('selfReportedCirculatingSupply')))
-                if not supply:
-                    self.logger.error(f'No supply found for {token_id}')
-                    self.logger.debug(json.dumps(data, indent=4))
-                    return None
-                return supply
-            return None
-
-    async def _get_token_data_by_token_ticker(self, token_ticker: str):
-        token_id = await self._get_token_id_from_search(token_ticker)
-        if not token_id:
-            self.logger.error(f'No token id found for {token_ticker}')
-            return None
-        supply = await self._get_supply_by_token_id(token_id)
-        if not supply:
-            self.logger.error(f'No supply found for {token_ticker}')
-            return None
-        pools = await self._get_pools_tvl_sorted(token_id, trace=True)
-        if not pools:
-            self.logger.error(f'No pools found for {token_ticker}')
-            return None
-        return {
-            'circulating_supply': supply,
-            'pools': pools
-        }
-
-    def _load_whitelist(self, whitelist_name: str) -> dict:
+    def _load_proxies(self) -> list[str]:
         """
-        Load whitelist from file. Format: ticker:address:chain (one per line)
-        Returns dict: {ticker.lower(): {'address': str, 'chain': str}}
+        Load proxies from PROXIES_PATH.  Supported line formats:
+          ip:port
+          ip:port:user:pass
+          http://ip:port
+          http://user:pass@ip:port
+        Lines starting with '#' and blank lines are ignored.
         """
-        if whitelist_name in self._whitelists:
-            return self._whitelists[whitelist_name]
-        
-        whitelist_path = os.path.join(WHITELIST_PATH, whitelist_name)
-        whitelist_data = {}
-        
+        proxies = []
         try:
-            with open(whitelist_path, 'r', encoding='utf-8') as f:
-                for line_num, line in enumerate(f, 1):
+            with open(PROXIES_PATH, 'r', encoding='utf-8') as f:
+                for line in f:
                     line = line.strip()
                     if not line or line.startswith('#'):
                         continue
-                    
-                    parts = line.split(':')
-                    if len(parts) != 3:
-                        self.logger.warning(f"Invalid whitelist entry at line {line_num}: {line}")
-                        continue
-                    
-                    ticker, address, chain = parts
-                    ticker = ticker.strip().lower()
-                    address = address.strip()
-                    chain = chain.strip().upper()
-                    
-                    if chain not in CHAIN_NAMES:
-                        self.logger.warning(f"Invalid chain '{chain}' in whitelist at line {line_num}")
-                        continue
-                    if chain != 'SOLANA': 
-                        address = Web3.to_checksum_address(address)
-                    whitelist_data[ticker] = {'address': address, 'chain': chain}
-            
-            self._whitelists[whitelist_name] = whitelist_data
-            self.logger.info(f"Loaded whitelist '{whitelist_name}' with {len(whitelist_data)} tokens")
-            return whitelist_data
-            
+                    if line.startswith('http'):
+                        proxies.append(line)
+                    else:
+                        parts = line.split(':')
+                        if len(parts) == 2:                          # ip:port
+                            proxies.append(f'http://{parts[0]}:{parts[1]}')
+                        elif len(parts) == 4:                        # ip:port:user:pass
+                            ip, port, user, pwd = parts
+                            proxies.append(f'http://{user}:{pwd}@{ip}:{port}')
+                        else:
+                            self.logger.warning(f'Unrecognised proxy format: {line!r}')
         except FileNotFoundError:
-            self.logger.error(f"Whitelist file not found: {whitelist_path}")
-            return {}
+            pass
         except Exception as e:
-            self.logger.error(f"Error loading whitelist '{whitelist_name}': {str(e)}")
-            return {}
-    
-    def is_ticker_in_whitelist(self, ticker: str, whitelist_name: str) -> bool:
-        """
-        Check if a ticker is in the specified whitelist
-        """
-        if not whitelist_name:
-            return True  # No whitelist means all tokens allowed
-        
-        whitelist = self._load_whitelist(whitelist_name)
-        return ticker.lower() in whitelist
-    
-    def get_whitelist_token_data(self, ticker: str, whitelist_name: str) -> dict:
-        """
-        Get token data (address, chain) from whitelist
-        Returns: {'address': str, 'chain': str} or None
-        """
-        if not whitelist_name:
+            self.logger.warning(f'Error loading proxies: {e}')
+        return proxies
+
+    def _pick_proxy(self) -> dict | None:
+        """Return a random proxy dict for curl_cffi, or None for direct."""
+        if not self._proxies:
             return None
-        
-        whitelist = self._load_whitelist(whitelist_name)
-        return whitelist.get(ticker.lower())
+        url = random.choice(self._proxies)
+        return {'http': url, 'https': url}
+
+    def _make_session(self) -> AsyncSession:
+        """AsyncSession pre-configured with a random proxy (if any loaded)."""
+        proxy = self._pick_proxy()
+        return AsyncSession(proxies=proxy) if proxy else AsyncSession()
+
+    # ------------------------------------------------------------------
+    # CMC data fetchers
+    # ------------------------------------------------------------------
+
+    async def _search_query(
+        self,
+        range_start: int,
+        range_end: int,
+        aux: str = 'circulating_supply,total_supply,self_reported_circulating_supply',
+        additional_params: str = ''
+    ):
+        url = f'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/listing?start={range_start}&limit={range_end}&sortBy=rank&sortType=desc&cryptoType=all&tagType=all&audited=false&aux={aux}&{additional_params}'
+        async with self._make_session() as session:
+            response = await session.get(url, headers=self.headers)
+            response.raise_for_status()
+            data = response.json().get('data').get('cryptoCurrencyList')
+        return data
+
+    async def _get_token_id_from_search(self, token_ticker: str):
+        url = 'https://api.coinmarketcap.com/gravity/v4/gravity/global-search'
+        payload = {"keyword": token_ticker, "limit": 5, "scene": "community"}
+        async with self._make_session() as session:
+            response = await session.post(url, headers=self.headers, json=payload)
+            response.raise_for_status()
+            data = response.json().get('data', {}).get('suggestions', [])
+        if not data:
+            return None
+        tokens = []
+        for suggestion in data:
+            if suggestion.get('type') == 'token':
+                tokens = suggestion.get('tokens', [])
+        for token in tokens:
+            if token.get('symbol', '').lower() == token_ticker.lower():
+                return token.get('id')
+        return None
+
+    async def _get_supply_by_token_id(self, token_id: int):
+        async with self._make_session() as session:
+            url = f"https://api.coinmarketcap.com/data-api/v3/cryptocurrency/quote/latest?id={token_id}"
+            response = await session.get(url, headers=self.headers)
+            response.raise_for_status()
+            data = response.json().get('data', [])
+        if data:
+            return max(
+                float(data[0].get('circulatingSupply', 0)),
+                float(data[0].get('selfReportedCirculatingSupply', 0))
+            ) or None
+        return None
+
+    async def _get_pools_tvl_sorted(self, token_id: int) -> list[dict]:
+        """
+        Queries CMC DEX market pairs and returns pools on supported chains sorted by
+        liquidity desc. Each entry: { token_address, chain, liquidity }
+        """
+        url = (
+            f'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/market-pairs/latest'
+            f'?id={token_id}&start=1&limit=100&category=spot&centerType=dex'
+            f'&sort=liquidity_pool_size&direction=desc&spotUntracked=true'
+        )
+        async with self._make_session() as session:
+            for _ in range(ERROR_429_RETRIES):
+                response = await session.get(url, headers=self.headers)
+                if response.status_code == 429:
+                    self.logger.warning(f'Rate limited, retrying in {ERROR_429_DELAY}s')
+                    await asyncio.sleep(ERROR_429_DELAY)
+                else:
+                    break
+            if response.status_code != 200:
+                return []
+            data = response.json().get('data', {}).get('marketPairs', [])
+
+        pools = []
+        for pair in data:
+            chain_name = pair.get('platformName', '').upper()
+            if chain_name not in CHAIN_NAMES:
+                continue
+            raw_address = pair.get('tokenAddress', '')
+            if not raw_address:
+                continue
+            liquidity = pair.get('liquidity') or 0
+            if liquidity < MIN_POOL_TVL:
+                continue
+            if chain_name != 'SOLANA':
+                token_address = Web3.to_checksum_address(raw_address.split('#')[0])
+            else:
+                token_address = raw_address
+            pools.append({'token_address': token_address, 'chain': chain_name, 'liquidity': float(liquidity)})
+
+        return sorted(pools, key=lambda x: x['liquidity'], reverse=True)
+
+    async def _get_supported_listings(self, token_id: int, type: Literal['perpetual', 'spot'] = 'perpetual') -> list[str]:
+        """Returns CEX slugs (from SUPPORTED_CEX_SLUGS) that list perpetual futures for this token."""
+        url = (
+            f'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/market-pairs/latest'
+            f'?id={token_id}&start=1&limit=100&category={type}&sort=name&direction=desc&spotUntracked=true'
+        )
+        for attempt in range(ERROR_429_RETRIES):
+            try:
+                async with self._make_session() as session:
+                    response = await session.get(url, headers=self.headers)
+                    response.raise_for_status()
+                    market_pairs = response.json().get('data', {}).get('marketPairs', [])
+                seen = set()
+                result = []
+                for pair in market_pairs:
+                    slug = pair.get('exchangeSlug', '').lower()
+                    if slug in SUPPORTED_CEX_SLUGS and slug not in seen:
+                        result.append(slug)
+                        seen.add(slug)
+                return result
+            except Exception as e:
+                if attempt == ERROR_429_RETRIES - 1:
+                    self.logger.error(f"{type} query failed for {token_id}: {e}")
+                    return []
+                self.logger.warning(f"{type} query retry {attempt + 1} for {token_id}: {e}")
+                await asyncio.sleep(ERROR_429_DELAY)
+        return []
+
+    # ------------------------------------------------------------------
+    # Cache management
+    # ------------------------------------------------------------------
 
     def _load_token_data(self):
         try:
@@ -549,558 +237,232 @@ class SupplyParser:
                 data = json.loads(f.read())
                 if len(data) != 2:
                     return None, None
-                else: 
+                else:
                     return data[1], datetime.fromisoformat(data[0])
         except FileNotFoundError:
-            self.logger.warning(f'Token data file not found, returning empty dict')
+            self.logger.warning('Token data file not found, returning empty dict')
             return None, None
 
     def _should_run_parse(self):
         if self.main_token_data is None:
             return True
-        
+
         if FORCE_UPDATE_ON_START:
-            self.logger.info(f'FORCE_UPDATE_ON_START is set to True, running parse')
+            self.logger.info('FORCE_UPDATE_ON_START is set to True, running parse')
             return True
-        
+
         time_since_last_run = datetime.now() - self._last_update_time
         should_run = time_since_last_run >= timedelta(days=PARSED_DATA_CHECK_DELAY_DAYS)
-        
+
         if should_run:
             self.logger.info(f'Last parsing run was {time_since_last_run.days} days ago, running parse')
         else:
             days_until_next = PARSED_DATA_CHECK_DELAY_DAYS - time_since_last_run.days
             self.logger.info(f'Last parsing run was {time_since_last_run.days} days ago, next run in {days_until_next} days')
-        
+
         return should_run
 
-    async def _get_pools_tvl_sorted(self, token_id: int, trace: bool = False):
-        """
-        returns list of pools supported sorted by TVL 
-        [
-            {
-                'address': '0x123',
-                'chain': 'SOLANA',
-                'base_token': 'WSOL',
-                'pool_type': 'v3',
-                'liquidity': 1000000,
-                'pair_address': '0x123'
-            }
-        ]
-        """
-        url = f'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/market-pairs/latest?id={token_id}&start=1&limit=100&category=spot&centerType=dex&sort=liquidity_pool_size&direction=desc&spotUntracked=true'
-        async with AsyncSession() as session:
-
-            for _ in range(ERROR_429_RETRIES):
-                response = await session.get(url, headers=self.headers)
-                if response.status_code == 429:
-                    self.logger.warning(f'Received 429 error, retrying in {ERROR_429_DELAY} seconds')
-                    await asyncio.sleep(ERROR_429_DELAY)
-                else: 
-                    break
-
-            if response.status_code != 200:
-                self.logger.warning(f'Received non-200 status code: {response.status_code}')
-                return []
-
-            data = response.json().get('data',{}).get('marketPairs',[])
-            if not data:
-                if trace:
-                    self.logger.warning(f'No pools found for {token_id}')
-                    self.logger.debug(json.dumps(response.json(), indent=4))
-                return []
-            supported_pools = []
-            base_tokens_unwrapped = ['SOL', 'ETH', 'BNB']
-            base_tokens_unused = ALL_BASE_TOKEN_TICKERS.copy() + base_tokens_unwrapped
-            for pool_data in data:
-
-                chain_name = pool_data.get('platformName', '').upper()
-                if chain_name not in CHAIN_NAMES: 
-                    continue
-                if pool_data.get('exchangeSlug','').lower() not in EXCHANGE_SLUGS:
-                    continue
-                if not pool_data.get('tokenAddress', ''):
-                    continue
-
-                base_symbol = ''
-                if pool_data.get('baseSymbol','').upper() in base_tokens_unused:
-                    base_symbol = pool_data.get('baseSymbol','').upper()
-                
-                if pool_data.get('quoteSymbol','').upper() in base_tokens_unused and not base_symbol:
-                    base_symbol = pool_data.get('quoteSymbol','').upper()
-                
-                if not base_symbol:
-                    continue
-                
-                liquidity = pool_data.get('liquidity')
-                if not liquidity:
-                    liquidity = 0
-                elif liquidity < MIN_POOL_TVL:
-                    continue
-    
-                if chain_name != 'SOLANA':
-                    token_address = Web3.to_checksum_address(pool_data.get('tokenAddress').split("#")[0])
-                    pair_address = '' if not pool_data.get('pairContractAddress') else pool_data.get('pairContractAddress')
-                    if len(pair_address) == 42:
-                        pair_address = Web3.to_checksum_address(pair_address)
-                else: 
-                    token_address = pool_data.get('tokenAddress')
-                    pair_address = pool_data.get('pairContractAddress', '')
-                    # Validate Solana address - if invalid, clear it so we fetch from Raydium
-                    if pair_address and not self.helper_sol._is_valid_solana_address(pair_address):
-                        pair_address = ''
-
-                if 'W' in base_symbol: #found wrapped base token, removing unwrapped as well
-                    base_tokens_unused.remove(base_symbol.split('W')[1])
-
-                if base_symbol in base_tokens_unwrapped: #found unwrapped base token, removing wrapped as well
-                    base_tokens_unused.remove(base_symbol)
-                    base_symbol = 'W' + base_symbol  
-                
-                base_tokens_unused.remove(base_symbol) #removing token from unused list
-                exchange_slug = EXHANGE_SLUG_TO_BOT_SLUG[pool_data.get('exchangeSlug').lower()]
-
-                #quote data from gecko/raydium
-                fee = 0
-                onchain_pool_data = {}
-                if chain_name != 'SOLANA' :
-                    if 'v3' in exchange_slug:
-                        if not pair_address:
-                            token_pool = await self.helper_evm._get_pool_by_token_address(token_address, base_symbol, chain_name, exchange_slug)
-                            if not token_pool:
-                                continue
-                            pair_address = token_pool.get('pair_address')
-                            liquidity = token_pool.get('liquidity')
-                        fee = await self.helper_evm._v3_get_pool_fee_tier(pair_address, chain_name)
-                        if not fee:
-                            continue
-                    if 'v4' in exchange_slug:
-                        if not pair_address: 
-                            token_pool = await self.helper_evm._get_pool_by_token_address(token_address, base_symbol, chain_name, exchange_slug)
-                            if not token_pool:
-                                continue
-                            pair_address = token_pool.get('pair_address')
-                            liquidity = token_pool.get('liquidity')
-                        onchain_pool_data = await self.helper_evm._v4_get_pool_data(pair_address, chain_name)
-                        if not onchain_pool_data:
-                            continue
-                    if 'v2' in exchange_slug:
-                        pass           
-                        
-                else: 
-                    if not pair_address: 
-                        base_token_address = DEX_ROUTER_DATA['SOLANA'].get(base_symbol)
-                        if not base_token_address: 
-                            continue
-                        buy_token_address = token_address
-                        pair_address, liquidity = await self.helper_sol._query_raydium_pool(base_token_address, buy_token_address)
-                        if not(pair_address and liquidity > MIN_POOL_TVL):
-                            continue
-                        
-                decimals = 0 if chain_name == 'SOLANA' else await self.helper_evm._get_token_decimals(token_address, chain_name)
-                supported_pools.append(
-                    {
-                        'token_address': token_address,
-                        'token_decimals': decimals,
-                        'chain': chain_name,
-                        'base_token': base_symbol,
-                        'dex_type': exchange_slug,
-                        'liquidity': liquidity,
-                        'pair_address': pair_address,
-                        'fee_tier': fee,
-                        'pool_data': onchain_pool_data
-                    }
-                )
-            
-            if not supported_pools and trace:
-                self.logger.warning(f'No supported pools found for {token_id}')
-                self.logger.debug(json.dumps(response.json(), indent=4))
-                return []
-
-            sorted_pools = sorted(supported_pools, key=lambda x: x['liquidity'], reverse=True)
-            return sorted_pools
-
     async def _update_token_cache_json(self):
-        self.logger.info(f'Saving main data to {SUPPLY_DATA_PATH}')
-
-        # Создаем директорию для главного файла, если не существует
+        self.logger.info(f'Saving data to {SUPPLY_DATA_PATH}')
         os.makedirs(os.path.dirname(SUPPLY_DATA_PATH), exist_ok=True)
-
-        with open(SUPPLY_DATA_PATH, 'r', encoding='utf-8') as f:
-            raw_data = json.load(f)
-            if isinstance(raw_data, list) and len(raw_data) == 2:
-                existing_data = raw_data[1]
-            else: 
-                existing_data = {}
-
-        merged_data = existing_data.copy()
-        for ticker, data in self.main_token_data.items():
-            merged_data[ticker] = data
-        
+        try:
+            with open(SUPPLY_DATA_PATH, 'r', encoding='utf-8') as f:
+                raw = json.load(f)
+                existing = raw[1] if isinstance(raw, list) and len(raw) == 2 else {}
+        except Exception:
+            existing = {}
+        merged = {**existing, **self.main_token_data}
         self._last_update_time = datetime.now()
         with open(SUPPLY_DATA_PATH, 'w', encoding='utf-8') as f:
-            f.write(json.dumps(
-                [self._last_update_time.isoformat(), merged_data], 
-                indent=4,
-                ensure_ascii=False
-            ))
-        
-    async def _fetch_whitelist_token_pools(self, ticker: str, address: str, chain: str):
-        """
-        Fetch pool data for a single whitelist token
-        First checks main_token_data, falls back to HelperEVM if not found
-        """
-        try:
-            # Normalize ticker for lookup
-            normalized_ticker = ticker.lower().replace(' ', '').replace('.', '').replace('$', '')
-            
-            # First try to get from main token data
-            if normalized_ticker in self.main_token_data:
-                pools = self.main_token_data[normalized_ticker].get('pools', [])
-                if pools:
-                    #self.logger.info(f'Loaded {ticker} from main_token_data with {len(pools)} pools')
-                    return {
-                        'symbol': ticker,
-                        'circulating_supply': self.main_token_data[normalized_ticker].get('circulating_supply', 0),
-                        'pools': pools
-                    }
-            
-            # Fallback to HelperEVM/HelperSOL
-            self.logger.info(f'Token {ticker} not in main_token_data, querying from Helper')
-            if chain == 'SOLANA':
-                pools = await self.helper_sol.get_pools_tvl_sorted(address)
-                supply = 0
-            else:
-                pools = await self.helper_evm._get_pools_tvl_sorted(chain, address)
-                supply = await self.helper_evm._get_token_supply(address, chain)
-            
-            if pools:
-                self.logger.info(f'Loaded {ticker} from Helper with {len(pools)} pools')
-                return {
-                    'symbol': ticker,
-                    'circulating_supply': supply,
-                    'pools': pools
-                }
-            else:
-                self.logger.warning(f'No pools found for whitelisted token {ticker} ({address}) on {chain}')
-                return None
-                
-        except Exception as e:
-            self.logger.error(f'Error loading whitelist token {ticker} ({address}) on {chain}: {str(e)}')
-            return None
+            json.dump([self._last_update_time.isoformat(), merged], f, indent=4, ensure_ascii=False)
 
-    async def _load_whitelist_tokens(self, whitelist_names: list) -> list:
-        """
-        Load tokens from whitelists and fetch their pool data
-        First queries from main_token_data, falls back to HelperEVM if missing
-        Processes in parallel batches for speed optimization
-        Returns list of token data dicts with pools
-        """
-        whitelist_tokens = []
-        all_tokens_to_fetch = []
-        
-        # Collect all tokens from all whitelists
-        for whitelist_name in whitelist_names:
-            whitelist = self._load_whitelist(whitelist_name)
-            if not whitelist:
-                continue
-    
-            for ticker, token_info in whitelist.items():
-                all_tokens_to_fetch.append({
-                    'ticker': ticker,
-                    'address': token_info['address'],
-                    'chain': token_info['chain']
-                })
-        
-        if not all_tokens_to_fetch:
-            return []
-        
-        # Process in batches for speed
-        batch_size = 10  # Process 10 tokens at a time
-        for i in range(0, len(all_tokens_to_fetch), batch_size):
-            batch = all_tokens_to_fetch[i:i + batch_size]
-            
-            # Create parallel tasks for this batch
-            tasks = [
-                self._fetch_whitelist_token_pools(
-                    token['ticker'],
-                    token['address'],
-                    token['chain']
-                )
-                for token in batch
-            ]
-            
-            # Execute batch in parallel
-            results = await asyncio.gather(*tasks)
-            
-            # Add successful results
-            for result in results:
-                if result:
-                    whitelist_tokens.append(result)
-        
-        self.logger.success(f'Loaded {len(whitelist_tokens)} tokens from whitelists')
-        return whitelist_tokens
+    # ------------------------------------------------------------------
+    # Parse
+    # ------------------------------------------------------------------
 
-    async def _populate_whitelists(self):
-        """Populate whitelists using WhitelistParser based on WHITELIST_AUTO_POPULATE config"""
-        if not WHITELIST_AUTO_POPULATE:
-            self.logger.info("No whitelist auto-population configured")
-            return
-        
-        def has_chinese_characters(text: str) -> bool:
-            if not text:
-                return False
-            chinese_pattern = re.compile(r'[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]')
-            return bool(chinese_pattern.search(text))
-        
-        def has_emoji(text: str) -> bool:
-            if not text:
-                return False
-            emoji_pattern = re.compile(
-                "["
-                "\U0001F600-\U0001F64F"
-                "\U0001F300-\U0001F5FF"
-                "\U0001F680-\U0001F6FF"
-                "\U0001F1E0-\U0001F1FF"
-                "\U00002702-\U000027B0"
-                "\U000024C2-\U0001F251"
-                "]+", flags=re.UNICODE
-            )
-            return bool(emoji_pattern.search(text))
-        
-        filter_map = {
-            'chinese': has_chinese_characters,
-            'emoji': has_emoji,
-            None: None
-        }
-        
-        for whitelist_name, config in WHITELIST_AUTO_POPULATE.items():
-            whitelist_path = os.path.join(WHITELIST_PATH, whitelist_name)
-            self.logger.info(f"Populating whitelist: {whitelist_name}")
-            
-            gecko_config = config.get('gecko', {})
-            if gecko_config.get('enabled'):
-                self.logger.info("Starting Gecko whitelist population")
-                from .whitelist_parser import WhitelistParser
-                gecko_parser = WhitelistParser(
-                    supply_parser=self,
-                    api_key=GECKO_API_KEY,
-                    platform_identifiers=GECKO_PLATFORM_IDENTIFIERS,
-                    rate_limit_delay=1.2
-                )
-                
-                filter_func_name = gecko_config.get('filter_func')
-                filter_func = filter_map.get(filter_func_name)
-                
-                await gecko_parser.populate_whitelist_from_gecko(
-                    exchange_id=gecko_config['exchange_id'],
-                    whitelist_path=whitelist_path,
-                    filter_func=filter_func,
-                    target_chains=gecko_config.get('target_chains'),
-                    max_pages=gecko_config.get('max_pages', 100)
-                )
-            
-            cmc_config = config.get('cmc', {})
-            if cmc_config.get('enabled'):
-                self.logger.info("Starting CMC whitelist population")
-                from .whitelist_parser import WhitelistParser
-                cmc_parser = WhitelistParser(
-                    supply_parser=self,
-                    api_key=GECKO_API_KEY,
-                    platform_identifiers=CMC_PLATFORM_IDS,
-                    rate_limit_delay=1.0
-                )
-                
-                await cmc_parser.populate_whitelist_from_cmc(
-                    search_lists=cmc_config['search_lists'],
-                    whitelist_path=whitelist_path,
-                    target_chains=cmc_config.get('target_chains')
-                )
-
-    async def _parse_tokens(self, whitelists_to_load: list = None):
-        
-        #получаем весь набор токенов мекс + топ 2000 кмк (айди и цирк сапплай)
+    async def _fetch_token_list(self) -> list:
+        """Fetch CMC_SEARCH_LISTS, remove anything in CMC_BLACKLISTS, dedup by id then by highest mcap."""
         token_list = []
-        for search_list_name, search_list in CMC_SEARCH_LISTS.items():
-            self.logger.info(f'Fetching tokens list for {search_list_name}')
-            token_list += await self._search_query(1, search_list['limit'], additional_params=search_list['params'])
-        raw_token_dict = {token['id']: token for token in token_list}
-        unique_tokens = list(raw_token_dict.values())
-        parsed_token_list = [ 
+        for name, search_list in CMC_SEARCH_LISTS.items():
+            self.logger.info(f'Fetching token list for {name}')
+            token_list += await self._search_query(
+                1, search_list['limit'], additional_params=search_list['params']
+            )
+
+        blacklist_ids: set = set()
+        for name, search_list in CMC_BLACKLISTS.items():
+            self.logger.info(f'Fetching blacklist for {name}')
+            bl_tokens = await self._search_query(
+                1, search_list['limit'], additional_params=search_list['params']
+            )
+            for t in bl_tokens:
+                blacklist_ids.add(t['id'])
+
+        raw_token_dict = {t['id']: t for t in token_list if t['id'] not in blacklist_ids}
+        return self._dedup_by_mcap(list(raw_token_dict.values()))
+
+    @staticmethod
+    def _dedup_by_mcap(tokens: list) -> list:
+        """From a list of raw CMC token dicts, keep one entry per normalized ticker (highest mcap wins)."""
+        best: dict = {}
+        for t in tokens:
+            key = (t.get('symbol') or '').lower().replace(' ', '').replace('.', '').replace('$', '')
+            mcap = float((t.get('quotes',[{}]))[0].get('marketCap', 0))
+            if key not in best or mcap > float((best[key].get('quotes',[{}]))[0].get('marketCap', 0)):
+                best[key] = t
+        return list(best.values())
+
+    async def _parse_tokens(self):
+        unique_tokens = await self._fetch_token_list()
+        parsed = [
             {
-                'id': token.get('id'),
-                'name': token.get('name'),
-                'symbol': token.get('symbol'),
-                'circulating_supply': max(float(token.get('circulatingSupply', 0)), float(token.get('selfReportedCirculatingSupply', 0)))
+                'id': t.get('id'),
+                'symbol': t.get('symbol'),
+                'supply': float(t.get('circulatingSupply', 0) or t.get('selfReportedCirculatingSupply', 0)),
+                'mcap': float(t.get('quotes',[{}])[0].get('marketCap', 0))
             }
-            for token in unique_tokens
+            for t in unique_tokens
         ]
-        
-        self.logger.info(f'Parsed {len(parsed_token_list)} tokens from CMC')
+        self.logger.info(f'Fetched {len(parsed)} tokens from CMC')
 
         main_data_dict = {}
-        chunk_size = CACHE_UPDATE_BATCH_SIZE
-        pool_count = 0
-        for i in range(0, len(parsed_token_list), chunk_size):
-            self.logger.info(f'Processing chunk {i//chunk_size+1}/{len(parsed_token_list)//chunk_size+1}')
-            chunk = parsed_token_list[i:i + chunk_size]
+        total_chunks = (len(parsed) - 1) // CACHE_UPDATE_BATCH_SIZE + 1
+        for i in range(0, len(parsed), CACHE_UPDATE_BATCH_SIZE):
+            chunk = parsed[i:i + CACHE_UPDATE_BATCH_SIZE]
+            self.logger.info(f'Processing chunk {i // CACHE_UPDATE_BATCH_SIZE + 1}/{total_chunks}')
 
-            tasks = []
-            for token in chunk:
-                token_id = token.get('id')
-                tasks.append(self._get_pools_tvl_sorted(token_id))
-            results = await asyncio.gather(*tasks)
+            pool_results, futures_results, spot_results = await asyncio.gather(
+                asyncio.gather(*[self._get_pools_tvl_sorted(t['id']) for t in chunk]),
+                asyncio.gather(*[self._get_supported_listings(t['id'], type='perpetual') for t in chunk]),
+                asyncio.gather(*[self._get_supported_listings(t['id'], type='spot') for t in chunk]),
+            )
 
-            for token, result in zip(chunk, results):
-                if not result:
+            for token, pools, futures, spot in zip(chunk, pool_results, futures_results, spot_results):
+                if not pools or isinstance(pools, Exception):
                     continue
-                main_data_dict[token.get('symbol','').lower().replace(' ', '').replace('.', '').replace('$', '')] = {
-                    'circulating_supply': token.get('circulating_supply'),
-                    'pools': result
+                best = pools[0]
+                if SEARCH_ALTERNATE_TO_ETH and best['chain'] == 'ETHEREUM':
+                    alt = next(
+                        (p for p in pools[1:] if p['chain'] != 'ETHEREUM' and int(p['liquidity']) >= MIN_POOL_TVL),
+                        None
+                    )
+                    if alt:
+                        best = alt
+                        self.logger.info(f'Found alternate pool for {token["symbol"]}: {alt["chain"]} with liquidity {alt["liquidity"]}')
+                key = token['symbol'].lower().replace(' ', '').replace('.', '').replace('$', '')
+                main_data_dict[key] = {
+                    'supply': token['supply'],
+                    'mcap': token['mcap'],
+                    'token_address': best['token_address'],
+                    'chain': best['chain'],
+                    'liquidity': best['liquidity'],
+                    'futures_listed': futures if isinstance(futures, list) else [],
+                    'spot_listed': spot if isinstance(spot, list) else [],
                 }
-                pool_count += len(result)
 
-            self.logger.success(f'Processed chunk {i//chunk_size+1}/{len(parsed_token_list)//chunk_size+1}')
+            self.logger.success(f'Chunk done | {len(main_data_dict)} tokens so far')
             await asyncio.sleep(DELAY_BETWEEN_BATCHES)
-        
-        # Обновляем данные в памяти
+
         self.main_token_data = main_data_dict
-        self.logger.success(f'Found {pool_count} pools for {len(main_data_dict)} tokens')
-        
-        # Process whitelist tokens at the end, after main_token_data is populated
-        whitelists_to_load = []
-        for exchange_name, exchange_data in EVENTS.items():
-            for event_type, event_config in exchange_data.items():
-                if event_config.get('whitelist'): 
-                    whitelists_to_load.append(event_config.get('whitelist'))
-        
-        if whitelists_to_load:
-            self.logger.info(f'Processing whitelist tokens from {len(whitelists_to_load)} whitelist(s)')
-            whitelist_tokens = await self._load_whitelist_tokens(whitelists_to_load)
-            
-            # Add whitelist tokens to main_token_data
-            for wl_token in whitelist_tokens:
-                normalized_ticker = wl_token['symbol'].lower().replace(' ', '').replace('.', '').replace('$', '')
-                # Only add if not already in main_token_data (whitelist takes priority)
-                #if normalized_ticker not in self.main_token_data:
-                self.main_token_data[normalized_ticker] = {
-                    'circulating_supply': wl_token['circulating_supply'],
-                    'pools': wl_token['pools']
-                }
-                pool_count += len(wl_token['pools'])
-            
-            self.logger.success(f'Added {len(whitelist_tokens)} tokens from whitelists to main_token_data')
-        
-        # Сохраняем данные в JSON файлы
+        self.logger.success(f'Parsed {len(main_data_dict)} tokens')
         await self._update_token_cache_json()
-        
-        self.logger.success(f'Token data updated and saved successfully with {pool_count} total pools')
-        
+
     async def _scheduled_parse_loop(self):
         while True:
             try:
                 if self._should_run_parse():
-                    self.logger.info(f'Starting scheduled parse')
-                    
-                    # Step 1: Populate whitelists first
-                    await self._populate_whitelists()
-                    
-                    # Step 2: Parse all tokens (including whitelisted ones)
                     await self._parse_tokens()
-                
-                await asyncio.sleep(PARSED_DATA_CHECK_DELAY_DAYS * 24 * 60 * 60)
-                
+                await asyncio.sleep(PARSED_DATA_CHECK_DELAY_DAYS * 24 * 3600)
             except Exception as e:
-                self.logger.error(f'Error in scheduled parse loop: {str(e)}')
-                self.logger.warning(f'Waiting 1 hour before retrying')
-                await asyncio.sleep(60 * 60)
+                self.logger.error(f'Scheduled parse error: {e}')
+                await asyncio.sleep(3600)
 
     async def start_scheduled_parsing_loop_task(self):
         if self._parser_task is None or self._parser_task.done():
             if self._should_run_parse():
-                await self._populate_whitelists()
                 await self._parse_tokens()
             self._parser_task = asyncio.create_task(self._scheduled_parse_loop())
             return True
-        else:
-            self.logger.warning(f'Scheduled parsing task already running')
-            return False
+        self.logger.warning('Scheduled parsing already running')
+        return False
 
     async def force_parse(self):
-        self.logger.info(f'Force parsing requested')
         await self._parse_tokens()
 
-    async def _get_token_pool_by_contract_evm(self, chain_name:str, contract:str):
+    async def _update_mcap_only(self):
+        """Light update: fetches CMC listing and patches only the mcap field for cached tokens."""
+        if not self.main_token_data:
+            self.logger.warning('No cached data to update mcap for')
+            return
+        unique_tokens = await self._fetch_token_list()
+        updated = 0
+        for t in unique_tokens:
+            key = (t.get('symbol') or '').lower().replace(' ', '').replace('.', '').replace('$', '')
+            if key not in self.main_token_data:
+                continue
+            mcap = float(t.get('quotes', [{}])[0].get('marketCap', 0))
+            self.main_token_data[key]['mcap'] = mcap
+            updated += 1
+        self.logger.success(f'[mcap] Updated mcap for {updated} tokens')
+        await self._update_token_cache_json()
 
-        try:
-            pools = await self.helper_evm._get_pools_tvl_sorted(chain_name, contract)
-            self.logger.debug(f'Found {len(pools)} pools for {contract}: {json.dumps(pools, indent=4)}')
-            for pool in pools:
-                if pool.get('liquidity', 0) < MIN_POOL_TVL:
-                    continue
-                if pool.get('base_token') not in USABLE_TOKENS:
-                    continue
-                selected_pool = pool
-                selected_pool['pool_data'] = {}
-                selected_pool['fee_tier'] = 0
-                break
-            
-            pool_type = selected_pool.get('dex_type')
-            if 'v4' in pool_type: 
-                onchain_pool_data = await self.helper_evm._v4_get_pool_data(selected_pool.get('pair_address'), chain_name)
-                selected_pool['pool_data'] = onchain_pool_data 
-            elif 'v3' in pool_type: 
-                fee = await self.helper_evm._v3_get_pool_fee_tier(selected_pool.get('pair_address'), chain_name)
-                selected_pool['fee_tier'] = fee 
-            else: 
-                pass
-            return selected_pool
-        except Exception as e:
-            import traceback
-            self.logger.error(f'Error getting token data for {contract}: {str(e)}')
-            self.logger.error(traceback.format_exc())
+    async def _scheduled_mcap_loop(self):
+        while True:
+            try:
+                await asyncio.sleep(MCAP_UPDATE_INTERVAL_HOURS * 3600)
+                await self._update_mcap_only()
+            except Exception as e:
+                self.logger.error(f'Mcap update error: {e}')
+                await asyncio.sleep(3600)
+
+    async def start_mcap_update_loop_task(self):
+        if self._mcap_task is None or self._mcap_task.done():
+            self._mcap_task = asyncio.create_task(self._scheduled_mcap_loop())
+            return True
+        self.logger.warning('Mcap update loop already running')
+        return False
+
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
+
+    async def get_token_data(self, token_ticker: str) -> dict:
+        """
+        Returns cached token data or queries CMC on-the-fly.
+        Schema: { supply, token_address, chain, liquidity, futures_listed, spot_listed }
+        """
+        key = token_ticker.lower().replace(' ', '').replace('.', '').replace('$', '')
+        if self.main_token_data:
+            cached = self.main_token_data.get(key)
+            if cached:
+                self.logger.info(f'Returning cached data for {token_ticker}')
+                return cached
+        if ONLY_PARSED:
+            self.logger.info(f'ONLY_PARSED: no data for {token_ticker}')
             return {}
-                        
-
-    async def get_token_data(self, token_ticker: str, token_contract: str = None, chain: str = None):
-
-        """
-        Запросит токен сапплай из базы данных
-        Если не найдет, запросит через API
-        Если апи не даст ответ - вернет {}
-        
-        Если передать чейн и контракт - выдаст самый ликвидный пул и маркеткапу с геко
-
-        Возвращает:
-            dict: Словарь с данными: {circulating_supply: int, pools: list<dict>}
-        """
-        
-        try: 
-            token_ticker = token_ticker.lower().replace(' ', '').replace('.', '').replace('$', '')
-            token_data = self.main_token_data.get(token_ticker)
-            if token_data:
-                self.logger.info(f'Returning parsed token data for {token_ticker}')
-                return token_data
-            elif BUY_ONLY_PARSED: 
-                self.logger.info(f'No parsed data and only parsed mode enabled, returning empty data for {token_ticker}')
+        try:
+            self.logger.warning(f'No cached data for {token_ticker}, querying CMC')
+            token_id = await self._get_token_id_from_search(key)
+            if not token_id:
                 return {}
-            elif token_contract and (chain and chain!='SOLANA'): 
-                self.logger.info(f'Getting gecko pool data for {token_ticker}')
-                pool = await self._get_token_pool_by_contract_evm(chain, token_contract)
-                self.logger.info(f'{json.dumps(pool, indent=4)}')
-                return {
-                    'circulating_supply': 0,
-                    'pool_selected': pool
-                }
-            else:
-                self.logger.warning(f'No parsed token data for {token_ticker}. Quering from API')
-                t_start = time.perf_counter()
-                token_data = await self._get_token_data_by_token_ticker(token_ticker)
-                t_end = time.perf_counter()
-                self.logger.debug(f'Query token data took {(t_end - t_start)*1000:.2f}ms')
-                return token_data
+            supply, pools, futures, spot = await asyncio.gather(
+                self._get_supply_by_token_id(token_id),
+                self._get_pools_tvl_sorted(token_id),
+                self._get_supported_listings(token_id, type='perpetual'),
+                self._get_supported_listings(token_id, type='spot'),
+            )
+            if not pools:
+                return {}
+            best = pools[0]
+            return {
+                'supply': supply or 0,
+                'mcap': best['mcap'],
+                'token_address': best['token_address'],
+                'chain': best['chain'],
+                'liquidity': best['liquidity'],
+                'futures_listed': futures or [],
+                'spot_listed': spot or [],
+            }
         except Exception as e:
-            import traceback
-            self.logger.error(f'Error getting token data for {token_ticker}: {str(e)}')
-            self.logger.error(traceback.format_exc())
+            self.logger.error(f'get_token_data error for {token_ticker}: {e}')
             return {}

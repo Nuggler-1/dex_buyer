@@ -50,14 +50,16 @@ class WebSocketClient:
                 #слушатель
                 class ClientListener(WSListener):
                     def on_ws_connected(self, transport: WSTransport):
-                        logger.info(f"WebSocket connected!")
+                        logger.success(f"WebSocket connected!")
                         
                     def on_ws_frame(self, transport: WSTransport, frame: WSFrame):
                         if frame.msg_type == WSMsgType.TEXT:
                             try:
                                 data = ujson.loads(frame.get_payload_as_utf8_text())
                                 # Check if this is a ping message from server
-                                if isinstance(data, dict) and data.get('type') == 'ping':
+                                if isinstance(data, dict) and data.get('message_type') == 'heartbeat':
+                                    pass
+                                elif isinstance(data, dict) and data.get('type') == 'ping':
                                     #logger.debug(f"Received PING from server")
                                     try:
                                         pong_msg = ujson.dumps({"type": "pong"})
@@ -67,7 +69,7 @@ class WebSocketClient:
                                         logger.error(f"Failed to send pong: {e}")
                                 else:
                                     # Normal message, pass to callback
-                                    
+                                    data['service_type'] = name
                                     logger.debug(f"Frame received: {json.dumps(data, indent=4)}")
                                     asyncio.create_task(callback(data))
                             except Exception as e:

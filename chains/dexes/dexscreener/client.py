@@ -18,8 +18,11 @@ class DexscreenerClient():
         latency = (time.perf_counter() - t0) * 1000
         return data, latency
 
-    async def quote_price(self, chain_id:str, token_address: str):
+    async def quote_price(self, chain_id: str, token_address: str) -> float | None:
         endpoint = f"/tokens/v1/{chain_id}/{token_address}"
         data, latency = await self.call_api(endpoint)
-        self.logger.info(f"Quoted price for {token_address} on chain {chain_id} in {latency}ms")
-        return data
+        #self.logger.info(f"Quoted price for {token_address} on chain {chain_id} in {latency:.2f}ms")
+        pairs = data if isinstance(data, list) else (data.get('pairs') or [])
+        if pairs and pairs[0].get('priceUsd'):
+            return float(pairs[0]['priceUsd'])
+        return None

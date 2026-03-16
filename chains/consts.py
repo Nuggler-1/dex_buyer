@@ -21,15 +21,17 @@ DEX_ROUTER_DATA = {
         'token_decimals': {
             '0xdAC17F958D2ee523a2206206994597C13D831ec7': 6,
             '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 6,
-            '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2': 18,
+            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE': 18,
             'USDT': 6,
             'USDC': 6,
-            'WETH': 18
+            'ETH': 18
         },
         'USDT': '0xdAC17F958D2ee523a2206206994597C13D831ec7',
         'USDC': '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        'ETH': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         'WETH': '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-        'gas_token': '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        'gas_token': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        'gas_token_ticker': 'ETH'
     },
     'ARBITRUM': {
         'chain_id': 42161,
@@ -53,15 +55,37 @@ DEX_ROUTER_DATA = {
         'token_decimals': {
             '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9': 6,
             '0xaf88d065e77c8cC2239327C5EDb3A432268e5831': 6,
-            '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1': 18,
+            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE': 18,
             'USDT': 6,
             'USDC': 6,
-            'WETH': 18
+            'ETH': 18
         },
         'USDT': '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
         'USDC': '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-        'WETH': '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        'gas_token': '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+        'ETH': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        'WETH': '0x4200000000000000000000000000000000000006',
+        'gas_token': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        'gas_token_ticker': 'ETH'
+    },
+    'BASE': {
+        'chain_id': 8453,
+        'dex_contracts': {
+        
+        },
+        'token_decimals': {
+            '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2': 18,
+            '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913': 18,
+            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE': 18,  
+            'USDT': 18,
+            'USDC': 18,
+            'ETH': 18
+        },
+        'USDT': '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2',
+        'USDC': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+        'ETH': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', 
+        'WETH': '0x4200000000000000000000000000000000000006',  
+        'gas_token': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        'gas_token_ticker': 'ETH'
     },
     'BSC': {
         'chain_id': 56,
@@ -85,29 +109,34 @@ DEX_ROUTER_DATA = {
         'token_decimals': {
             '0x55d398326f99059fF775485246999027B3197955': 18,
             '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': 18,
-            '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': 18,  
+            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE': 18,  
             'USDT': 18,
             'USDC': 18,
-            'WBNB': 18
+            'BNB': 18
         },
         'USDT': '0x55d398326f99059fF775485246999027B3197955',
         'USDC': '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-        'WBNB': '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',   
-        'gas_token': '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+        'BNB': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',   
+        'WBNB': '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+        'gas_token': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        'gas_token_ticker': 'BNB'
     },
     'SOLANA': {
+        'chain_id': 501,
         'token_decimals': {
-            'So11111111111111111111111111111111111111112': 9,
+            'So11111111111111111111111111111111111111111': 9,
             'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v': 6,
             'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB': 6,
             'USDC': 6,
-            'WSOL': 9,
+            'SOL': 9,
             'USDT': 6
         },
+        'SOL': 'So11111111111111111111111111111111111111111',
         'WSOL': 'So11111111111111111111111111111111111111112',
         'USDT': 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
         'USDC': 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        'gas_token': 'So11111111111111111111111111111111111111112',
+        'gas_token': 'So11111111111111111111111111111111111111111',
+        'gas_token_ticker': 'SOL'
     }
 }
 

@@ -5,16 +5,18 @@ from datetime import datetime, timezone
 from urllib.parse import urlencode
 from curl_cffi.requests import AsyncSession
 from utils import get_logger
+import asyncio
+from config import OKX_API_KEY, OKX_API_SECRET, OKX_API_PASSPHRASE, OKX_PROJECT_ID, OKX_RETRY_COUNT, SLIPPAGE_PERCENT, SOLANA_PRIORITY_FEE
 
 BASE_URL = "https://web3.okx.com"
 
 class OkxDexClient:
-    def __init__(self, user_address: str, api_key: str, api_secret: str, api_passphrase: str, project_id: str):
+    def __init__(self, user_address: str):
         self.user_address = user_address
-        self.api_key = api_key
-        self.api_secret = api_secret
-        self.api_passphrase = api_passphrase
-        self.project_id = project_id
+        self.api_key = OKX_API_KEY
+        self.api_secret = OKX_API_SECRET
+        self.api_passphrase = OKX_API_PASSPHRASE
+        self.project_id = OKX_PROJECT_ID
         self.base_url = BASE_URL
         self.logger = get_logger("OKX_API")
 
@@ -47,10 +49,24 @@ class OkxDexClient:
         t0 = time.perf_counter()
         async with AsyncSession() as s:
             resp = await s.get(url, headers=hdrs)
-            data = resp.json()
+            try:
+                data = resp.json()
+            except Exception:
+                self.logger.error(
+                    f"OKX non-JSON response [{resp.status_code}] {endpoint}: {resp.text[:300]}"
+                )
+                data = {}
         latency = (time.perf_counter() - t0) * 1000
 
         return data, latency
+
+    async def quote_all_tokens_for_chain(self, chain_id:int): 
+        quote_params = {
+            "chainIndex": chain_id,
+        }
+        data, latency = await self.call_api("/dex/aggregator/all-tokens", quote_params)
+        self.logger.info(f"Latency for query is: {latency} ms")
+        return data
 
     async def quote_swap(self,chain_id:int, from_token_address:str, to_token_address:str, amount_in_decimal:int, slippage_in_percent:float = 0.5):
         quote_params = {
@@ -60,27 +76,53 @@ class OkxDexClient:
             "amount": int(amount_in_decimal),
             "slippage": slippage_in_percent,
         }
-        data, latency = await self.call_api("/dex/aggregator/quote", quote_params)
-        self.logger.info(f"Latency for query is: {latency} ms")
-        query = data.get('data', [])[0]
-        if query:
+        for attempt in range(1, OKX_RETRY_COUNT + 1):
+            data, latency = await self.call_api("/dex/aggregator/quote", quote_params)
+            self.logger.info(f"Latency for query is: {latency:.2f} ms")
+            if data.get('code', '0') != '0':
+                self.logger.error(f"OKX quote error {data.get('code')}: {data.get('msg')} (attempt {attempt}/{OKX_RETRY_COUNT})")
+                continue
+            rows = data.get('data') or []
+            if not rows:
+                self.logger.error(f"OKX quote: empty data list (attempt {attempt}/{OKX_RETRY_COUNT})")
+                continue
+            query = rows[0]
+            query['chainIndex'] = chain_id
             query['amount'] = query['fromTokenAmount']
             query['fromTokenAddress'] = from_token_address
             query['toTokenAddress'] = to_token_address
-            query['slippagePercent'] = slippage_in_percent
+            query['slippagePercent'] = str(slippage_in_percent)
             return query
+        self.logger.error(f"OKX quote_swap failed after {OKX_RETRY_COUNT} attempts")
+        return None
 
     async def get_swap_data(self,quote_params:dict): 
         swap_params = {
             **quote_params,
             "userWalletAddress": self.user_address,
+            "priceImpactProtectionPercent": '30',
             "disableRFQ": "true",      # skip RFQ for lower latency
         }
-        swap_data, latency = await self.call_api(
-             "/dex/aggregator/swap", swap_params
-        )
-        self.logger.info(f"Latency for swap data is: {latency} ms")
-        return swap_data
+        #gas api
+        if str(swap_params.get('chainIndex', '')) == '501':
+            swap_params['computeUnitPrice'] = str(SOLANA_PRIORITY_FEE)
+        else: 
+            swap_params['gasLevel'] = "fast"
+
+        for attempt in range(1, OKX_RETRY_COUNT + 1):
+            swap_data, latency = await self.call_api("/dex/aggregator/swap", swap_params)
+            self.logger.info(f"Latency for swap data is: {latency:.2f} ms")
+            if swap_data.get('code', '0') != '0':
+                self.logger.error(f"OKX swap error {swap_data.get('code')}: {swap_data.get('msg')} (attempt {attempt}/{OKX_RETRY_COUNT})")
+                await asyncio.sleep(0.15)
+                continue
+            if not (swap_data.get('data') or []):
+                self.logger.error(f"OKX swap: empty data list (attempt {attempt}/{OKX_RETRY_COUNT})")
+                await asyncio.sleep(0.15)
+                continue
+            return swap_data
+        self.logger.error(f"OKX get_swap_data failed after {OKX_RETRY_COUNT} attempts")
+        return None
 
     async def get_approve_address(self,chain_id:int, token_to_approve:str):
         quote_params = {
@@ -89,6 +131,9 @@ class OkxDexClient:
             "approveAmount": 1000000000000
         }
         data, latency = await self.call_api("/dex/aggregator/approve-transaction", quote_params)
-        address = data.get('data', [])[0].get('dexContractAddress')
-        self.logger.info(f"Latency for approve is: {latency} ms")
+        self.logger.info(f"Latency for approve is: {latency:.2f} ms")
+        rows = data.get('data') or []
+        if not isinstance(rows, list) or not rows:
+            return None
+        address = rows[0].get('dexContractAddress')
         return address

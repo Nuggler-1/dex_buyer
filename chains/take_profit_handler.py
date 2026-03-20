@@ -102,6 +102,7 @@ class TakeProfitHandler:
         steps_done: int = 0,
         original_total_raw: int = None,
         custom_tp_ladder: dict = None,
+        delay_before_sl: int = 0,
     ) -> asyncio.Task:
         task = asyncio.create_task(
             self._run_tp_task(
@@ -112,6 +113,7 @@ class TakeProfitHandler:
                 steps_done=steps_done,
                 original_total_raw=original_total_raw,
                 custom_tp_ladder=custom_tp_ladder,
+                delay_before_sl=delay_before_sl,
             )
         )
         self._tasks.append(task)
@@ -127,6 +129,7 @@ class TakeProfitHandler:
         original_total_raw: int = None,
         custom_tp_ladder: dict = None,
         max_failures: int = 5,
+        delay_before_sl: int = 0,
     ):
         try:
             await self._run_tp_task_inner(
@@ -138,6 +141,7 @@ class TakeProfitHandler:
                 original_total_raw=original_total_raw,
                 custom_tp_ladder=custom_tp_ladder,
                 max_failures=max_failures,
+                delay_before_sl=delay_before_sl,
             )
         except Exception as e:
             self.logger.error(f"TP task crashed for {token_address}: {str(e)}", exc_info=True)
@@ -152,6 +156,7 @@ class TakeProfitHandler:
         original_total_raw: int = None,
         custom_tp_ladder: dict = None,
         max_failures: int = 5,
+        delay_before_sl: int = 0,
     ):
         ladder = custom_tp_ladder if custom_tp_ladder is not None else TP_LADDERS.get(tp_ladder_id)
         if not ladder or not ladder.get('enabled'):
@@ -209,6 +214,7 @@ class TakeProfitHandler:
 
         poll_interval = PRICE_UPDATE_DELAY[self.chain_name]
         failures = 0
+        sl_active_after = asyncio.get_event_loop().time() + delay_before_sl
         
         if self.chain_name!='SOLANA':
             spender = await self.trade_handler.okx_client.get_approve_address(
@@ -241,7 +247,8 @@ class TakeProfitHandler:
                     continue
 
                 # Stop-loss check
-                if current_price <= stop_loss_price:
+                sl_enabled = asyncio.get_event_loop().time() >= sl_active_after
+                if sl_enabled and current_price <= stop_loss_price:
                     self.logger.warning(
                         f"TP | SL triggered for {token_address} @ ${current_price:.8f}"
                     )

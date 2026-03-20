@@ -36,7 +36,7 @@ class NewsController:
 
         chain = data.get('chain')
         contract = data.get('contract_address')
-        delay_before_tp = int(data.get('sl_time', 0))
+        delay_before_sl = int(data.get('sl_time', 0))
 
         if not (chain and contract): 
             token_data = await self.supply_parser.get_token_data(ticker)
@@ -73,10 +73,10 @@ class NewsController:
         trades.append(TokenTrade(
             ticker=ticker,
             chain=chain,
-            contract=contract,
-            size=custom_size,
-            tp_ladder=custom_tp_ladder,
-            delay_before_tp=delay_before_tp
+            token_address=contract,
+            custom_size=custom_size,
+            custom_tp_ladder=custom_tp_ladder,
+            delay_before_sl=delay_before_sl
         ))
         return trades
 

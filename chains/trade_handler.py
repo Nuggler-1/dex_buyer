@@ -21,7 +21,7 @@ from config import (
     TOKEN_TO_SELL,
     USE_WEBSOCKET,
     SLIPPAGE_PERCENT,
-    DELAY_BEFORE_TP,
+    DELAY_BEFORE_SL,
     GAS_LIMIT_MULTIPLIER
 )
 from .consts import DEX_ROUTER_DATA, erc20_abi
@@ -175,8 +175,9 @@ class TradeHandler:
             try:
                 resp = await self.client.get_latest_blockhash()
                 self._blockhash_cache = resp.value.blockhash
-            except Exception as e:
-                self.logger.error(f"Blockhash update: {str(e)}")
+            except Exception:
+                import traceback
+                self.logger.error(f"Blockhash update: {traceback.format_exc()}")
             await asyncio.sleep(5)
 
     # ------------------------------------------------------------------
@@ -410,7 +411,7 @@ class TradeHandler:
         base_token_name: str,
         mcap: float,
         mcap_config:list,
-        delay_before_tp:int = DELAY_BEFORE_TP,
+        delay_before_sl:int = DELAY_BEFORE_SL,
         position_size: float = None,
         custom_tp_ladder: dict = None,
     ) -> str | None:
@@ -498,14 +499,14 @@ class TradeHandler:
 
         # --- Start TP task ---
         if self._take_profit_handler and tp_ladder_id is not None:
-            await asyncio.sleep(delay_before_tp)
             self._take_profit_handler.start_task(
                 token_address=token_address,
                 base_token_address=base_token_address,
                 tp_ladder_id=tp_ladder_id,
                 price_bought_usd=token_price_usd,
                 custom_tp_ladder=custom_tp_ladder,
-                original_total_raw=int(swap_quote.get('toTokenAmount', 0)) if self.chain_name == 'SOLANA' else None
+                original_total_raw=int(swap_quote.get('toTokenAmount', 0)) if self.chain_name == 'SOLANA' else None,
+                delay_before_sl=delay_before_sl,
             )
 
         return tx_hash

@@ -53,7 +53,7 @@ class OkxDexClient:
                 data = resp.json()
             except Exception:
                 self.logger.error(
-                    f"OKX non-JSON response [{resp.status_code}] {endpoint}: {resp.text[:300]}"
+                    f"OKX non-JSON response [{resp.status_code}] {endpoint}: {resp.text}"
                 )
                 data = {}
         latency = (time.perf_counter() - t0) * 1000
@@ -81,10 +81,12 @@ class OkxDexClient:
             self.logger.info(f"Latency for query is: {latency:.2f} ms")
             if data.get('code', '0') != '0':
                 self.logger.error(f"OKX quote error {data.get('code')}: {data.get('msg')} (attempt {attempt}/{OKX_RETRY_COUNT})")
+                await asyncio.sleep(0.33)
                 continue
             rows = data.get('data') or []
             if not rows:
                 self.logger.error(f"OKX quote: empty data list (attempt {attempt}/{OKX_RETRY_COUNT})")
+                await asyncio.sleep(0.33)
                 continue
             query = rows[0]
             query['chainIndex'] = chain_id
@@ -98,15 +100,18 @@ class OkxDexClient:
 
     async def get_swap_data(self,quote_params:dict): 
         swap_params = {
-            **quote_params,
+            "chainIndex": quote_params['chainIndex'],
+            "fromTokenAddress": quote_params['fromTokenAddress'],
+            "toTokenAddress": quote_params['toTokenAddress'],
+            "amount": quote_params['amount'],
+            "slippagePercent": quote_params.get('slippagePercent', 0.5),
             "userWalletAddress": self.user_address,
-            "priceImpactProtectionPercent": '30',
-            "disableRFQ": "true",      # skip RFQ for lower latency
+            "priceImpactProtectionPercent": '1',
+            "disableRFQ": "true",
         }
-        #gas api
-        if str(swap_params.get('chainIndex', '')) == '501':
+        if str(swap_params['chainIndex']) == '501':
             swap_params['computeUnitPrice'] = str(SOLANA_PRIORITY_FEE)
-        else: 
+        else:
             swap_params['gasLevel'] = "fast"
 
         for attempt in range(1, OKX_RETRY_COUNT + 1):
@@ -114,11 +119,11 @@ class OkxDexClient:
             self.logger.info(f"Latency for swap data is: {latency:.2f} ms")
             if swap_data.get('code', '0') != '0':
                 self.logger.error(f"OKX swap error {swap_data.get('code')}: {swap_data.get('msg')} (attempt {attempt}/{OKX_RETRY_COUNT})")
-                await asyncio.sleep(0.15)
+                await asyncio.sleep(0.33)
                 continue
             if not (swap_data.get('data') or []):
                 self.logger.error(f"OKX swap: empty data list (attempt {attempt}/{OKX_RETRY_COUNT})")
-                await asyncio.sleep(0.15)
+                await asyncio.sleep(0.33)
                 continue
             return swap_data
         self.logger.error(f"OKX get_swap_data failed after {OKX_RETRY_COUNT} attempts")

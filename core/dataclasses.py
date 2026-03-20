@@ -12,4 +12,4 @@ class TokenTrade:
     error: str | None = None
     custom_size: int | None = None
     custom_tp_ladder: list | None = None
-    delay_before_tp: int | None = None
+    delay_before_sl: int | None = None

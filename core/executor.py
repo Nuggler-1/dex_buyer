@@ -3,7 +3,7 @@ from typing import Dict, Callable
 from chains import TradeHandler
 from loguru import logger
 from typing import Literal
-from config import CHAIN_NAMES, DELAY_BEFORE_TP
+from config import CHAIN_NAMES, DELAY_BEFORE_SL
 from web3 import Web3
 import traceback
 from .dataclasses import TokenTrade
@@ -54,7 +54,7 @@ class TransactionExecutor:
                 mcap_config=token_data.mcap_config,
                 position_size=token_data.custom_size,
                 custom_tp_ladder=token_data.custom_tp_ladder,
-                delay_before_tp=token_data.delay_before_tp if token_data.delay_before_tp else DELAY_BEFORE_TP,
+                delay_before_sl=token_data.delay_before_sl if token_data.delay_before_sl else DELAY_BEFORE_SL,
             )
             if tx_hash:
                 tx_handler.logger.success(f"bought {ticker} ({token_address}) on {chain} | TX: {tx_hash}")

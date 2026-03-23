@@ -1,4 +1,5 @@
 import asyncio
+import time
 from .websocket_client import WebSocketClient
 from .executor import TransactionExecutor
 from chains import TradeHandler, TakeProfitHandler, DexscreenerClient, OkxDexClient
@@ -257,6 +258,7 @@ class TradingBot:
         self.news_controller = NewsController(self.supply_parser)
         self.logger = get_logger("SIGNAL")
         self.ws_clients: list[WebSocketClient] = []
+        self._ticker_last_signal: dict[str, float] = {}
         self._pk_sol = pk_sol
         self._pk_evm = pk_evm
         
@@ -311,8 +313,15 @@ class TradingBot:
             if trade.error:
                 self.logger.error(f"error in message: {trade.error}")
                 continue
-            else: 
-                asyncio.create_task(self.executor.execute_trade(trade))
+            ticker = trade.ticker or ''
+            now = time.monotonic()
+            last = self._ticker_last_signal.get(ticker)
+            if last is not None and now - last < 600:
+                remaining = int(600 - (now - last))
+                self.logger.info(f"Skipping {ticker}: cooldown active, {remaining}s remaining")
+                continue
+            self._ticker_last_signal[ticker] = now
+            asyncio.create_task(self.executor.execute_trade(trade))
 
         #send tg messages for errors         
         for trade in trades:

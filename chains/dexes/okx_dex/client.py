@@ -74,7 +74,9 @@ class OkxDexClient:
             "fromTokenAddress": from_token_address,
             "toTokenAddress": to_token_address,
             "amount": int(amount_in_decimal),
-            "slippage": slippage_in_percent,
+            "priceImpactProtectionPercent": 100,
+            "singlePoolPerHop": True
+            #"slippage": slippage_in_percent,
         }
         for attempt in range(1, OKX_RETRY_COUNT + 1):
             data, latency = await self.call_api("/dex/aggregator/quote", quote_params)
@@ -94,6 +96,9 @@ class OkxDexClient:
             query['fromTokenAddress'] = from_token_address
             query['toTokenAddress'] = to_token_address
             query['slippagePercent'] = str(slippage_in_percent)
+            import json
+            self.logger.debug(f"Received Route: {json.dumps(query.get('dexRouterList', []), indent=4)}")
+            self.logger.debug(f"Estimated price impact: {query.get('priceImpactPercent', 'N/A')}")
             return query
         self.logger.error(f"OKX quote_swap failed after {OKX_RETRY_COUNT} attempts")
         return None

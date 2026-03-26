@@ -74,7 +74,7 @@ class OkxDexClient:
             "fromTokenAddress": from_token_address,
             "toTokenAddress": to_token_address,
             "amount": int(amount_in_decimal),
-            "priceImpactProtectionPercent": 100,
+            "priceImpactProtectionPercent": '100',
             "singlePoolPerHop": True
             #"slippage": slippage_in_percent,
         }
